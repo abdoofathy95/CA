@@ -3,23 +3,30 @@ package components;
 import java.util.Hashtable;
 
 public class ExecutionStage {
-	public static Hashtable<String,String> tempRegisterWB;
-	public static Hashtable<String,String> tempRegisterM;
-	private static Hashtable<String,String> tempRegisterEx;
-	public static int currentPC;
-	public static int jumpAddress;
-	public static String branchAddress;  // set in the current Class
-	private static String registerOneData; // private since it won't be passed to next stage
+	public static Hashtable<String, String> tempRegisterWB;
+	public static Hashtable<String, String> tempRegisterM;
+	private static Hashtable<String, String> tempRegisterEx;
+	public static String currentPC;
+	public static String jumpAddress;
+	// set in the current Class
+	public static String branchAddress;
+	// private since it won't be passed to next stage
+	private static String registerOneData;
 	public static String registerTwoData;
-	public static String aluZeroSignal; // set in the current class
-	public static String aluResult; // set in the current class
-	private static String immediateValue; // private since it won't be passed to next stage (used only in this class)
-	public static String registerAddressToWriteTo;  // pick one of (register t , register d) according to instruction itself
+	// set in the current class
+	public static String aluZeroSignal;
+	// set in the current class
+	public static String aluResult;
+	// private since it won't be passed to next stage (used only in this class)
+	private static String immediateValue;
+	// pick one of (register t , register d) according to instruction itself
+	public static String registerAddressToWriteTo;
 	private static String registerTAddress;
 	private static String registerDAddress;
 	private static final String registerRA = "$RA";
-	
-	public static void init() { // called from previous stage (no need to call it again)
+
+	public static void init() { // called from previous stage (no need to call
+								// it again)
 		tempRegisterWB = InstructionDecodeStage.tempRegisterWB;
 		tempRegisterM = InstructionDecodeStage.tempRegisterM;
 		currentPC = InstructionDecodeStage.currentPC;
@@ -30,9 +37,9 @@ public class ExecutionStage {
 		registerTAddress = InstructionDecodeStage.registerTAddress;
 		registerDAddress = InstructionDecodeStage.registerDAddress;
 	}
-	
+
 	public static void startNextStage() {
 		MemoryStage.init();
 	}
-	
+
 }
