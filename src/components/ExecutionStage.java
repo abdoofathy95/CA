@@ -25,10 +25,17 @@ public class ExecutionStage {
 	private static String registerDAddress;
 	private static final String registerRA = "$RA";
 
+
 	public static void init() { // called from previous stage (no need to call
 								// it again)
+		String immediateValueShift16;
+		String immediateValueShift2;
+		String Registertwodata2ndInput;	
+		String ALU2ndInput;
+		String registerToWriteTo;
 		tempRegisterWB = InstructionDecodeStage.tempRegisterWB;
 		tempRegisterM = InstructionDecodeStage.tempRegisterM;
+		tempRegisterEx=InstructionDecodeStage.tempRegisterEx;
 		currentPC = InstructionDecodeStage.currentPC;
 		jumpAddress = InstructionDecodeStage.jumpAddress;
 		registerOneData = InstructionDecodeStage.registerOneData;
@@ -36,6 +43,74 @@ public class ExecutionStage {
 		immediateValue = InstructionDecodeStage.immediateValue;
 		registerTAddress = InstructionDecodeStage.registerTAddress;
 		registerDAddress = InstructionDecodeStage.registerDAddress;
+		 immediateValueShift2=(Integer.parseInt(immediateValue)*4)+"";
+		branchAddress=(Integer.parseInt(immediateValueShift2)+Integer.parseInt(currentPC))+"";
+		immediateValueShift16=(Integer.parseInt(immediateValue)*32)+"";
+		if(Integer.parseInt(tempRegisterEx.get("Shift-Left"))==0)
+			Registertwodata2ndInput=immediateValue;
+		else
+			Registertwodata2ndInput=immediateValueShift16;
+		
+		if(Integer.parseInt(tempRegisterEx.get("ALUsrc"))==0)
+			ALU2ndInput=registerTwoData;
+		else
+			ALU2ndInput=Registertwodata2ndInput;
+		
+		if(Integer.parseInt(tempRegisterEx.get("RegDst"))==0)
+			registerToWriteTo=registerTAddress;
+		else
+			registerToWriteTo=registerDAddress;
+		if(Integer.parseInt(tempRegisterEx.get("JAL"))==0)
+			registerAddressToWriteTo=registerToWriteTo;
+		else
+			registerAddressToWriteTo=registerRA;
+		switch(tempRegisterEx.get("ALUop")){
+		case"Add":{
+			aluResult=(Integer.parseInt(registerOneData)+Integer.parseInt(ALU2ndInput))+"";
+			break;
+		}
+		case"Sub":{
+			aluResult=(Integer.parseInt(registerOneData)-Integer.parseInt(ALU2ndInput))+"";
+			break;
+		}
+		case"AND":{
+			aluResult=(Integer.parseInt(registerOneData) & Integer.parseInt(ALU2ndInput))+"";
+			break;
+		}
+		case"OR":{
+			aluResult=(Integer.parseInt(registerOneData) | Integer.parseInt(ALU2ndInput))+"";
+			break;
+		}
+		case"SLL":{
+			aluResult=(Integer.parseInt(registerOneData) * Integer.parseInt(ALU2ndInput)*2)+"";
+			break;
+		}
+		case"SRL":{
+			aluResult=(Integer.parseInt(registerOneData) / (Integer.parseInt(ALU2ndInput)*2))+"";
+			break;
+		}
+		case"NOR":{
+			aluResult=(~(Integer.parseInt(registerOneData) | Integer.parseInt(ALU2ndInput)))+"";
+			break;
+		}
+		case"SLT":{
+			if(Integer.parseInt(registerOneData) < Integer.parseInt(ALU2ndInput))
+				aluResult="1";
+			else aluResult="0";
+			break;
+		}
+		case"SLTU":{
+			int x =Integer.compareUnsigned(Integer.parseInt(registerOneData), Integer.parseInt(ALU2ndInput));
+			if(x <0 )
+				aluResult="1";
+			else aluResult="0";
+			break;
+		}
+		//JR mesh ma3moola
+		}
+		if(Integer.compare(Integer.parseInt(registerOneData), Integer.parseInt(ALU2ndInput))==0)
+			aluZeroSignal="1";
+		else aluZeroSignal = "0";
 	}
 
 	public static void startNextStage() {
