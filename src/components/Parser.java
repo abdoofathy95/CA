@@ -295,6 +295,7 @@ public class Parser {
 					 temp5 = " "+ temp5;
 					if(result[i].length() != 0){
 						instruction = temp5 + result[i];
+						//System.out.println(instruction);
 						break;
 					}
 				}
@@ -371,14 +372,16 @@ public class Parser {
 						System.exit(0);
 					}
 					else{
-						if(!isValidRegister(tempArr[1])){
+						
+						if(!isValidRegister(tempArr[0])){
 							System.out.println("Invalid register name in line: "+ lineCounter);
 							System.exit(0);
 						}
 						
-						int begin = getCharPosition(tempArr[0], '(');
-						int end = getCharPosition(tempArr[0], ')');
-						String reg = tempArr[0].substring(begin + 1, end);
+						int begin = getCharPosition(tempArr[1], '(');
+						int end = getCharPosition(tempArr[1], ')');
+						String reg = tempArr[1].substring(begin + 1, end);
+						//System.out.println(reg);
 						if(!isValidRegister(reg)){
 							System.out.println("Invalid register name \""+ reg +"\" in line: "+ lineCounter);
 							System.exit(0);
