@@ -17,3 +17,7 @@ exit: add $v0, $a0, $zero
 test:				sw $t2, 0($t1)
 				
 lw     $t6 , 5($t5) 
+
+
+
+

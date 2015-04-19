@@ -46,11 +46,15 @@ public class Parser {
 		FileReader fileReader = new FileReader("code.txt");
 		BufferedReader br = new BufferedReader(fileReader);
 		while ((currentLine = br.readLine()) != null) {
-			while(currentLine.matches("\\s*")){
+			while(currentLine != null && currentLine.matches("\\s*") ){
 				lineCounter++;
 				currentLine = br.readLine();
 			}
 			//Line contains more than 1 ':'
+			if(currentLine == null){
+				break;
+			}
+				
 			if (currentLine.contains(":")) {
 				if (countColumns(currentLine) > 1) {
 					System.out
@@ -79,9 +83,13 @@ public class Parser {
 		BufferedReader br = new BufferedReader(fileReader);
 		String instruction = "";
 		while ((currentLine = br.readLine()) != null) {
-			while(currentLine.matches("\\s*")){
+			while(currentLine != null && currentLine.matches("\\s*") ){
 				lineCounter++;
 				currentLine = br.readLine();
+			}
+			//Line contains more than 1 ':'
+			if(currentLine == null){
+				break;
 			}
 			if(!currentLine.contains(":")){
 				String[] result = currentLine.split(" ");
@@ -143,9 +151,13 @@ public class Parser {
 		BufferedReader br = new BufferedReader(fileReader);
 		String instruction = "";
 		while ((currentLine = br.readLine()) != null) {
-			while(currentLine.matches("\\s*")){
+			while(currentLine != null && currentLine.matches("\\s*") ){
 				lineCounter++;
 				currentLine = br.readLine();
+			}
+			//Line contains more than 1 ':'
+			if(currentLine == null){
+				break;
 			}
 			if(!currentLine.contains(":")){
 				String[] result = currentLine.split(" ");
@@ -280,9 +292,13 @@ public class Parser {
 		BufferedReader br = new BufferedReader(fileReader);
 		String instruction = "";
 		while ((currentLine = br.readLine()) != null) {
-			while(currentLine.matches("\\s*")){
+			while(currentLine != null && currentLine.matches("\\s*") ){
 				lineCounter++;
 				currentLine = br.readLine();
+			}
+			//Line contains more than 1 ':'
+			if(currentLine == null){
+				break;
 			}
 			if(currentLine.contains(":")){
 				int begin = getCharPosition(currentLine, ':')+1;
@@ -443,15 +459,19 @@ public class Parser {
 		String label = "";
 		String finalInst = "";
 		while ((currentLine = br.readLine()) != null) {
-			while(currentLine.matches("\\s*")){
+			while(currentLine != null && currentLine.matches("\\s*") ){
 				lineCounter++;
 				currentLine = br.readLine();
+			}
+			//Line contains more than 1 ':'
+			if(currentLine == null){
+				break;
 			}
 			if(currentLine.contains(":")){
 				label = currentLine.substring(0, getCharPosition(currentLine, ':'));
 				label = label.replaceAll("\\s", "");
 				//System.out.print("*"+label+"*");
-				//System.out.println(currentLine.substring(getCharPosition(currentLine, ':')+1));
+			//System.out.println(currentLine.substring(getCharPosition(currentLine, ':')+1));
 				if(currentLine.substring(getCharPosition(currentLine, ':')+1).matches("\\s*")){
 					
 					if((currentLine = br.readLine()) != null){
@@ -514,6 +534,40 @@ public class Parser {
 		for (int i = 0; i < x.InstructionSet.size(); i++) {
 			System.out.println(x.InstructionSet.get(i).toString());
 		}
-		
+		//System.out.println(x.InstructionSet.size());
+		//System.out.println(InstructionSet.size());
+		/*
+		int lineCounter = 1;
+		String currentLine = "";
+		FileReader fileReader = new FileReader("code.txt");
+		BufferedReader br = new BufferedReader(fileReader);
+		while ((currentLine = br.readLine()) != null) {
+			while(currentLine.matches("\\s*")){
+				currentLine = br.readLine();
+			}
+			System.out.println("what");
+			if (currentLine.contains(":")) {
+				if (countColumns(currentLine) > 1) {
+					System.out
+							.println("Invalid input: Unexpected \":\" in line "
+									+ lineCounter);
+					System.exit(0);
+				}
+				// String [] result= currentLine.split(":");
+
+				if (currentLine
+						.substring(getCharPosition(currentLine, ':') + 1)
+						.matches("\\s*")) {
+					currentLine = br.readLine();
+					while(currentLine.matches("\\s*")){
+						currentLine = br.readLine();
+					}
+					System.out.println(currentLine);
+				}
+			}
+			lineCounter++;
+		}
+		br.close();
+		*/
 	}
 }
