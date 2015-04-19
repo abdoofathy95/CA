@@ -1,3 +1,4 @@
+
 package components;
 
 import java.io.BufferedReader;
@@ -6,11 +7,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Parser {
-	private ArrayList<Instruction> Instructions = new ArrayList<Instruction>();
+	private static ArrayList<Instruction> InstructionSet = new ArrayList<Instruction>();
 	
-	public ArrayList<Instruction> getAllInstructions() {
-
-		return null;
+	public Parser() throws IOException{
+		validatColumnSyntax();
+		validateInstructionNames();
+		validateInstructionFormat();
+		validateInstructionRegisters();
+		fillArray();
 	}
 	
 	
@@ -34,9 +38,7 @@ public class Parser {
 		return -1;
 	}
 	
-	public static void addLabelsAndInstructions(){
-		
-	}
+	
 	
 	public static void validatColumnSyntax() throws IOException{
 		int lineCounter = 1;
@@ -89,16 +91,40 @@ public class Parser {
 						break;
 					}
 				}
-				if(!instruction.equals("add") && !instruction.equals("addi") &&
-						!instruction.equals("sub") && !instruction.equals("lw") &&
-						!instruction.equals("lb") && !instruction.equals("lbu") &&
-						!instruction.equals("sw") && !instruction.equals("sb") &&
-						!instruction.equals("lui") && !instruction.equals("sll") && 
-						!instruction.equals("srl") && !instruction.equals("and") &&
-						!instruction.equals("nor") && !instruction.equals("beq") &&
-						!instruction.equals("bne") && !instruction.equals("j") &&
-						!instruction.equals("jal") && !instruction.equals("jr") &&
-						!instruction.equals("slt") && !instruction.equals("sltu")){
+				if(!instruction.matches("\\s*"+"add"+"\\s*") && !instruction.matches("\\s*"+"addi"+"\\s*") &&
+						!instruction.matches("\\s*"+"sub"+"\\s*") && !instruction.matches("\\s*"+"lw"+"\\s*") &&
+						!instruction.matches("\\s*"+"lb"+"\\s*") && !instruction.matches("\\s*"+"lbu"+"\\s*") &&
+						!instruction.matches("\\s*"+"sw"+"\\s*") && !instruction.matches("\\s*"+"sb"+"\\s*") &&
+						!instruction.matches("\\s*"+"lui"+"\\s*") && !instruction.matches("\\s*"+"sll"+"\\s*") && 
+						!instruction.matches("\\s*"+"srl"+"\\s*") && !instruction.matches("\\s*"+"and"+"\\s*") &&
+						!instruction.matches("\\s*"+"nor"+"\\s*") && !instruction.matches("\\s*"+"beq"+"\\s*") &&
+						!instruction.matches("\\s*"+"bne"+"\\s*") && !instruction.matches("\\s*"+"j"+"\\s*") &&
+						!instruction.matches("\\s*"+"jal"+"\\s*") && !instruction.matches("\\s*"+"jr"+"\\s*") &&
+						!instruction.matches("\\s*"+"slt"+"\\s*") && !instruction.matches("\\s*"+"sltu"+"\\s*")){
+					System.out.println(instruction+" in line "+lineCounter + " is not an instruction");
+					System.exit(0);
+				}
+			}
+			else{
+				int splitPosition = getCharPosition(currentLine, ':');
+				String tempS = currentLine.substring(splitPosition+1);
+				String[] result = tempS.split(" ");
+				for (int i = 0; i < result.length; i++) {
+					if(result[i].length() != 0){
+						instruction = result[i];
+						break;
+					}
+				}
+				if(!instruction.matches("\\s*") && !instruction.matches("\\s*"+"add"+"\\s*") && !instruction.matches("\\s*"+"addi"+"\\s*") &&
+						!instruction.matches("\\s*"+"sub"+"\\s*") && !instruction.matches("\\s*"+"lw"+"\\s*") &&
+						!instruction.matches("\\s*"+"lb"+"\\s*") && !instruction.matches("\\s*"+"lbu"+"\\s*") &&
+						!instruction.matches("\\s*"+"sw"+"\\s*") && !instruction.matches("\\s*"+"sb"+"\\s*") &&
+						!instruction.matches("\\s*"+"lui"+"\\s*") && !instruction.matches("\\s*"+"sll"+"\\s*") && 
+						!instruction.matches("\\s*"+"srl"+"\\s*") && !instruction.matches("\\s*"+"and"+"\\s*") &&
+						!instruction.matches("\\s*"+"nor"+"\\s*") && !instruction.matches("\\s*"+"beq"+"\\s*") &&
+						!instruction.matches("\\s*"+"bne"+"\\s*") && !instruction.matches("\\s*"+"j"+"\\s*") &&
+						!instruction.matches("\\s*"+"jal"+"\\s*") && !instruction.matches("\\s*"+"jr"+"\\s*") &&
+						!instruction.matches("\\s*"+"slt"+"\\s*") && !instruction.matches("\\s*"+"sltu"+"\\s*")){
 					System.out.println(instruction+" in line "+lineCounter + " is not an instruction");
 					System.exit(0);
 				}
@@ -109,45 +135,382 @@ public class Parser {
 		br.close();
 		System.out.println("Validate-InstructionNames-Done");
 	}
-
-
-	public static void main(String[] args) throws IOException {
-		ArrayList<Instruction> instructions = new ArrayList<Instruction>();
-		validatColumnSyntax();
-		validateInstructionNames();
-		/*
+	
+	public static void validateInstructionFormat() throws IOException{
 		int lineCounter = 1;
 		String currentLine = "";
 		FileReader fileReader = new FileReader("code.txt");
 		BufferedReader br = new BufferedReader(fileReader);
+		String instruction = "";
 		while ((currentLine = br.readLine()) != null) {
 			while(currentLine.matches("\\s*")){
+				lineCounter++;
 				currentLine = br.readLine();
 			}
-			System.out.println("what");
-			if (currentLine.contains(":")) {
-				if (countColumns(currentLine) > 1) {
-					System.out
-							.println("Invalid input: Unexpected \":\" in line "
-									+ lineCounter);
-					System.exit(0);
-				}
-				// String [] result= currentLine.split(":");
-
-				if (currentLine
-						.substring(getCharPosition(currentLine, ':') + 1)
-						.matches("\\s*")) {
-					currentLine = br.readLine();
-					while(currentLine.matches("\\s*")){
-						currentLine = br.readLine();
+			if(!currentLine.contains(":")){
+				String[] result = currentLine.split(" ");
+				for (int i = 0; i < result.length; i++) {
+					if(result[i].length() != 0){
+						instruction = result[i];
+						break;
 					}
-					System.out.println(currentLine);
-					System.out.println("fuck you");
+				}
+				if(instruction.matches("\\s*"+"add"+"\\s*") || instruction.matches("\\s*"+"addi"+"\\s*") ||
+						instruction.matches("\\s*"+"sub"+"\\s*") || instruction.matches("\\s*"+"sll"+"\\s*") ||
+						instruction.matches("\\s*"+"srl"+"\\s*") || instruction.matches("\\s*"+"and"+"\\s*") ||
+						instruction.matches("\\s*"+"nor"+"\\s*") || instruction.matches("\\s*"+"beq"+"\\s*") ||
+						instruction.matches("\\s*"+"bne"+"\\s*") || instruction.matches("\\s*"+"slt"+"\\s*") ||
+						instruction.matches("\\s*"+"sltu"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if(tempArr.length < 3){
+						System.out.println("Missing parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					if(tempArr.length > 3){
+						System.out.println("Extra parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					
+				}
+				
+				if(instruction.matches("\\s*"+"lw"+"\\s*") || instruction.matches("\\s*"+"lb"+"\\s*") ||
+						instruction.matches("\\s*"+"lbu"+"\\s*") || instruction.matches("\\s*"+"sw"+"\\s*") ||
+						instruction.matches("\\s*"+"sb"+"\\s*") || instruction.matches("\\s*"+"lui"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if(tempArr.length < 2){
+						System.out.println("Missing parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					if(tempArr.length > 2){
+						System.out.println("Extra parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					
+				}
+				
+				if(instruction.matches("\\s*"+"j"+"\\s*") || instruction.matches("\\s*"+"jal"+"\\s*") ||
+						instruction.matches("\\s*"+"jr"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if(tempArr.length < 1 || tempArr[0].matches("\\s") || tempArr[0].equals("")){
+						System.out.println("Missing parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					if(tempArr.length > 1){
+						System.out.println("Extra parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					
+				}
+				
+			}
+			if(currentLine.contains(":")){
+				int splitPosition = getCharPosition(currentLine, ':');
+				String tempS = currentLine.substring(splitPosition+1);
+				String[] result = tempS.split(" ");
+				for (int i = 0; i < result.length; i++) {
+					if(result[i].length() != 0){
+						instruction = result[i];
+						break;
+					}
+				}
+				if(instruction.matches("\\s*"+"add"+"\\s*") || instruction.matches("\\s*"+"addi"+"\\s*") ||
+						instruction.matches("\\s*"+"sub"+"\\s*") || instruction.matches("\\s*"+"sll"+"\\s*") ||
+						instruction.matches("\\s*"+"srl"+"\\s*") || instruction.matches("\\s*"+"and"+"\\s*") ||
+						instruction.matches("\\s*"+"nor"+"\\s*") || instruction.matches("\\s*"+"beq"+"\\s*") ||
+						instruction.matches("\\s*"+"bne"+"\\s*") || instruction.matches("\\s*"+"slt"+"\\s*") ||
+						instruction.matches("\\s*"+"sltu"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if(tempArr.length < 3){
+						System.out.println("Missing parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					if(tempArr.length > 3){
+						System.out.println("Extra parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					
+				}
+				
+				if(instruction.matches("\\s*"+"lw"+"\\s*") || instruction.matches("\\s*"+"lb"+"\\s*") ||
+						instruction.matches("\\s*"+"lbu"+"\\s*") || instruction.matches("\\s*"+"sw"+"\\s*") ||
+						instruction.matches("\\s*"+"sb"+"\\s*") || instruction.matches("\\s*"+"lui"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if(tempArr.length < 2){
+						System.out.println("Missing parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					if(tempArr.length > 2){
+						System.out.println("Extra parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					
+				}
+				
+				if(instruction.matches("\\s*"+"j"+"\\s*") || instruction.matches("\\s*"+"jal"+"\\s*") ||
+						instruction.matches("\\s*"+"jr"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if(tempArr.length < 1 || tempArr[0].matches("\\s") || tempArr[0].equals("")){
+						System.out.println("Missing parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					if(tempArr.length > 1){
+						System.out.println("Extra parameter in Line "+lineCounter);
+						System.exit(0);
+					}
+					
+				}
+			}
+			
+			lineCounter++;
+		}
+		br.close();
+		System.out.println("Validate-Instruction-Format-Done");
+	}
+
+	public static void validateInstructionRegisters() throws IOException{
+		int lineCounter = 1;
+		String currentLine = "";
+		FileReader fileReader = new FileReader("code.txt");
+		BufferedReader br = new BufferedReader(fileReader);
+		String instruction = "";
+		while ((currentLine = br.readLine()) != null) {
+			while(currentLine.matches("\\s*")){
+				lineCounter++;
+				currentLine = br.readLine();
+			}
+			if(currentLine.contains(":")){
+				int begin = getCharPosition(currentLine, ':')+1;
+				currentLine = currentLine.substring(begin);
+			}
+			if(!currentLine.contains(":")){
+				String[] result = currentLine.split(" ");
+				String temp5 = "";
+				for (int i = 0; i < result.length; i++) {
+					 temp5 = " "+ temp5;
+					if(result[i].length() != 0){
+						instruction = temp5 + result[i];
+						break;
+					}
+				}
+				
+				//System.out.println(currentLine.substring(instruction.length()));
+				if(instruction.matches("\\s*"+"add"+"\\s*") || instruction.matches("\\s*"+"sub"+"\\s*")
+						|| instruction.matches("\\s*"+"and"+"\\s*") || instruction.matches("\\s*"+"nor"+"\\s*")
+						|| instruction.matches("\\s*"+"slt"+"\\s*") || instruction.matches("\\s*"+"sltu"+"\\s*")
+						|| instruction.matches("\\s*"+"jr"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					
+					//System.out.println(temp);
+					String[] tempArr = temp.split(",");
+					if(tempArr[0].matches("\\s*"+"\\$zero"+"\\s*")){
+						System.out.println("ERROR Line "+lineCounter+", Register Zero cannot be overwritten");
+						System.exit(0);
+					}
+					else{
+						for (int i = 0; i < tempArr.length; i++) {
+							if(!isValidRegister(tempArr[i])){
+							System.out.println("Invalid register name in line: "+ lineCounter);
+							System.exit(0);
+							}
+						}
+					}
+				}
+				else if(instruction.matches("\\s*"+"addi"+"\\s*") || instruction.matches("\\s*"+"sll"+"\\s*")
+						|| instruction.matches("\\s*"+"srl"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if(tempArr[0].matches("\\s*"+"\\$zero"+"\\s*")){
+						System.out.println("ERROR Line "+lineCounter+", Register Zero cannot be overwritten");
+						System.exit(0);
+					}
+					else{
+						for (int i = 0; i < tempArr.length - 1; i++) {
+							if(!isValidRegister(tempArr[i])){
+							System.out.println("Invalid register name in line: "+ lineCounter);
+							System.exit(0);
+							}
+						}
+						
+					}
+				}
+				else if(instruction.matches("\\s*"+"lw"+"\\s*") || instruction.matches("\\s*"+"lb"+"\\s*")
+						|| instruction.matches("\\s*"+"lbu"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if(tempArr[0].matches("\\s*"+"\\$zero"+"\\s*")){
+						System.out.println("ERROR Line "+lineCounter+", Register Zero cannot be overwritten");
+						System.exit(0);
+					}
+					else{
+						if(!isValidRegister(tempArr[0])){
+							System.out.println("Invalid register name in line: "+ lineCounter);
+							System.exit(0);
+						}
+						int begin = getCharPosition(tempArr[1], '(');
+						int end = getCharPosition(tempArr[1], ')');
+						String reg = tempArr[1].substring(begin + 1, end);
+						if(!isValidRegister(reg)){
+							System.out.println("Invalid register name "+ reg +" in line: "+ lineCounter);
+							System.exit(0);
+						}
+						
+						
+					}
+				}
+				else if(instruction.matches("\\s*"+"sw"+"\\s*") || instruction.matches("\\s*"+"sb"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if(tempArr[1].matches("\\s*"+"\\$zero"+"\\s*")){
+						System.out.println("ERROR Line "+lineCounter+", Register Zero cannot be overwritten");
+						System.exit(0);
+					}
+					else{
+						if(!isValidRegister(tempArr[1])){
+							System.out.println("Invalid register name in line: "+ lineCounter);
+							System.exit(0);
+						}
+						
+						int begin = getCharPosition(tempArr[0], '(');
+						int end = getCharPosition(tempArr[0], ')');
+						String reg = tempArr[0].substring(begin + 1, end);
+						if(!isValidRegister(reg)){
+							System.out.println("Invalid register name \""+ reg +"\" in line: "+ lineCounter);
+							System.exit(0);
+						}
+					}
+				}
+				else if(instruction.matches("\\s*"+"beq"+"\\s*") || instruction.matches("\\s*"+"bne"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if(tempArr[0].matches("\\s*"+"\\$zero"+"\\s*")){
+						System.out.println("ERROR Line "+lineCounter+", Register Zero cannot be overwritten");
+						System.exit(0);
+					}
+					else{
+						for (int i = 0; i < tempArr.length - 1; i++) {
+							if(!isValidRegister(tempArr[i])){
+							System.out.println("Invalid register name in line: "+ lineCounter);
+							System.exit(0);
+							}
+						}
+						
+					}
 				}
 			}
 			lineCounter++;
 		}
 		br.close();
-		*/
+		System.out.println("Validate-Instruction-Registers-Done");
+	}
+	
+	public static boolean isValidRegister(String x){
+		if(!(x.matches("\\s*"+"\\$zero"+"\\s*") || x.matches("\\s*"+"\\$at"+"\\s*") ||
+				x.matches("\\s*"+"\\$v0"+"\\s*") || x.matches("\\s*"+"\\$v1"+"\\s*") ||
+				x.matches("\\s*"+"\\$a0"+"\\s*") || x.matches("\\s*"+"\\$a1"+"\\s*") ||
+				x.matches("\\s*"+"\\$a2"+"\\s*") || x.matches("\\s*"+"\\$a3"+"\\s*") ||
+				x.matches("\\s*"+"\\$t0"+"\\s*") || x.matches("\\s*"+"\\$t1"+"\\s*") ||
+				x.matches("\\s*"+"\\$t2"+"\\s*") || x.matches("\\s*"+"\\$t3"+"\\s*") ||
+				x.matches("\\s*"+"\\$t4"+"\\s*") || x.matches("\\s*"+"\\$t5"+"\\s*") ||
+				x.matches("\\s*"+"\\$t6"+"\\s*") || x.matches("\\s*"+"\\$t7"+"\\s*") ||
+				x.matches("\\s*"+"\\$t8"+"\\s*") || x.matches("\\s*"+"\\$t9"+"\\s*") ||
+				x.matches("\\s*"+"\\$s0"+"\\s*") || x.matches("\\s*"+"\\$s1"+"\\s*") ||
+				x.matches("\\s*"+"\\$s2"+"\\s*") || x.matches("\\s*"+"\\$s3"+"\\s*") ||
+				x.matches("\\s*"+"\\$s4"+"\\s*") || x.matches("\\s*"+"\\$s5"+"\\s*") ||
+				x.matches("\\s*"+"\\$s6"+"\\s*") || x.matches("\\s*"+"\\$s7"+"\\s*") ||
+				x.matches("\\s*"+"\\$k0"+"\\s*") || x.matches("\\s*"+"\\$k1"+"\\s*") ||
+				x.matches("\\s*"+"\\$gp"+"\\s*") || x.matches("\\s*"+"\\$sp"+"\\s*") ||
+				x.matches("\\s*"+"\\$ra"+"\\s*"))){
+			return false;
+		}
+		return true;
+	}
+	
+	public static void fillArray() throws IOException{
+		int lineCounter = 1;
+		String currentLine = "";
+		FileReader fileReader = new FileReader("code.txt");
+		BufferedReader br = new BufferedReader(fileReader);
+		String instruction = "";
+		String label = "";
+		String finalInst = "";
+		while ((currentLine = br.readLine()) != null) {
+			while(currentLine.matches("\\s*")){
+				lineCounter++;
+				currentLine = br.readLine();
+			}
+			if(currentLine.contains(":")){
+				label = currentLine.substring(0, getCharPosition(currentLine, ':'));
+				label = label.replaceAll("\\s", "");
+				//System.out.print("*"+label+"*");
+				//System.out.println(currentLine.substring(getCharPosition(currentLine, ':')+1));
+				if(currentLine.substring(getCharPosition(currentLine, ':')+1).matches("\\s*")){
+					
+					if((currentLine = br.readLine()) != null){
+					lineCounter++;
+					}
+					while(currentLine.matches("\\s*")){
+						if((currentLine = br.readLine()) != null){
+							lineCounter++;
+							}
+					}
+					instruction = currentLine;
+					//System.out.println(instruction);
+					String[] tempI = instruction.split("\\s+");
+					for (int i = 0; i < tempI.length; i++) {
+						//System.out.println(i + " " +tempI[i] + " L " + tempI.length);
+						if(!tempI[i].matches("\\s*")){
+							finalInst  =finalInst + tempI[i] + " ";
+						}
+					}
+					//System.out.println(instruction);
+				}
+				else{
+					instruction = currentLine.substring(getCharPosition(currentLine, ':')+1);
+					//System.out.println(instruction);
+					String[] tempI = instruction.split("\\s+");
+					for (int i = 0; i < tempI.length; i++) {
+						//System.out.println(i + " " +tempI[i] + " L " + tempI.length);
+						if(!tempI[i].matches("\\s*")){
+							finalInst  =finalInst + tempI[i] + " ";
+						}
+					}
+					
+				}
+			}
+			else{
+				instruction = currentLine;
+				//System.out.println(instruction);
+				//System.out.println(instruction);
+				String[] tempI = instruction.split("\\s+");
+				for (int i = 0; i < tempI.length; i++) {
+					//System.out.println(i + " " +tempI[i] + " L " + tempI.length);
+					if(!tempI[i].matches("\\s*")){
+						finalInst  =finalInst + tempI[i] + " ";
+					}
+				}
+			}
+			//System.out.println(label + ": "+finalInst);
+			Instruction temp = new Instruction(label, finalInst);
+			//System.out.println(temp.toString());
+			InstructionSet.add(temp);
+			finalInst="";
+			label="";
+			lineCounter++;
+		}
+		
+	}
+	
+	public static void main(String[] args) throws IOException {
+		Parser x = new Parser();
+		for (int i = 0; i < x.InstructionSet.size(); i++) {
+			System.out.println(x.InstructionSet.get(i).toString());
+		}
+		
 	}
 }

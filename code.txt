@@ -1,9 +1,19 @@
 
-gcd::    beq $a0, $a1, exit
-slt2 $t0, $a1, $a0
+gcd:   
+
+
+
+beq $a0,          $a1, exit
+slt $t0, $a1, $a0
 bne $t0, $zero, L1
 sub $a1, $a1, $a0
-j gcd
+
+
+j 		gcd
 L1: sub $a0, $a0, $a1
 j gcd
 exit: add $v0, $a0, $zero
+
+test:				sw 0($t1), $t2
+				
+lw     $t6 , 5($t5) 
