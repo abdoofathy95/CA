@@ -6,14 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import jdk.nashorn.internal.ir.Labels;
-
-
 public class Parser
 {
 ArrayList<instruction> instructions;
 ArrayList<String> labels;
-
+int lineCounter;
 
 public Parser()
 {
@@ -22,46 +19,91 @@ public Parser()
     RegisterFile.initRegistersWithAddresses();
 }
 
+public void readLabels() throws IOException
+{
+	@SuppressWarnings("resource")
+	BufferedReader bufferRead = new BufferedReader(new FileReader("input.txt"));
+	String line =  "";	
+	 while((line = bufferRead.readLine()) != null) 
+	    {
+	
+			 String label = ""; 
+			 line = line.toLowerCase();
+			   
+		     //getting label and deleting it from String
+		     if (line.contains(":"))
+		     {
+		    	 label = (line.split(":"))[0];
+		    	 label = label.replaceAll("\\s", "");
+		    	 labels.add(label);	
+		     }
+	     
+	     }
+	    
+	    
+}
+
 public void readFile() throws NumberFormatException, IOException
 {
 	@SuppressWarnings("resource")
 	BufferedReader bufferRead = new BufferedReader(new FileReader("input.txt"));
 	String line =  "";
-	int lineCounter = 0;
-    while((line = bufferRead.readLine()) != null) 
+	lineCounter = 0;
+		
+ while((line = bufferRead.readLine()) != null) 
     {
      lineCounter++;
+     
+  	if (line.contains("#"))
+ 	{
+  		readLabels();
+  		
+ 		int index = 0;
+ 		while(line.charAt(index) != '#')
+ 		{
+ 		 index++;
+ 		}
+ 	line = line.substring(0,index);
+ 	}
+      
+  	
+     if (line.length() > 0)
+     {
      ArrayList<String> parameters = new ArrayList<String>();
      String instruction = "";
      String label = "";
      int offset = 0;
      instruction toBeAdded = new instruction(label, instruction, parameters, offset);
+     line = line.toLowerCase();
+   
      //getting label and deleting it from String
      if (line.contains(":"))
      {
     	 label = (line.split(":"))[0];
-    	 label = label.replaceAll("\\s", "");
-    	 labels.add(label);	 
+    	 label = label.replaceAll("\\s", "");	 
     	 toBeAdded.label = label;
     	 line = line.substring(label.length() + 1);
      }
      
       //getting instruction
-     boolean flag = false;
+     line = line.replaceAll("\t", "");
+     
+     
+    while (line.length() > 0 && line.charAt(0) == ' ')
+    {
+    	line = line.substring(1);
+    }
     
-    while ((line.length() != 0 && line.charAt(0) != ' ') || !flag)
-	    {
-    	if (line.charAt(0) != ' ')
-    	{
-    		flag = true;
-    	}
+    while ((line.length() != 0 && line.charAt(0) != ' '))
+	 {
 			instruction += line.charAt(0);
 			line = line.substring(1);
-		}
+	 }
     
    
     instruction = instruction.replaceAll("\\s", "");
     toBeAdded.name = instruction;
+    
    //getting list of parameters
 	 line = line.replaceAll("\\s","");
 	 parameters = new ArrayList<String>(Arrays.asList(line.split(",")));
@@ -70,12 +112,17 @@ public void readFile() throws NumberFormatException, IOException
 	 {
 		 parameters.set(i, parameters.get(i).replaceAll("\\s", ""));
 	 }
-	 if(parameters.get(0).equals("$zero"))
+	 
+	 
+	 if(parameters.get(0).equals("$zero") && !instruction.equals("sw"))
      {
-    	 System.out.println("Unvalid instruction in line" +lineCounter+ " register $zero cannot be overwritten");
+    	 System.out.println(lineCounter +":" + " Unvalid input register $zero cannot be overwritten");
     	 return;
      }
+	 
+	 
 	 toBeAdded.parameters = parameters;
+	 
 	 //DONE
     if (instruction.equals("add") || instruction.equals("sub") || instruction.equals("slt") ||
     	instruction.equals("sltu")|| instruction.equals("and") || instruction.equals("nor"))
@@ -85,8 +132,14 @@ public void readFile() throws NumberFormatException, IOException
 		{
 			instructions.add(toBeAdded);
 		}
+		else
+		{
+			System.out.println(lineCounter + ": Unexpected input");
+		}
 		
 	}
+    
+    
     //DONE
     else if (instruction.equals("lw") || instruction.equals("lb") || instruction.equals("lbu") ||
     		 instruction.equals("sw") || instruction.equals("sb") || instruction.equals("lui"))
@@ -95,13 +148,15 @@ public void readFile() throws NumberFormatException, IOException
     	{
     			int i = 0;
     			String tmp = "";
+    			
     			while(parameters.get(1).charAt(i) != '(')
     			{
     				tmp +=parameters.get(1).charAt(i);
     				i++;
     			}
+    			
     	 	    offset = Integer.parseInt(tmp);
-    	 		String dr = parameters.get(1).substring(2, parameters.get(1).length() - 1);
+    	 		String dr = parameters.get(1).substring(i + 1, parameters.get(1).length() - 1);
     	 		parameters.set(1, dr);
     	 	   
     	 		if (jValidator(instruction, parameters, offset))
@@ -111,13 +166,20 @@ public void readFile() throws NumberFormatException, IOException
     				instructions.add(toBeAdded);
     			}
     	 		
+    	 		else
+    			{
+    				System.out.println(lineCounter + ": Unexpected input");
+    			}
+    	 		
     	}
+    	
     	catch(java.lang.NumberFormatException e)
     	{
-    		 System.out.println("Offset must be a number");
+    		 System.out.println(lineCounter + ": Offset must be a number");
     	}
     			
     }
+    
     //DONE
     else if(instruction.equals("beq") || instruction.equals("bne"))
     {
@@ -126,6 +188,12 @@ public void readFile() throws NumberFormatException, IOException
     		toBeAdded.parameters = parameters;
     		instructions.add(toBeAdded);
     	}
+    	
+    	else
+		{
+			System.out.println(lineCounter + ": Unexpected input");
+		}
+    	
     }
     //DONE
     else if(instruction.equals("addi") || instruction.equals("sll") || instruction.equals("srl"))
@@ -135,7 +203,13 @@ public void readFile() throws NumberFormatException, IOException
     		toBeAdded.parameters = parameters;
     		instructions.add(toBeAdded);
     	}
+    	
+    	else
+		{
+			System.out.println(lineCounter + ": Unexpected input");
+		}
     }
+    
     //DONE
     else if(instruction.equals("j") || instruction.equals("jal"))
     {
@@ -144,6 +218,17 @@ public void readFile() throws NumberFormatException, IOException
     		toBeAdded.parameters = parameters;
     		instructions.add(toBeAdded);
     	}
+    	
+    	else
+		{
+    		if (!labels.contains(parameters.get(0)))
+    		{
+    			System.out.println(lineCounter + ": The label referred to does not exist");
+    		}
+    		
+			System.out.println(lineCounter + ": Unexpected input");
+		}
+    	
     }
     
     else if (instruction.equalsIgnoreCase("jr"))
@@ -153,8 +238,19 @@ public void readFile() throws NumberFormatException, IOException
     		toBeAdded.parameters = parameters;
     		instructions.add(toBeAdded);
     	}
+    	
+    	else
+		{
+			System.out.println(lineCounter + ": Unexpected input");
+		}
+    	
+    }
+    else
+    {
+    	System.out.println(lineCounter + ": Unexpected input");
     }
 
+    }
     }
 
 }
@@ -170,11 +266,13 @@ public boolean jrValidator(ArrayList<String> parameters)
 	{
 		return false;
 	}
+	
 	else
 	{
 		parameters.set(0,parameters.get(0).substring(1));
 		if (!RegisterFile.registersAddress.containsKey(parameters.get(0)))
 		{
+		 System.out.println(lineCounter +": Unvalid register name");
          return false;
 		}
 	}
@@ -189,32 +287,34 @@ public boolean immediateValidator(ArrayList<String> parameters)
 	{
 		return false;
 	}
+	
 	for (int i = 0; i < parameters.size() - 1; i++) 
 	{
 		if (parameters.get(i).charAt(0) != '$')
 		{
 			return false;	
 		}
+		
 		else
 		{
 			parameters.set(i,parameters.get(i).substring(1));
 			if (!RegisterFile.registersAddress.containsKey(parameters.get(i)))
 			{
+			 System.out.println(lineCounter +": Unvalid register name");
 	         return false;
 			}
 		}
+		
 	}
 	try
 	{
-		System.out.println(parameters.get(2));
 		@SuppressWarnings("unused")
 		
 		int temp = Integer.parseInt(parameters.get(2));
-		System.out.println(temp);
 	}
 	catch (Exception e)
 	{
-		System.out.println("CONSTANT ERROR");
+		System.out.println(lineCounter + ": input must be a constant");
 		return false;
 	}
 	
@@ -239,12 +339,17 @@ public boolean branchValidator (ArrayList<String> parameters)
 			parameters.set(i,parameters.get(i).substring(1));
 			if (!RegisterFile.registersAddress.containsKey(parameters.get(i)))
 			{
+			 System.out.println(lineCounter +": Unvalid register name");
 	         return false;
 			}
 		}
 	}
 	if (parameters.get(2).charAt(0) == '$'|| !labels.contains(parameters.get(2)))
 	{
+		if(!labels.contains(parameters.get(2)))
+		{
+			System.out.println(lineCounter + ": The label referred to does not exist");
+	    }
 		return false;
 	}
 	
@@ -270,6 +375,7 @@ public boolean rValidator(String instruction, ArrayList<String> parameters)
 			parameters.set(i,parameters.get(i).substring(1));
 			if (!RegisterFile.registersAddress.containsKey(parameters.get(i)))
 			{
+			 System.out.println(lineCounter +": Unvalid register name");
 	         return false;
 			}
 		}
@@ -290,6 +396,7 @@ public boolean jValidator(String instruction, ArrayList<String> parameters, int 
 		if (parameters.get(i).charAt(0) != '$')
 		{
 			
+			System.out.println(parameters.get(i));
 			return false;
 		}
 		else
@@ -297,8 +404,10 @@ public boolean jValidator(String instruction, ArrayList<String> parameters, int 
 			parameters.set(i,parameters.get(i).substring(1));
 			if (!RegisterFile.registersAddress.containsKey(parameters.get(i)))
 			{
+			System.out.println(lineCounter +": Unvalid register name");
 	         return false;
 			}
+			
 		}
 	}
 	
@@ -309,7 +418,6 @@ public boolean jValidator(String instruction, ArrayList<String> parameters, int 
 public static void main(String[] args) throws NumberFormatException, IOException
 {
 	Parser n = new Parser();
-	String ins = "jr";
 	ArrayList<String> x = new ArrayList<String>();
 	n.labels.add("t2");
 	x.add("s");
@@ -320,7 +428,16 @@ public static void main(String[] args) throws NumberFormatException, IOException
 	//System.out.println(n.instructions.size());
 	for (int i = 0; i < n.instructions.size(); i++)
 	{
-		System.out.println(n.instructions.get(i).name);
+		if (n.instructions.get(i).label != "")
+		System.out.print(n.instructions.get(i).label + ":");
+		
+		System.out.print(n.instructions.get(i).name + " ");
+		
+		for (int j = 0; j < n.instructions.get(i).parameters.size(); j++)
+		{
+			System.out.print(n.instructions.get(i).parameters.get(j) + " ");
+		}
+		System.out.println();
 	}
 }
 }

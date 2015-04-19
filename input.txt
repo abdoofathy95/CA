@@ -1,2 +1,23 @@
-sort:   addi $sp,$sp, -20 
-		
+sort: addi $sp,$sp, -20 
+sw $ra, 16($sp)
+sw $s3, 12($sp) 
+sw $s2, 8($sp) 
+sw $s0, 0($sp) 
+
+exit1: lw $s0, 0($sp) #this is a comment
+	   lw $s1, 4($sp) 
+ 			 	 lw $s2, 8($sp) 
+lw $s3, 12($sp) #comment comment comment
+#lel
+#lol
+#jbdksajjdbsjad 
+lw $ra, 16($sp) 
+addi $sp,$sp, 20 
+jr $ra
+
+ sll $t4, $t3, 42
+bne $t0, $t2, loop1
+
+
+loop1: sll $t4, $t3, 42
+
