@@ -9,11 +9,11 @@ import java.util.Arrays;
 
 public class Parser
 {
-ArrayList<String> instructions;
+ArrayList<instruction> instructions;
 
 public Parser()
 {
-    instructions = new ArrayList<String>();
+    instructions = new ArrayList<instruction>();
     RegisterFile.initRegistersWithAddresses();
 }
 
@@ -21,71 +21,86 @@ public void readFile() throws NumberFormatException, IOException
 {
 	@SuppressWarnings("resource")
 	BufferedReader bufferRead = new BufferedReader(new FileReader("input.txt"));
-	String tmp =  "";
+	String line =  "";
 	ArrayList<String> labels = new ArrayList<String>();
 	
-    while((tmp = bufferRead.readLine()) != null) 
+	
+    while((line = bufferRead.readLine()) != null) 
     {
-     ArrayList<String> registers = new ArrayList<String>();
+     ArrayList<String> parameters = new ArrayList<String>();
      String instruction = "";
-     if (tmp.contains(":"))
+     String label = "";
+     int offset = 0;
+     instruction toBeAdded = new instruction(label, instruction, parameters, offset);
+     //getting label and deleting it from String
+     if (line.contains(":"))
      {
-    	 String tmp2 = (tmp.split(":"))[0];
-    	 labels.add(tmp2);
-    	 
-    	 tmp = tmp.substring(tmp2.length() + 1);
+    	 label = (line.split(":"))[0];
+    	 label = label.replaceAll("\\s", "");
+    	 labels.add(label);	 
+    	 toBeAdded.label = label;
+    	 line = line.substring(label.length() + 1);
      }
      
-     
-     int c = 0;
-     for (c = 0; tmp.charAt(c) != ' '; c++)
-    {
-		instruction += tmp.charAt(c);	
-	}
-   
-	 tmp = tmp.substring(c);
-	 tmp = tmp.replaceAll("\\s","");
-	 registers = new ArrayList<String>(Arrays.asList(tmp.split(",")));
-	    
-    if (instruction.equals("add") || instruction.equals("addi") || instruction.equals("sub") ||
-    	instruction.equals("slt") || instruction.equals("sltu") || instruction.equals("and") ||
-    	instruction.equals("nor"))
+      //getting instruction
+    while (line.length() != 0 && line.charAt(0) != ' ')
+	    {
+			instruction += line.charAt(0);
+			line = line.substring(1);
+		}
+    
+    toBeAdded.name = instruction;
+   //getting list of parameters
+	 line = line.replaceAll("\\s","");
+	 parameters = new ArrayList<String>(Arrays.asList(line.split(",")));
+	 
+	 for (int i = 0; i < parameters.size(); i++)
+	 {
+		 parameters.set(i, parameters.get(i).replaceAll("\\s", ""));
+	 }
+	 
+	 toBeAdded.parameters = parameters;
+	 //DONE
+    if (instruction.equals("add") || instruction.equals("sub") || instruction.equals("slt") ||
+    	instruction.equals("sltu")|| instruction.equals("and") || instruction.equals("nor"))
 	{  
    
-		if (rvalidator(instruction, registers))
+		if (rValidator(instruction, parameters))
 		{
 			
-			instructions.add(tmp);
+			instructions.add(toBeAdded);
 		}
 		
 	}
+    
     else if (instruction.equals("lw") || instruction.equals("lb") || instruction.equals("lbu") ||
-    		instruction.equals("sw")  || instruction.equals("sb") || instruction.equals("lui"))
+    		 instruction.equals("sw") || instruction.equals("sb") || instruction.equals("lui"))
     {
     	try
     	{
-    	 		int offset = Integer.parseInt(registers.get(2).charAt(0) + "");
-    	 		String dr = registers.get(2).substring(0, registers.get(2).length());
-    	 		registers.set(2, dr);
-    	 		if (jvalidator(instruction, registers, offset))
+    	 	    offset = Integer.parseInt(parameters.get(2).charAt(0) + "");
+    	 		String dr = parameters.get(2).substring(2, parameters.get(2).length());
+    	 		parameters.set(2, dr);
+    	 		
+    	 		if (jvalidator(instruction, parameters, offset))
     			{
-    				instructions.add(tmp);
+    				instructions.add(toBeAdded);
     			}
     	 		
     	}
-    	catch( Exception e)
+    	catch(java.lang.NumberFormatException e)
     	{
-    		 System.out.println("ERROR!");
+    		 System.out.println("Offset error");
     	}
     			
     }
     else if(instruction.equals("beq") || instruction.equals("bne"))
     {
- String label =  registers.get(2);
- registers.remove(2);
-    	if (labels.contains(label) && jvalidator(instruction, registers, labels.get(labels.size() - 1)))
+  label =  parameters.get(2);
+ parameters.remove(2);
+    	if (labels.contains(label) && jvalidator(instruction, parameters, labels.get(labels.size() - 1)))
     	{
-    		instructions.add(tmp);
+    		instructions.add(toBeAdded);
     	}
     }
 
@@ -93,35 +108,67 @@ public void readFile() throws NumberFormatException, IOException
 
 }
 
-public boolean jvalidator(String instruction, ArrayList<String> registers, String label)
+//DONE
+public boolean rValidator(String instruction, ArrayList<String> parameters)
+{ 
+
+	for (int i = 0; i < parameters.size(); i++) 
+	{
+		if (parameters.get(i).charAt(0) != '$')
+		{
+			return false;	
+		}
+		else
+		{
+			parameters.set(i,parameters.get(i).substring(1));
+		}
+	}
+	
+	if (parameters.size() < 3)
+	{
+		return false;
+	}
+	
+	for (int i = 0; i < parameters.size(); i++)
+	{
+		if (!RegisterFile.registersAddress.containsKey(parameters.get(i)))
+		{
+         return false;
+		}
+	}
+    return true;
+}
+
+
+public boolean jvalidator(String instruction, ArrayList<String> parameters, String label)
 {
 	
 	
 return true;
 }
 
-public boolean jvalidator(String instruction, ArrayList<String> registers, int offset)
+public boolean jvalidator(String instruction, ArrayList<String> parameters, int offset)
 {
 	
-	if(registers.size() < 2)
+	if(parameters.size() < 2)
 	{
 		return false;
 	}
-	for (int i = 0; i < registers.size(); i++) 
+	for (int i = 0; i < parameters.size(); i++) 
 	{
-		if (registers.get(i).charAt(0) != '$')
+		if (parameters.get(i).charAt(0) != '$')
 		{
 			return false;
 		}
 		else
 		{
-			registers.set(i,registers.get(i).substring(0));
+			parameters.set(i,parameters.get(i).substring(0));
 		}
 	}
 	
-	for (int i = 0; i < registers.size(); i++)
+	for (int i = 0; i < parameters.size(); i++)
 	{
-		if (!RegisterFile.registersAddress.contains(registers.get(i)))
+		if (!RegisterFile.registersAddress.contains(parameters.get(i)))
 		{
          return false;
 		}
@@ -130,42 +177,15 @@ public boolean jvalidator(String instruction, ArrayList<String> registers, int o
 	return true;
 }
 
-public boolean rvalidator(String instruction, ArrayList<String> registers)
-{ 
-	if(registers.size() != 3)
-	{
-	 	
-		return false;
-	}
-	
-	for (int i = 0; i < registers.size(); i++) 
-	{
-		if (registers.get(i).charAt(0) != '$')
-		{
-			
-			return false;
-		}
-		else
-		{
-			registers.set(i,registers.get(i).substring(1));
-		}
-	}
-	
-	for (int i = 0; i < registers.size(); i++)
-	{
-		System.out.println(registers.get(i));
-		if (!RegisterFile.registersAddress.containsKey(registers.get(i)))
-		{
-		System.out.println("lel");
-         return false;
-		}
-	}
-    return true;
-}
 
 public static void main(String[] args) throws NumberFormatException, IOException
 {
-	Parser x = new Parser();
-	x.readFile();
+	Parser n = new Parser();
+	String ins = "add";
+	ArrayList<String> x = new ArrayList<String>();
+	x.add("$t0");
+	x.add("$t1");
+	x.add("$t2");
+	System.out.println(n.rValidator(ins,x));
 }
 }
