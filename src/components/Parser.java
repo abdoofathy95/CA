@@ -534,40 +534,6 @@ public class Parser {
 		for (int i = 0; i < x.InstructionSet.size(); i++) {
 			System.out.println(x.InstructionSet.get(i).toString());
 		}
-		//System.out.println(x.InstructionSet.size());
-		//System.out.println(InstructionSet.size());
-		/*
-		int lineCounter = 1;
-		String currentLine = "";
-		FileReader fileReader = new FileReader("code.txt");
-		BufferedReader br = new BufferedReader(fileReader);
-		while ((currentLine = br.readLine()) != null) {
-			while(currentLine.matches("\\s*")){
-				currentLine = br.readLine();
-			}
-			System.out.println("what");
-			if (currentLine.contains(":")) {
-				if (countColumns(currentLine) > 1) {
-					System.out
-							.println("Invalid input: Unexpected \":\" in line "
-									+ lineCounter);
-					System.exit(0);
-				}
-				// String [] result= currentLine.split(":");
-
-				if (currentLine
-						.substring(getCharPosition(currentLine, ':') + 1)
-						.matches("\\s*")) {
-					currentLine = br.readLine();
-					while(currentLine.matches("\\s*")){
-						currentLine = br.readLine();
-					}
-					System.out.println(currentLine);
-				}
-			}
-			lineCounter++;
-		}
-		br.close();
-		*/
+		
 	}
 }

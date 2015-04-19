@@ -3,7 +3,7 @@ gcd:
 
 
 
-beq $a0,          $a1, exit
+beq $a0,   	       $a1, exit
 slt $t0, $a1, $a0
 bne $t0, $zero, L1
 sub $a1, $a1, $a0
@@ -17,7 +17,3 @@ exit: add $v0, $a0, $zero
 test:				sw $t2, 0($t1)
 				
 lw     $t6 , 5($t5) 
-
-
-
-
