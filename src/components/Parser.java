@@ -474,7 +474,10 @@ public class Parser {
 							System.exit(0);
 							}
 						}
-						
+						if(!allLables.contains(tempArr[2].replaceAll("\\s*", ""))){
+							System.out.println("Invalid label name in line: " + lineCounter);
+							System.exit(0);
+						}
 					}
 				}
 				else if(instruction.matches("\\s*"+"lui"+"\\s*")){
@@ -616,8 +619,6 @@ public class Parser {
 			// BEQ Takes a label as a third parameter (Existing LABEL)
 			// BNE Takes a label as a third parameter (Existing LABEL)
 			// LB customize the exception (lb $t1 , anything) error should say bad offset 
-			// SLL should take only a number as a third parameter ex : sll $t1 , $t2 , number should pass while sll $t1 , $t2 , $t3 shouldn't pass
-			// SRL should take only a number as a third parameter ex : srl $t1 , $t2 , number should pass while sll $t1 , $t2 , $t3 shouldn't pass
 		}
 	}
 }
