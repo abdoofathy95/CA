@@ -13,7 +13,6 @@ public class Parser {
 	
 	public Parser() throws IOException{
 		getLabels();
-		
 		validatColumnSyntax();
 		validateInstructionNames();
 		validateInstructionFormat();
@@ -437,6 +436,16 @@ public class Parser {
 							System.exit(0);
 						}
 						
+						try{							
+						
+							Integer.parseInt(tempArr[1].substring(0, begin).replaceAll("\\s", ""));
+							
+						}
+						catch(Exception E){
+							System.out.println("Invalid number format in line: " + lineCounter);
+							System.exit(0);
+						}
+						
 						
 					}
 				}
@@ -464,6 +473,16 @@ public class Parser {
 						//System.out.println(reg);
 						if(!isValidRegister(reg)){
 							System.out.println("Invalid register name \""+ reg +"\" in line: "+ lineCounter);
+							System.exit(0);
+						}
+						
+						try{							
+							
+							Integer.parseInt(tempArr[1].substring(0, begin).replaceAll("\\s", ""));
+							
+						}
+						catch(Exception E){
+							System.out.println("Invalid number format in line: " + lineCounter);
 							System.exit(0);
 						}
 					}
@@ -624,7 +643,7 @@ public class Parser {
 		Parser x = new Parser();
 		for (int i = 0; i < x.InstructionSet.size(); i++) {
 			System.out.println(x.InstructionSet.get(i).toString());
-			// load and store chech offset
+			// Offset range in load and store
 		}
 	}
 }
