@@ -427,7 +427,7 @@ public class Parser {
 						}
 						int begin = getCharPosition(tempArr[1], '(');
 						int end = getCharPosition(tempArr[1], ')');
-						if(begin == -1 || end == -1){
+						if(begin == -1 || end == -1 || end < begin){
 							System.out.println("Invalid parameter in line: " + lineCounter);
 							System.exit(0);
 						}
@@ -456,7 +456,7 @@ public class Parser {
 						
 						int begin = getCharPosition(tempArr[1], '(');
 						int end = getCharPosition(tempArr[1], ')');
-						if(begin == -1 || end == -1){
+						if(begin == -1 || end == -1 || end < begin){
 							System.out.println("Invalid parameter in line: " + lineCounter);
 							System.exit(0);
 						}
