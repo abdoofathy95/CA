@@ -427,6 +427,10 @@ public class Parser {
 						}
 						int begin = getCharPosition(tempArr[1], '(');
 						int end = getCharPosition(tempArr[1], ')');
+						if(begin == -1 || end == -1){
+							System.out.println("Invalid parameter in line: " + lineCounter);
+							System.exit(0);
+						}
 						String reg = tempArr[1].substring(begin + 1, end);
 						if(!isValidRegister(reg)){
 							System.out.println("Invalid register name "+ reg +" in line: "+ lineCounter);
@@ -452,6 +456,10 @@ public class Parser {
 						
 						int begin = getCharPosition(tempArr[1], '(');
 						int end = getCharPosition(tempArr[1], ')');
+						if(begin == -1 || end == -1){
+							System.out.println("Invalid parameter in line: " + lineCounter);
+							System.exit(0);
+						}
 						String reg = tempArr[1].substring(begin + 1, end);
 						//System.out.println(reg);
 						if(!isValidRegister(reg)){
@@ -616,9 +624,7 @@ public class Parser {
 		Parser x = new Parser();
 		for (int i = 0; i < x.InstructionSet.size(); i++) {
 			System.out.println(x.InstructionSet.get(i).toString());
-			// BEQ Takes a label as a third parameter (Existing LABEL)
-			// BNE Takes a label as a third parameter (Existing LABEL)
-			// LB customize the exception (lb $t1 , anything) error should say bad offset 
+			// load and store chech offset
 		}
 	}
 }
