@@ -1,5 +1,6 @@
 package components;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 /* refer to this site to understand format 
@@ -47,7 +48,7 @@ public class InstructionDecodeStage {
 	public static void main(String[] args) {
 		RegisterFile.initRegistersWithAddresses();
 		RegisterFile.initRegistersWithZeros();
-		InstructionFetchStage.currentPC = 0;
+		InstructionFetchStage.currentPC = 1;
 		InstructionFetchStage.currentInstruction = new Object[] { "add", "t1",
 				"t2", "t3" };
 		InstructionDecodeStage.ExecuteStage();
@@ -61,6 +62,43 @@ public class InstructionDecodeStage {
 		}
 		currentInstruction = InstructionFetchStage.currentInstruction;
 		decodeInstruction(InstructionFetchStage.currentInstruction);
+		
+		
+		//printing values
+		//--------------------------------------------------------------------
+		System.out.println("-------------------------------------");
+		System.out.println("WB REGISTER :");
+		Enumeration e = tempRegisterWB.keys();
+		while(e.hasMoreElements()){
+			String key = (String) e.nextElement();
+			System.out.println(key + " : " + tempRegisterWB.get(key));
+		}
+		System.out.println("");
+		System.out.println("M REGISTER :");
+		e = tempRegisterM.keys();
+		while(e.hasMoreElements()){
+			String key = (String) e.nextElement();
+			System.out.println(key + " : " + tempRegisterM.get(key));
+		}
+		System.out.println("");
+		System.out.println("EX REGISTER :");
+		e = tempRegisterEx.keys();
+		while(e.hasMoreElements()){
+			String key = (String) e.nextElement();
+			System.out.println(key + " : " + tempRegisterEx.get(key));
+		}
+		System.out.println("");
+		
+		System.out.println("currentPC" + " : " + currentPC);
+		System.out.println("jumpAddress" + " : " + jumpAddress);
+		System.out.println("currentInstruction" + " : " + currentInstruction[0]);
+		System.out.println("registerOneData" + " : " + registerOneData);
+		System.out.println("registerTwoData" + " : " + registerTwoData);
+		System.out.println("immediateValue" + " : " + immediateValue);
+		System.out.println("registerTAddress" + " : " + registerTAddress);
+		System.out.println("registerDAddress" + " : " + registerDAddress);
+		System.out.println("-------------------------------------");
+		//--------------------------------------------------------------------
 	}
 
 	public static void decodeInstruction(Object[] instruction) {
@@ -82,7 +120,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "100000";
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -105,7 +143,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "100010";
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -128,7 +166,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "100100";
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -154,7 +192,7 @@ public class InstructionDecodeStage {
 			instructionBinary += signExtened.substring(16, 32);
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -180,7 +218,7 @@ public class InstructionDecodeStage {
 			instructionBinary += signExtened.substring(16, 32);
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -206,7 +244,7 @@ public class InstructionDecodeStage {
 			instructionBinary += signExtened.substring(16, 32);
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -232,7 +270,7 @@ public class InstructionDecodeStage {
 			instructionBinary += signExtened.substring(16, 32);
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -258,7 +296,7 @@ public class InstructionDecodeStage {
 
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -284,7 +322,7 @@ public class InstructionDecodeStage {
 
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -310,7 +348,7 @@ public class InstructionDecodeStage {
 			instructionBinary += signExtened.substring(16, 32);
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -335,7 +373,7 @@ public class InstructionDecodeStage {
 			instructionBinary += signExtened.substring(16, 32);
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = "0x00000000";
 			registerTwoData = RegisterFile
 					.readRegister2((String) instruction[1]);
@@ -359,7 +397,7 @@ public class InstructionDecodeStage {
 
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -384,7 +422,7 @@ public class InstructionDecodeStage {
 
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -407,7 +445,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "100111";
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -433,7 +471,7 @@ public class InstructionDecodeStage {
 			instructionBinary += signExtened.substring(16, 32);
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -456,7 +494,7 @@ public class InstructionDecodeStage {
 
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = "0x00000000";
 			registerTwoData = "0x00000000";
 			jumpAddress = currentPC.substring(0, 4)
@@ -477,7 +515,7 @@ public class InstructionDecodeStage {
 
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = "0x00000000";
 			registerTwoData = "0x00000000";
 			jumpAddress = currentPC.substring(0, 4)
@@ -492,7 +530,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "0000000000000000010000";
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = "0x00000000";
@@ -515,7 +553,7 @@ public class InstructionDecodeStage {
 
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
@@ -538,7 +576,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "101011";
 			immediateValue = instructionBinary.substring(16, 32);
 			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(17, 22);
+			registerDAddress = instructionBinary.substring(16, 21);
 			registerOneData = RegisterFile
 					.readRegister1((String) instruction[1]);
 			registerTwoData = RegisterFile
