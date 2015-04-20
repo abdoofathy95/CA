@@ -8,16 +8,42 @@ import java.util.ArrayList;
 
 public class Parser {
 	private static ArrayList<Instruction> InstructionSet = new ArrayList<Instruction>();
+	private static ArrayList<String> allLables = new ArrayList<String>();
+			
 	
 	public Parser() throws IOException{
+		getLabels();
+		
 		validatColumnSyntax();
 		validateInstructionNames();
 		validateInstructionFormat();
 		validateInstructionRegisters();
 		fillArray();
+		
 	}
 	
-	
+	public static void getLabels() throws IOException{
+		int lineCounter = 1;
+		String currentLine = "";
+		FileReader fileReader = new FileReader("code.txt");
+		BufferedReader br = new BufferedReader(fileReader);
+		while ((currentLine = br.readLine()) != null) {
+			while(currentLine != null && currentLine.matches("\\s*") ){
+				lineCounter++;
+				currentLine = br.readLine();
+			}
+			//Line contains more than 1 ':'
+			if(currentLine == null){
+				break;
+			}
+			if (currentLine.contains(":")){
+				int pos = getCharPosition(currentLine, ':');
+				String label = currentLine.substring(0, pos);
+				//System.out.println(label.replaceAll("\\s*", ""));
+				allLables.add(label.replaceAll("\\s*", ""));
+			}
+		}
+	}
 
 	public static int countColumns(String x) {
 		int count = 0;
@@ -215,6 +241,13 @@ public class Parser {
 						System.exit(0);
 					}
 					
+					if(instruction.matches("\\s*"+"j"+"\\s*") || instruction.matches("\\s*"+"jal"+"\\s*")){
+						if(!allLables.contains(currentLine.substring(instruction.length()).replaceAll("\\s*", ""))){
+							System.out.println("Invalid label name in line: " + lineCounter);
+							System.exit(0);
+						}
+					}
+					
 				}
 				
 			}
@@ -275,7 +308,12 @@ public class Parser {
 						System.out.println("Extra parameter in Line "+lineCounter);
 						System.exit(0);
 					}
-					
+					if(instruction.matches("\\s*"+"j"+"\\s*") || instruction.matches("\\s*"+"jal"+"\\s*")){
+						if(!allLables.contains(currentLine.substring(instruction.length()).replaceAll("\\s*", ""))){
+							System.out.println("Invalid label name in line: " + lineCounter);
+							System.exit(0);
+						}
+					}
 				}
 			}
 			
@@ -421,6 +459,34 @@ public class Parser {
 						
 					}
 				}
+				else if(instruction.matches("\\s*"+"lui"+"\\s*")){
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if(tempArr[0].matches("\\s*"+"\\$zero"+"\\s*")){
+						System.out.println("ERROR Line "+lineCounter+", Register Zero cannot be overwritten");
+						System.exit(0);
+					}
+					else{
+						if(!isValidRegister(tempArr[0])){
+							System.out.println("Invalid register in Line: " + lineCounter);
+							System.exit(0);
+						}
+						// -32768 to 32767
+						//System.out.println(tempArr[1].replaceAll("\\s", ""));
+						
+						try{							
+							//System.out.println(tempArr[1].replaceAll("\\s", ""));
+							String x = tempArr[1].replaceAll("\\s", "");
+							Short.parseShort(x);
+							//System.out.println(x+"ACSAD");
+							
+						}
+						catch(Exception E){
+							System.out.println("Invalid number format in line: " + lineCounter);
+							System.exit(0);
+						}
+					}
+				}
 			}
 			lineCounter++;
 		}
@@ -533,6 +599,12 @@ public class Parser {
 		Parser x = new Parser();
 		for (int i = 0; i < x.InstructionSet.size(); i++) {
 			System.out.println(x.InstructionSet.get(i).toString());
+			// LUI Takes a number as 2nd parameter 
+			// BEQ Takes a label as a third parameter (Existing LABEL)
+			// BNE Takes a label as a third parameter (Existing LABEL)
+			// LB customize the exception (lb $t1 , anything) error should say bad offset 
+			// SLL should take only a number as a third parameter ex : sll $t1 , $t2 , number should pass while sll $t1 , $t2 , $t3 shouldn't pass
+			// SRL should take only a number as a third parameter ex : srl $t1 , $t2 , number should pass while sll $t1 , $t2 , $t3 shouldn't pass
 		}
 		
 	}
