@@ -20,16 +20,15 @@ public class Parser {
 		validateInstructionRegisters();
 		fillArray();
 		
+		
 	}
 	
 	public static void getLabels() throws IOException{
-		int lineCounter = 1;
 		String currentLine = "";
 		FileReader fileReader = new FileReader("code.txt");
 		BufferedReader br = new BufferedReader(fileReader);
 		while ((currentLine = br.readLine()) != null) {
 			while(currentLine != null && currentLine.matches("\\s*") ){
-				lineCounter++;
 				currentLine = br.readLine();
 			}
 			//Line contains more than 1 ':'
@@ -43,6 +42,7 @@ public class Parser {
 				allLables.add(label.replaceAll("\\s*", ""));
 			}
 		}
+		br.close();
 	}
 
 	public static int countColumns(String x) {
@@ -391,6 +391,24 @@ public class Parser {
 							System.exit(0);
 							}
 						}
+						String x = "";
+						try{							
+							//System.out.println(tempArr[1].replaceAll("\\s", ""));
+							x = tempArr[2].replaceAll("\\s", "");
+							Short.parseShort(x);
+							//System.out.println(x+"ACSAD");
+							
+						}
+						catch(Exception E){
+							System.out.println("Invalid number format in line: " + lineCounter);
+							System.exit(0);
+						}
+						if(!instruction.matches("\\s*"+"addi"+"\\s*")){
+							if(Short.parseShort(x) < 0 || Short.parseShort(x) > 31){
+								System.out.println("Invalid number format in line: " + lineCounter);
+								System.exit(0);
+							}
+						}
 						
 					}
 				}
@@ -517,7 +535,6 @@ public class Parser {
 	}
 	
 	public static void fillArray() throws IOException{
-		int lineCounter = 1;
 		String currentLine = "";
 		FileReader fileReader = new FileReader("code.txt");
 		BufferedReader br = new BufferedReader(fileReader);
@@ -526,7 +543,6 @@ public class Parser {
 		String finalInst = "";
 		while ((currentLine = br.readLine()) != null) {
 			while(currentLine != null && currentLine.matches("\\s*") ){
-				lineCounter++;
 				currentLine = br.readLine();
 			}
 			//Line contains more than 1 ':'
@@ -541,11 +557,9 @@ public class Parser {
 				if(currentLine.substring(getCharPosition(currentLine, ':')+1).matches("\\s*")){
 					
 					if((currentLine = br.readLine()) != null){
-					lineCounter++;
 					}
 					while(currentLine.matches("\\s*")){
 						if((currentLine = br.readLine()) != null){
-							lineCounter++;
 							}
 					}
 					instruction = currentLine;
@@ -590,22 +604,20 @@ public class Parser {
 			InstructionSet.add(temp);
 			finalInst="";
 			label="";
-			lineCounter++;
 		}
-		
+		br.close();
 	}
 	
+	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws IOException {
 		Parser x = new Parser();
 		for (int i = 0; i < x.InstructionSet.size(); i++) {
 			System.out.println(x.InstructionSet.get(i).toString());
-			// LUI Takes a number as 2nd parameter 
 			// BEQ Takes a label as a third parameter (Existing LABEL)
 			// BNE Takes a label as a third parameter (Existing LABEL)
 			// LB customize the exception (lb $t1 , anything) error should say bad offset 
 			// SLL should take only a number as a third parameter ex : sll $t1 , $t2 , number should pass while sll $t1 , $t2 , $t3 shouldn't pass
 			// SRL should take only a number as a third parameter ex : srl $t1 , $t2 , number should pass while sll $t1 , $t2 , $t3 shouldn't pass
 		}
-		
 	}
 }
