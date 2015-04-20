@@ -643,6 +643,8 @@ public class Parser {
 		for (int i = 0; i < x.InstructionSet.size(); i++) {
 			System.out.println(x.InstructionSet.get(i).toString());
 			// Offset range in load and store
+			//---------------------------TO BE TESTED AGAIN-----------------
+			// BNE - BNE - LW - SW 
 		}
 	}
 }
