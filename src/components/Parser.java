@@ -10,7 +10,6 @@ public class Parser {
 	private static ArrayList<Instruction> InstructionSet = new ArrayList<Instruction>();
 	private static ArrayList<String> allLables = new ArrayList<String>();
 			
-	
 	public Parser() throws IOException{
 		getLabels();
 		validatColumnSyntax();
