@@ -49,15 +49,21 @@ public void readFile() throws NumberFormatException, IOException
 	BufferedReader bufferRead = new BufferedReader(new FileReader("input.txt"));
 	String line =  "";
 	lineCounter = 0;
-		
+	readLabels();
+	   String label = "";
+	
  while((line = bufferRead.readLine()) != null) 
     {
      lineCounter++;
+     line = line.toLowerCase();
+     
+     String instruction = "";
+  
+     int offset = 0;
+	
      
   	if (line.contains("#"))
  	{
-  		readLabels();
-  		
  		int index = 0;
  		while(line.charAt(index) != '#')
  		{
@@ -65,17 +71,20 @@ public void readFile() throws NumberFormatException, IOException
  		}
  	line = line.substring(0,index);
  	}
-      
   	
+  	while (line.length() > 0 && line.charAt(0) == ' ')
+    {
+    	line = line.substring(1);
+    }
+  	line = line.replaceAll("\t", "");
      if (line.length() > 0)
      {
      ArrayList<String> parameters = new ArrayList<String>();
-     String instruction = "";
-     String label = "";
-     int offset = 0;
+   
      instruction toBeAdded = new instruction(label, instruction, parameters, offset);
      line = line.toLowerCase();
    
+     
      //getting label and deleting it from String
      if (line.contains(":"))
      {
@@ -84,11 +93,12 @@ public void readFile() throws NumberFormatException, IOException
     	 toBeAdded.label = label;
     	 line = line.substring(label.length() + 1);
      }
-     
+     String tmp2 = line.replaceAll("\\s", "");
+     if (tmp2.length() != 0)
+     {
       //getting instruction
-     line = line.replaceAll("\t", "");
      
-     
+ 
     while (line.length() > 0 && line.charAt(0) == ' ')
     {
     	line = line.substring(1);
@@ -142,7 +152,7 @@ public void readFile() throws NumberFormatException, IOException
     
     //DONE
     else if (instruction.equals("lw") || instruction.equals("lb") || instruction.equals("lbu") ||
-    		 instruction.equals("sw") || instruction.equals("sb") || instruction.equals("lui"))
+    		 instruction.equals("sw") || instruction.equals("sb"))
     {
     	try
     	{
@@ -178,6 +188,19 @@ public void readFile() throws NumberFormatException, IOException
     		 System.out.println(lineCounter + ": Offset must be a number");
     	}
     			
+    }
+    
+    else if  (instruction.equals("lui"))
+    {
+    	if(luiValidator(parameters))
+    	{
+    		toBeAdded.parameters = parameters;
+    		instructions.add(toBeAdded);
+    	}
+    	else
+    	{
+    		System.out.println(lineCounter + ": Unexpected input");
+    	}
     }
     
     //DONE
@@ -252,7 +275,33 @@ public void readFile() throws NumberFormatException, IOException
 
     }
     }
+    }
 
+}
+
+public boolean luiValidator(ArrayList<String> parameters)
+{
+	if (parameters.size() > 2)
+	{
+		return false;
+	}
+	if (parameters.get(0).charAt(0) != '$')
+	{
+		return false;
+	}
+	else 
+	{
+		try 
+		{
+			Integer.parseInt(parameters.get(1));
+		}
+		catch (java.lang.NumberFormatException e)
+		{
+			System.out.println(lineCounter + ": constant must be an integer");
+			return false;
+		}
+	}
+	return true;
 }
 //DONE
 public boolean jrValidator(ArrayList<String> parameters)
