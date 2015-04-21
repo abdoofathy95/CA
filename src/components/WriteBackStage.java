@@ -16,6 +16,7 @@ public class WriteBackStage {
 		aluResult = MemoryStage.aluResult;
 		registerAddressToWriteTo = MemoryStage.registerAddressToWriteTo;
 		memoryData = MemoryStage.memoryData;
+		findInstruction(tempRegisterWB);
 	}	
 		public static void findInstruction(Hashtable<String,String> tempRegisterWB){
 			
