@@ -7,10 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Parser {
-	private static ArrayList<Instruction> InstructionSet = new ArrayList<Instruction>();
+	private static InstructionMemory InstructionSet;
 	private static ArrayList<String> allLables = new ArrayList<String>();
 
 	public Parser() throws IOException {
+		this.InstructionSet = new InstructionMemory();
 		getLabels();
 		validatColumnSyntax();
 		validateInstructionNames();
@@ -806,7 +807,7 @@ public class Parser {
 			}
 			Instruction temp = new Instruction(label, instName, rd, rs, rt,
 					offset, constant, jumpLabel);
-			InstructionSet.add(temp);
+			InstructionSet.instructions.add(temp);
 			finalInst = "";
 			label = "";
 			fullInstruction = "";
@@ -844,8 +845,8 @@ public class Parser {
 	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws IOException {
 		Parser x = new Parser();
-		for (int i = 0; i < x.InstructionSet.size(); i++) {
-			System.out.println(x.InstructionSet.get(i).toString());
+		for (int i = 0; i < x.InstructionSet.instructions.size(); i++) {
+			System.out.println(x.InstructionSet.instructions.get(i).toString());
 			// Offset range in load and store
 		}
 	}
