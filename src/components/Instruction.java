@@ -34,21 +34,21 @@ public class Instruction {
 		}
 		x = x + instructionName;
 		if (rd != null) {
-			x = x + " (rd: " + rd + "), ";
+			x = x + " (rd: " + rd + ") ";
 		}
 
 		if (rt != null) {
-			x = x + " (rt: " + rt + "), ";
+			x = x + " (rt: " + rt + ") ";
 		}
 		if (offset != null) {
-			x = x + " (offset: " + offset + "), ";
+			x = x + " (offset: " + offset + ") ";
 		}
 		if (rs != null) {
-			x = x + " (rs: " + rs + "), ";
+			x = x + " (rs: " + rs + ") ";
 		}
 
 		if (jumpLabel != null) {
-			x = x + " (Jumping to: " + jumpLabel + "), ";
+			x = x + " (Jumping to: " + jumpLabel + ") ";
 		}
 
 		if (constant != null) {
