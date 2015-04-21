@@ -10,6 +10,7 @@ public class Parser {
 	private static InstructionMemory InstructionSet;
 	private static ArrayList<String> allLables = new ArrayList<String>();
 
+	@SuppressWarnings("static-access")
 	public Parser() throws IOException {
 		this.InstructionSet = new InstructionMemory();
 		getLabels();
@@ -289,7 +290,7 @@ public class Parser {
 			if (currentLine.contains(":")) {
 				int splitPosition = getCharPosition(currentLine, ':');
 				String tempS = currentLine.substring(splitPosition + 1);
-				String[] result = currentLine.split("\\s");
+				String[] result = tempS.split("\\s");
 				for (int i = 0; i < result.length; i++) {
 					if (result[i].length() != 0) {
 						instruction = result[i];
@@ -307,7 +308,7 @@ public class Parser {
 						|| instruction.matches("\\s*" + "bne" + "\\s*")
 						|| instruction.matches("\\s*" + "slt" + "\\s*")
 						|| instruction.matches("\\s*" + "sltu" + "\\s*")) {
-					String temp = currentLine.substring(instruction.length());
+					String temp = tempS.substring(instruction.length() + 1);
 					String[] tempArr = temp.split(",");
 					if (tempArr.length < 3) {
 						System.out.println("Missing parameter in Line "
@@ -328,7 +329,7 @@ public class Parser {
 						|| instruction.matches("\\s*" + "sw" + "\\s*")
 						|| instruction.matches("\\s*" + "sb" + "\\s*")
 						|| instruction.matches("\\s*" + "lui" + "\\s*")) {
-					String temp = currentLine.substring(instruction.length());
+					String temp = tempS.substring(instruction.length() + 1);
 					String[] tempArr = temp.split(",");
 					if (tempArr.length < 2) {
 						System.out.println("Missing parameter in Line "
@@ -346,7 +347,7 @@ public class Parser {
 				if (instruction.matches("\\s*" + "j" + "\\s*")
 						|| instruction.matches("\\s*" + "jal" + "\\s*")
 						|| instruction.matches("\\s*" + "jr" + "\\s*")) {
-					String temp = currentLine.substring(instruction.length());
+					String temp = tempS.substring(instruction.length() + 1);
 					String[] tempArr = temp.split(",");
 					if (tempArr.length < 1 || tempArr[0].matches("\\s")
 							|| tempArr[0].equals("")) {
@@ -413,7 +414,6 @@ public class Parser {
 						|| instruction.matches("\\s*" + "sltu" + "\\s*")
 						|| instruction.matches("\\s*" + "jr" + "\\s*")) {
 					String temp = currentLine.substring(instruction.length());
-
 					String[] tempArr = temp.split(",");
 					if (tempArr[0].matches("\\s*" + "\\$zero" + "\\s*")) {
 						System.out.println("ERROR Line " + lineCounter
