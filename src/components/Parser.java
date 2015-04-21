@@ -33,11 +33,34 @@ public class Parser {
 			}
 			if (currentLine.contains(":")) {
 				int pos = getCharPosition(currentLine, ':');
-				String label = currentLine.substring(0, pos);
+				String label = currentLine.substring(0, pos).replaceAll("\\s*", "");
 				if (!allLables.contains(label)) {
 					allLables.add(label.replaceAll("\\s*", ""));
 				} else {
 					System.out.println("Dublicate label name");
+					System.exit(0);
+				}
+				if (label.matches("\\s*" + "add" + "\\s*")
+						|| label.matches("\\s*" + "addi" + "\\s*")
+						|| label.matches("\\s*" + "sub" + "\\s*")
+						|| label.matches("\\s*" + "lw" + "\\s*")
+						|| label.matches("\\s*" + "lb" + "\\s*")
+						|| label.matches("\\s*" + "lbu" + "\\s*")
+						|| label.matches("\\s*" + "sw" + "\\s*")
+						|| label.matches("\\s*" + "sb" + "\\s*")
+						|| label.matches("\\s*" + "lui" + "\\s*")
+						|| label.matches("\\s*" + "sll" + "\\s*")
+						|| label.matches("\\s*" + "srl" + "\\s*")
+						|| label.matches("\\s*" + "and" + "\\s*")
+						|| label.matches("\\s*" + "nor" + "\\s*")
+						|| label.matches("\\s*" + "beq" + "\\s*")
+						|| label.matches("\\s*" + "bne" + "\\s*")
+						|| label.matches("\\s*" + "j" + "\\s*")
+						|| label.matches("\\s*" + "jal" + "\\s*")
+						|| label.matches("\\s*" + "jr" + "\\s*")
+						|| label.matches("\\s*" + "slt" + "\\s*")
+						|| label.matches("\\s*" + "sltu" + "\\s*")) {
+					System.out.println("Reserver instruction name: \""+label + "\" cannot be a label name");
 					System.exit(0);
 				}
 			}
