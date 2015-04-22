@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-*.class
-=======
->>>>>>> origin/parser-under-construction
 /bin/
+*.class
+*.prefs

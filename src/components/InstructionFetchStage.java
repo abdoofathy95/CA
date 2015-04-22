@@ -8,7 +8,7 @@ public class InstructionFetchStage {
 	public static int currentPC; // at beginning of a program execution (after
 									// reading the file containing the program),
 									// set this to zero
-	public static Object[] currentInstruction;
+	public static Instruction currentInstruction;
 
 	/*
 	 * public static void startNextStage() { //InstructionDecodeStage.init(); }

@@ -1,6 +1,5 @@
 package components;
 import java.lang.reflect.Array;
->>>>>>> origin/parser-under-construction
 import java.util.ArrayList;
 
 /* THIS CLASS SIMULATES THE INSTRUCTION MEMORY (HOLDING THE PROGRAM)
@@ -9,5 +8,5 @@ import java.util.ArrayList;
 */
 
 public class InstructionMemory {
-	static ArrayList<Object[]> instructions = new ArrayList<Object[]>();
+	static ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 }

@@ -1,4 +1,5 @@
 package components;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -21,7 +22,7 @@ public class InstructionDecodeStage {
 	public static String jumpAddress;
 	// will hold instuction values (it's private since it won't be called from
 	// next stage (only used in the current class)
-	private static Object[] currentInstruction;
+	private static Instruction currentInstruction;
 	// will be holding content of register s (source register)
 	public static String registerOneData;
 	// will be holding content of register t (register after source)
@@ -48,10 +49,12 @@ public class InstructionDecodeStage {
 		RegisterFile.initRegistersWithAddresses();
 		RegisterFile.initRegistersWithZeros();
 		InstructionFetchStage.currentPC = 1;
-		InstructionFetchStage.currentInstruction = new Object[] { "add", "t1",
-				"t2", "t3" };
+		InstructionFetchStage.currentInstruction = new Instruction("kareem",
+				"add", "t3", "t1", "t2", "", "", "");
 		InstructionDecodeStage.ExecuteStage();
 		// InstructionFetchStage.ExecuteStage();
+		
+		printStage();
 	}
 
 	public static void ExecuteStage() {
@@ -62,93 +65,99 @@ public class InstructionDecodeStage {
 		currentInstruction = InstructionFetchStage.currentInstruction;
 		decodeInstruction(InstructionFetchStage.currentInstruction);
 		
-		
-		//printing values
-		//--------------------------------------------------------------------
-		System.out.println("-------------------------------------");
-		System.out.println("WB REGISTER :");
-		Enumeration e = tempRegisterWB.keys();
-		while(e.hasMoreElements()){
-			String key = (String) e.nextElement();
-			System.out.println(key + " : " + tempRegisterWB.get(key));
-		}
-		System.out.println("");
-		System.out.println("M REGISTER :");
-		e = tempRegisterM.keys();
-		while(e.hasMoreElements()){
-			String key = (String) e.nextElement();
-			System.out.println(key + " : " + tempRegisterM.get(key));
-		}
-		System.out.println("");
-		System.out.println("EX REGISTER :");
-		e = tempRegisterEx.keys();
-		while(e.hasMoreElements()){
-			String key = (String) e.nextElement();
-			System.out.println(key + " : " + tempRegisterEx.get(key));
-		}
-		System.out.println("");
-		
-		System.out.println("currentPC" + " : " + currentPC);
-		System.out.println("jumpAddress" + " : " + jumpAddress);
-		System.out.println("currentInstruction" + " : " + currentInstruction[0]);
-		System.out.println("registerOneData" + " : " + registerOneData);
-		System.out.println("registerTwoData" + " : " + registerTwoData);
-		System.out.println("immediateValue" + " : " + immediateValue);
-		System.out.println("registerTAddress" + " : " + registerTAddress);
-		System.out.println("registerDAddress" + " : " + registerDAddress);
-		System.out.println("-------------------------------------");
-		//--------------------------------------------------------------------
+	}
+	
+	private static void printStage() {
+		// TODO Auto-generated method stub
+		// printing values
+				// --------------------------------------------------------------------
+				System.out.println("-------------------------------------");
+				System.out.println("WB REGISTER :");
+				Enumeration e = tempRegisterWB.keys();
+				while (e.hasMoreElements()) {
+					String key = (String) e.nextElement();
+					System.out.println(key + " : " + tempRegisterWB.get(key));
+				}
+				System.out.println("");
+				System.out.println("M REGISTER :");
+				e = tempRegisterM.keys();
+				while (e.hasMoreElements()) {
+					String key = (String) e.nextElement();
+					System.out.println(key + " : " + tempRegisterM.get(key));
+				}
+				System.out.println("");
+				System.out.println("EX REGISTER :");
+				e = tempRegisterEx.keys();
+				while (e.hasMoreElements()) {
+					String key = (String) e.nextElement();
+					System.out.println(key + " : " + tempRegisterEx.get(key));
+				}
+				System.out.println("");
+
+				System.out.println("currentPC" + " : " + currentPC);
+				System.out.println("jumpAddress" + " : " + jumpAddress);
+				System.out.println("currentInstruction" + " : "
+						+ currentInstruction.getInstructionName());
+				System.out.println("registerOneData" + " : " + registerOneData);
+				System.out.println("registerTwoData" + " : " + registerTwoData);
+				System.out.println("immediateValue" + " : " + immediateValue);
+				System.out.println("registerTAddress" + " : " + registerTAddress);
+				System.out.println("registerDAddress" + " : " + registerDAddress);
+				System.out.println("-------------------------------------");
+				// --------------------------------------------------------------------
 	}
 
-	public static void decodeInstruction(Object[] instruction) {
+	private static void stageOutput(String binInstruction,
+			String registerOneData1, String registerTwoData1) {
+		// TODO Auto-generated method stub
+		immediateValue = binInstruction.substring(16, 32);
+		registerTAddress = binInstruction.substring(11, 16);
+		registerDAddress = binInstruction.substring(16, 21);
+		jumpAddress = currentPC.substring(0, 4) + binInstruction.substring(6)
+				+ "00";
+		registerOneData = registerOneData1;
+		registerTwoData = registerTwoData1;
+	}
+
+	public static void decodeInstruction(Instruction instruction) {
 		// fill temporary registers here
 
-		String insName = (String) instruction[0];
+		String insName = (String) instruction.getInstructionName();
 		switch (insName) {
 		case "add": {
 			storeControlSignals("1", "0", "0", "0", "0", "Add", "0", "0", "1",
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
+					.get(instruction.getRt()));// target
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[3]));// destination
+					.get(instruction.getRd()));// destination
 			instructionBinary += "00000";
 			instructionBinary += "100000";
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
+
 		case "sub": {
 			storeControlSignals("1", "0", "0", "0", "0", "Sub", "0", "0", "1",
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
+					.get(instruction.getRt()));// target
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[3]));// destination
+					.get(instruction.getRd()));// destination
 			instructionBinary += "00000";
 			instructionBinary += "100010";
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "and": {
@@ -156,22 +165,16 @@ public class InstructionDecodeStage {
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
+					.get(instruction.getRt()));// target
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[3]));// destination
+					.get(instruction.getRd()));// destination
 			instructionBinary += "00000";
 			instructionBinary += "100100";
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "lw": {
@@ -179,25 +182,20 @@ public class InstructionDecodeStage {
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "100011";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
-			String signExtened = Integer.toBinaryString((int) instruction[3]);
+					.get(instruction.getRs()));// target
+			String signExtened = Integer.toBinaryString((int) Integer
+					.parseInt(instruction.getOffset()));
 			if (signExtened.length() < 32) {
 				for (int i = 0; i < 32 - signExtened.length(); i++) {
 					signExtened = "0" + signExtened;
 				}
 			}// sign extend
 			instructionBinary += signExtened.substring(16, 32);
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "sw": {
@@ -205,51 +203,20 @@ public class InstructionDecodeStage {
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "101011";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
-			String signExtened = Integer.toBinaryString((int) instruction[3]);
+					.get(instruction.getRt()));// target
+			String signExtened = Integer.toBinaryString((int) Integer
+					.parseInt(instruction.getOffset()));
 			if (signExtened.length() < 32) {
 				for (int i = 0; i < 32 - signExtened.length(); i++) {
 					signExtened = "0" + signExtened;
 				}
 			}// sign extend
 			instructionBinary += signExtened.substring(16, 32);
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
-			break;
-		}
-		case "beq": {
-			storeControlSignals("x", "1", "0", "0", "x", "Sub", "0", "0", "0",
-					"0", "0", "0", "0", "0", "0");
-			String instructionBinary = "101011";
-			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
-			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
-			String signExtened = Integer.toBinaryString((int) instruction[3]);
-			if (signExtened.length() < 32) {
-				for (int i = 0; i < 32 - signExtened.length(); i++) {
-					signExtened = "0" + signExtened;
-				}
-			}// sign extend
-			instructionBinary += signExtened.substring(16, 32);
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "addi": {
@@ -257,25 +224,20 @@ public class InstructionDecodeStage {
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "101011";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
-			String signExtened = Integer.toBinaryString((int) instruction[3]);
+					.get(instruction.getRt()));// target
+			String signExtened = Integer.toBinaryString((int) Integer
+					.parseInt(instruction.getConstant()));
 			if (signExtened.length() < 32) {
 				for (int i = 0; i < 32 - signExtened.length(); i++) {
 					signExtened = "0" + signExtened;
 				}
 			}// sign extend
 			instructionBinary += signExtened.substring(16, 32);
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "lb": {
@@ -283,25 +245,20 @@ public class InstructionDecodeStage {
 					"0", "0", "0", "1", "0", "0");
 			String instructionBinary = "101011";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
-			String signExtened = Integer.toBinaryString((int) instruction[3]);
+					.get(instruction.getRt()));// target
+			String signExtened = Integer.toBinaryString((int) Integer
+					.parseInt(instruction.getOffset()));
 			if (signExtened.length() < 32) {
 				for (int i = 0; i < 32 - signExtened.length(); i++) {
 					signExtened = "0" + signExtened;
 				}
 			}// sign extend
-
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			instructionBinary += signExtened;
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "lbu": {
@@ -309,10 +266,11 @@ public class InstructionDecodeStage {
 					"0", "0", "0", "0", "1", "0");
 			String instructionBinary = "101011";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
-			String signExtened = Integer.toBinaryString((int) instruction[3]);
+					.get(instruction.getRt()));// target
+			String signExtened = Integer.toBinaryString((int) Integer
+					.parseInt(instruction.getOffset()));
 			if (signExtened.length() < 32) {
 				for (int i = 0; i < 32 - signExtened.length(); i++) {
 					signExtened = "0" + signExtened;
@@ -320,14 +278,9 @@ public class InstructionDecodeStage {
 			}// sign extend
 
 			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "sb": {
@@ -335,25 +288,20 @@ public class InstructionDecodeStage {
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "101000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
-			String signExtened = Integer.toBinaryString((int) instruction[3]);
+					.get(instruction.getRt()));// target
+			String signExtened = Integer.toBinaryString((int) Integer
+					.parseInt(instruction.getOffset()));
 			if (signExtened.length() < 32) {
 				for (int i = 0; i < 32 - signExtened.length(); i++) {
 					signExtened = "0" + signExtened;
 				}
 			}// sign extend
 			instructionBinary += signExtened.substring(16, 32);
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "lui": {
@@ -362,22 +310,17 @@ public class InstructionDecodeStage {
 			String instructionBinary = "001111";
 			instructionBinary += "00000";// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// target
-			String signExtened = Integer.toBinaryString((int) instruction[2]);
+					.get(instruction.getRt()));// target
+			String signExtened = Integer.toBinaryString((int) Integer
+					.parseInt(instruction.getConstant()));
 			if (signExtened.length() < 32) {
 				for (int i = 0; i < 32 - signExtened.length(); i++) {
 					signExtened = "0" + signExtened;
 				}
 			}// sign extend
 			instructionBinary += signExtened.substring(16, 32);
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = "0x00000000";
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[1]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary, "0x00000000",
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "sll": {
@@ -385,24 +328,18 @@ public class InstructionDecodeStage {
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
+					.get(instruction.getRt()));// target
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[3]));// destination
+					.get(instruction.getRd()));// destination
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[4]));// shamt
+					.get(instruction.getConstant()));// shamt
 			instructionBinary += "000000";
 
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "srl": {
@@ -410,24 +347,18 @@ public class InstructionDecodeStage {
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
+					.get(instruction.getRt()));// target
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[3]));// destination
+					.get(instruction.getRd()));// destination
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[4]));// shamt
+					.get(instruction.getConstant()));// shamt
 			instructionBinary += "000010";
 
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "nor": {
@@ -435,32 +366,27 @@ public class InstructionDecodeStage {
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
+					.get(instruction.getRt()));// target
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[3]));// destination
+					.get(instruction.getRd()));// destination
 			instructionBinary += "00000";
 			instructionBinary += "100111";
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
+		/*
 		case "bne": {
 			storeControlSignals("x", "0", "1", "0", "x", "Sub", "0", "0", "0",
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "000101";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
+					.get(instruction.getRt()));// target
 			String signExtened = Integer.toBinaryString((int) instruction[3]);
 			if (signExtened.length() < 32) {
 				for (int i = 0; i < 32 - signExtened.length(); i++) {
@@ -468,36 +394,23 @@ public class InstructionDecodeStage {
 				}
 			}// sign extend
 			instructionBinary += signExtened.substring(16, 32);
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "j": {
 			storeControlSignals("x", "x", "x", "0", "0", "DC", "0", "x", "0",
 					"1", "0", "0", "0", "0", "0");
 			String instructionBinary = "000010";
-			String signExtened = Integer.toBinaryString((int) instruction[1]);
+			String signExtened = Integer.toBinaryString((int) instruction.getJumpLabel());
 			if (signExtened.length() < 32) {
 				for (int i = 0; i < 32 - signExtened.length(); i++) {
 					signExtened = "0" + signExtened;
 				}
 			}// sign extend
 			instructionBinary += signExtened.substring(6, 32);
-
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = "0x00000000";
-			registerTwoData = "0x00000000";
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary, "0x00000000", "0x00000000");
 			break;
 		}
 		case "jal": {
@@ -512,13 +425,7 @@ public class InstructionDecodeStage {
 			}// sign extend
 			instructionBinary += signExtened.substring(6, 32);
 
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = "0x00000000";
-			registerTwoData = "0x00000000";
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary, "0x00000000", "0x00000000");
 			break;
 		}
 		case "jr": {
@@ -527,38 +434,48 @@ public class InstructionDecodeStage {
 			String instructionBinary = "000000";
 			String signExtened = Integer.toBinaryString((int) instruction[1]);// source
 			instructionBinary += "0000000000000000010000";
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = "0x00000000";
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					"0x00000000");
 			break;
 		}
+		case "beq": {
+			storeControlSignals("x", "1", "0", "0", "x", "Sub", "0", "0", "0",
+					"0", "0", "0", "0", "0", "0");
+			String instructionBinary = "101011";
+			instructionBinary += hexToBinary(RegisterFile.registersAddress
+					.get(instruction.getRs()));// source
+			instructionBinary += hexToBinary(RegisterFile.registersAddress
+					.get(instruction.getRt()));// target
+			String signExtened = Integer.toBinaryString((int) instruction[3]);
+			if (signExtened.length() < 32) {
+				for (int i = 0; i < 32 - signExtened.length(); i++) {
+					signExtened = "0" + signExtened;
+				}
+			}// sign extend
+			instructionBinary += signExtened.substring(16, 32);
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
+			break;
+		}
+		*/
 		case "slt": {
 			storeControlSignals("1", "0", "0", "0", "0", "SLT", "0", "0", "1",
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
+					.get(instruction.getRt()));// target
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[3]));// destination
+					.get(instruction.getRd()));// destination
 			instructionBinary += "00000";
 			instructionBinary += "101010";
 
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
 		case "sltu": {
@@ -566,24 +483,19 @@ public class InstructionDecodeStage {
 					"0", "0", "0", "0", "0", "0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[1]));// source
+					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[2]));// target
+					.get(instruction.getRt()));// target
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction[3]));// destination
+					.get(instruction.getRd()));// destination
 			instructionBinary += "00000";
 			instructionBinary += "101011";
-			immediateValue = instructionBinary.substring(16, 32);
-			registerTAddress = instructionBinary.substring(11, 16);
-			registerDAddress = instructionBinary.substring(16, 21);
-			registerOneData = RegisterFile
-					.readRegister1((String) instruction[1]);
-			registerTwoData = RegisterFile
-					.readRegister2((String) instruction[2]);
-			jumpAddress = currentPC.substring(0, 4)
-					+ instructionBinary.substring(6) + "00";
+			stageOutput(instructionBinary,
+					RegisterFile.readRegister1(instruction.getRs()),
+					RegisterFile.readRegister2(instruction.getRt()));
 			break;
 		}
+
 		}
 
 	}

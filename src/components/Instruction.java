@@ -57,6 +57,70 @@ public class Instruction {
 		return (x);
 
 	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String getInstructionName() {
+		return instructionName;
+	}
+
+	public void setInstructionName(String instructionName) {
+		this.instructionName = instructionName;
+	}
+
+	public String getRd() {
+		return rd;
+	}
+
+	public void setRd(String rd) {
+		this.rd = rd;
+	}
+
+	public String getRs() {
+		return rs;
+	}
+
+	public void setRs(String rs) {
+		this.rs = rs;
+	}
+
+	public String getRt() {
+		return rt;
+	}
+
+	public void setRt(String rt) {
+		this.rt = rt;
+	}
+
+	public String getOffset() {
+		return offset;
+	}
+
+	public void setOffset(String offset) {
+		this.offset = offset;
+	}
+
+	public String getConstant() {
+		return constant;
+	}
+
+	public void setConstant(String constant) {
+		this.constant = constant;
+	}
+
+	public String getJumpLabel() {
+		return jumpLabel;
+	}
+
+	public void setJumpLabel(String jumpLabel) {
+		this.jumpLabel = jumpLabel;
+	}
 }
 // Documentation of registers used in each instruction
 /*
