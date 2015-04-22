@@ -24,7 +24,7 @@ public class ExecutionStage {
 	private static String registerTAddress;
 	private static String registerDAddress;
 	private static final String registerRA = "$RA";
-	private static String registerTwoDataOutput; 
+	public static String registerTwoDataOutput; 
 
 
 	public static void init() { // called from previous stage (no need to call
