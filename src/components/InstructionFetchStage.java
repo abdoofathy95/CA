@@ -1,5 +1,4 @@
 package components;
-
 /*
  * HERE fetch the instruction
  * increment the pc and put it in the currentPC

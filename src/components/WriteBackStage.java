@@ -9,7 +9,7 @@ public class WriteBackStage {
 	private static String aluResult;
 	public static String registerAddressToWriteTo;
 	public static String dataToBeWrittenToReg; // set in current class
-
+	
 	public static void init() {
 		tempRegisterWB = MemoryStage.tempRegisterWB;
 		currentPC = MemoryStage.currentPC;

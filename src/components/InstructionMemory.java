@@ -1,5 +1,6 @@
 package components;
-
+import java.lang.reflect.Array;
+>>>>>>> origin/parser-under-construction
 import java.util.ArrayList;
 
 /* THIS CLASS SIMULATES THE INSTRUCTION MEMORY (HOLDING THE PROGRAM)
