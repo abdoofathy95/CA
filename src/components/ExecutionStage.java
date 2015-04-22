@@ -115,6 +115,10 @@ public class ExecutionStage {
 			else aluResult="0";
 			break;
 		}
+		case"LUI":{
+			aluResult=ALU2ndInput;
+			break;
+		}
 		//JR mesh ma3moola
 		}
 		if(Integer.compare(Integer.parseInt(registerOneData), Integer.parseInt(ALU2ndInput))==0)
