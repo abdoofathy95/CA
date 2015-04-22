@@ -24,6 +24,7 @@ public class ExecutionStage {
 	private static String registerTAddress;
 	private static String registerDAddress;
 	private static final String registerRA = "$RA";
+	private static String registerTwoDataOutput; 
 
 
 	public static void init() { // called from previous stage (no need to call
@@ -64,6 +65,14 @@ public class ExecutionStage {
 			registerAddressToWriteTo=registerToWriteTo;
 		else
 			registerAddressToWriteTo=registerRA;
+		if(Integer.parseInt(tempRegisterEx.get("sb"))==0)
+			registerTwoDataOutput=registerTwoData;
+		else
+		{
+			int x = Integer.parseInt(registerTwoData);
+			
+			registerTwoDataOutput=((x >> 3)&1)+""+((x >> 2)&1)+((x >> 1)&1)+((x >> 0)&1);
+		}
 		switch(tempRegisterEx.get("ALUop")){
 		case"Add":{
 			aluResult=(Integer.parseInt(registerOneData)+Integer.parseInt(ALU2ndInput))+"";
