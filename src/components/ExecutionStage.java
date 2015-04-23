@@ -122,7 +122,11 @@ public class ExecutionStage {
 			aluResult=ALU2ndInput;
 			break;
 		}
-		//JR mesh ma3moola
+		case"JR":{
+			aluResult=registerOneData;
+			break;
+		}
+		
 		}
 		if(Integer.compare(Integer.parseInt(registerOneData), Integer.parseInt(ALU2ndInput))==0)
 			aluZeroSignal="1";
