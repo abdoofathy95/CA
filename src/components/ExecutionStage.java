@@ -91,11 +91,14 @@ public class ExecutionStage {
 			break;
 		}
 		case"SLL":{
-			aluResult=(Integer.parseInt(registerOneData) * Integer.parseInt(ALU2ndInput)*2)+"";
+			Double x = Math.pow(2, Integer.parseInt(ALU2ndInput));
+			
+			aluResult=(Integer.parseInt(registerOneData) *x.intValue()) +"";
 			break;
 		}
 		case"SRL":{
-			aluResult=(Integer.parseInt(registerOneData) / (Integer.parseInt(ALU2ndInput)*2))+"";
+			Double x = Math.pow(2, Integer.parseInt(ALU2ndInput));
+			aluResult=(Integer.parseInt(registerOneData) / x.intValue())+"";
 			break;
 		}
 		case"NOR":{
