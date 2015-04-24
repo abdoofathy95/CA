@@ -30,7 +30,6 @@ public class ExecutionStage {
 
 	public static void executeStage() { // called from previous stage (no need to call
 								// it again)
-		
 		if(execute){
 		MemoryStage.execute = true;
 		String immediateValueShift16;
@@ -48,11 +47,24 @@ public class ExecutionStage {
 		immediateValue = InstructionDecodeStage.immediateValue;
 		registerTAddress = InstructionDecodeStage.registerTAddress;
 		registerDAddress = InstructionDecodeStage.registerDAddress;
-		 immediateValueShift2=(Integer.parseInt(immediateValue,2)*4)+"";
-		branchAddress=(Integer.parseInt(immediateValueShift2)+Integer.parseInt(currentPC))+"";
-		immediateValueShift16=(Integer.parseInt(immediateValue,2)*32)+"";
-		if(Integer.parseInt(tempRegisterEx.get("Shift-Left"))==0)
+		int immediate = Integer.parseUnsignedInt(immediateValue,2);
+		immediateValueShift2=(Integer.toBinaryString(immediate*4));
+		branchAddress=(Integer.parseUnsignedInt(immediateValueShift2,2)+Integer.parseInt(currentPC))+"";
+		immediateValueShift16=(Integer.toBinaryString(immediate<<16));
+		if (immediate>=0) {
+			immediateValueShift2 = "0"+ immediateValueShift2;
+			immediateValueShift16 = "0"+ immediateValueShift16;
+			immediateValueShift2 = signExtendData(immediateValueShift2);
+			immediateValueShift16 = signExtendData(immediateValueShift16);
+		}else{
+			immediateValueShift2 = "1"+ immediateValueShift2;
+			immediateValueShift16 = "1"+ immediateValueShift16;
+			immediateValueShift2 = signExtendData(immediateValueShift2);
+			immediateValueShift16 = signExtendData(immediateValueShift16);
+		}
+		if(Integer.parseInt(tempRegisterEx.get("Shift-Left"))==0) {
 			Registertwodata2ndInput=immediateValue;
+		}
 		else
 			Registertwodata2ndInput=immediateValueShift16;
 		
@@ -73,53 +85,125 @@ public class ExecutionStage {
 			registerTwoDataOutput=registerTwoData;
 		else
 		{
-			int x = Integer.parseInt(registerTwoData);
-			
+			int x = Integer.parseUnsignedInt(registerTwoData);
 			registerTwoDataOutput=((x >> 3)&1)+""+((x >> 2)&1)+((x >> 1)&1)+((x >> 0)&1);
 		}
 		switch(tempRegisterEx.get("AluOp")){
 		case"Add":{
-			aluResult=(Integer.parseInt(registerOneData,2)+Integer.parseInt(ALU2ndInput,2))+"";
+			int result=(Integer.parseUnsignedInt(registerOneData,2)+Integer.parseUnsignedInt(ALU2ndInput,2));
+			aluResult = Integer.toBinaryString(result);
+			if (result >= 0) {
+				aluResult = "0"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
+			else {
+				aluResult = "1"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
 			break;
 		}
 		case"Sub":{
-			aluResult=(Integer.parseInt(registerOneData)-Integer.parseInt(ALU2ndInput))+"";
+			
+			int result=(Integer.parseUnsignedInt(registerOneData,2)-Integer.parseUnsignedInt(ALU2ndInput,2));
+			aluResult = Integer.toBinaryString(result);
+			if (result >= 0 && aluResult.length()<32) {
+				aluResult = "0"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
+			else if (result < 0 && aluResult.length()<32){
+				aluResult = "1"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
 			break;
 		}
 		case"AND":{
-			aluResult=(Integer.parseInt(registerOneData) & Integer.parseInt(ALU2ndInput))+"";
+			int result=(Integer.parseUnsignedInt(registerOneData,2) & Integer.parseUnsignedInt(ALU2ndInput,2));
+			aluResult = Integer.toBinaryString(result);
+			if (result >= 0 && aluResult.length()<32) {
+				aluResult = "0"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
+			else if(result < 0 && aluResult.length()<32){
+				aluResult = "1"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
 			break;
 		}
 		case"OR":{
-			aluResult=(Integer.parseInt(registerOneData) | Integer.parseInt(ALU2ndInput))+"";
+			int result=(Integer.parseUnsignedInt(registerOneData,2) | Integer.parseUnsignedInt(ALU2ndInput,2));
+			aluResult = Integer.toBinaryString(result);
+			if (result >= 0 && aluResult.length()<32) {
+				aluResult = "0"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
+			else if (result < 0 && aluResult.length()<32){
+				aluResult = "1"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
 			break;
 		}
 		case"SLL":{
-			Double x = Math.pow(2, Integer.parseInt(ALU2ndInput));
-			
-			aluResult=(Integer.parseInt(registerOneData,2) *x.intValue()) +"";
+			int result= Integer.parseUnsignedInt(registerOneData,2) << Integer.parseUnsignedInt(ALU2ndInput,2);
+			aluResult = Integer.toBinaryString(result);
+			if (result >= 0 && aluResult.length()<32) {
+				aluResult = "0"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
+			else if (result < 0&& aluResult.length()<32){
+				aluResult = "1"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
 			break;
 		}
 		case"SRL":{
-			Double x = Math.pow(2, Integer.parseInt(ALU2ndInput));
-			aluResult=(Integer.parseInt(registerOneData,2) / x.intValue())+"";
+			int result= Integer.parseUnsignedInt(registerOneData,2) >> Integer.parseUnsignedInt(ALU2ndInput,2);
+			aluResult = Integer.toBinaryString(result);
+			if (result >= 0&& aluResult.length()<32) {
+				aluResult = "0"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
+			else if (result < 0&& aluResult.length()<32){
+				aluResult = "1"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
 			break;
 		}
 		case"NOR":{
-			aluResult=(~(Integer.parseInt(registerOneData) | Integer.parseInt(ALU2ndInput)))+"";
+			int result=(~(Integer.parseUnsignedInt(registerOneData,2) | Integer.parseUnsignedInt(ALU2ndInput,2)));
+			aluResult = Integer.toBinaryString(result);
+			if (result >= 0&& aluResult.length()<32) {
+				aluResult = "0"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
+			else if(result < 0&& aluResult.length()<32){
+				aluResult = "1"+aluResult;
+				aluResult=signExtendData(aluResult);
+			}
 			break;
 		}
 		case"SLT":{
-			if(Integer.parseInt(registerOneData) < Integer.parseInt(ALU2ndInput))
+			if(Integer.parseUnsignedInt(registerOneData,2) < Integer.parseUnsignedInt(ALU2ndInput,2))
+				{
 				aluResult="1";
-			else aluResult="0";
+				aluResult = signExtendData(aluResult);
+				}
+			else {
+				aluResult="0";
+				aluResult = signExtendData(aluResult);
+			}
 			break;
 		}
 		case"SLTU":{
 			int x =Integer.compareUnsigned(Integer.parseInt(registerOneData), Integer.parseInt(ALU2ndInput));
 			if(x <0 )
+				{
 				aluResult="1";
-			else aluResult="0";
+				aluResult = signExtendData(aluResult);
+				}
+			else {
+				aluResult="0";
+				aluResult = signExtendData(aluResult);
+			}
 			break;
 		}
 		case"LUI":{
@@ -132,7 +216,8 @@ public class ExecutionStage {
 		}
 		
 		}
-		if(Integer.compare(Integer.parseInt(registerOneData,2), Integer.parseInt(ALU2ndInput,2))==0)
+
+		if(Integer.compare(Integer.parseUnsignedInt(registerOneData,2), Integer.parseUnsignedInt(ALU2ndInput,2))==0)
 			aluZeroSignal="1";
 		else aluZeroSignal = "0";
 		//startNextStage();
@@ -141,10 +226,14 @@ public class ExecutionStage {
 			MemoryStage.execute = false;
 		}
 	}
-		
-
-	public static void startNextStage() {
-		MemoryStage.executeStage();
+	private static String signExtendData(String data) {
+        String binary = data;
+		if(binary.substring(0,1).equals("1")){
+      	  while(binary.length()<32) binary="1"+binary;
+        }else{
+        	while(binary.length()<32) binary="0"+binary;
+        }
+		return binary;
 	}
 
 }

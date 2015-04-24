@@ -53,5 +53,6 @@ public class MainApp {
 			System.out.println("-------------end Cycle " + y + "-------------");
 			y++;
 		}
+		System.out.println(RegisterFile.readRegisterWithItsName("t0"));
 	}
 }

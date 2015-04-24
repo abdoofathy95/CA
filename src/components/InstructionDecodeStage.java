@@ -536,9 +536,8 @@ public class InstructionDecodeStage {
 					RegisterFile.readRegisterWithItsName(instruction.getRt()));
 			break;
 		}
-
 		}
-
+		immediateValue=signExtendData(immediateValue);
 	}
 
 	private static void storeControlSignals(String RegDest, String Branch,
@@ -574,5 +573,15 @@ public class InstructionDecodeStage {
 			bin = "0" + bin;
 		}
 		return bin;
+	}
+	
+	private static String signExtendData(String data) {
+        String binary = data;
+		if(binary.substring(0,1).equals("1")){
+      	  while(binary.length()<32) binary="1"+binary;
+        }else{
+        	while(binary.length()<32) binary="0"+binary;
+        }
+		return binary;
 	}
 }

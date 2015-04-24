@@ -31,7 +31,7 @@ public class WriteBackStage {
 				}
 				else{
 					if(tempRegisterWB.get("Zero-Extended").equals("1")){ //lbu
-						dataToBeWrittenToReg = "0x000000"+memoryData.substring(memoryData.length()-2,memoryData.length());
+						dataToBeWrittenToReg = "00000000000000000000000000"+memoryData.substring(memoryData.length()-8,memoryData.length());
 						lbu(registerAddressToWriteTo,dataToBeWrittenToReg);
 					}
 					else{ //lw
@@ -48,6 +48,7 @@ public class WriteBackStage {
 				}else{
 					// add, sub, and, addi, lui, sll, srl, nor, slt, sltu
 					if(tempRegisterWB.get("RegWrite").equals("1")){ 
+						System.out.println("ALU RESULT//////////////////////////"+registerAddressToWriteTo);
 						RegisterFile.writeToRegister(registerAddressToWriteTo,aluResult);
 					}
 				}
@@ -55,11 +56,11 @@ public class WriteBackStage {
 		}
 
 		private static String signExtendData(String data) {
-          String binary =  hexToBinary8Bits("0x"+data.substring(8));
+          String binary = data.substring(data.length()-8,data.length());
           if(binary.substring(0,1).equals("1")){
-        	  return "0xFFFFFF"+data.substring(data.length()-2,data.length());
+        	  return "11111111111111111111111111"+data.substring(data.length()-8,data.length());
           }else{
-        	  return "0x000000"+data.substring(data.length()-2,data.length());
+        	  return "00000000000000000000000000"+data.substring(data.length()-8,data.length());
           }
 		}
 
@@ -90,12 +91,9 @@ public class WriteBackStage {
 			}
 			return bin;
 		}
-		/*
-		public static void main(String[]args){
-			System.out.println(signExtendData("0x001289AA"));
-			System.out.println(signExtendData("0x0012897A"));
-		}
-		*/
+		
+		
+		
 	}
 
 

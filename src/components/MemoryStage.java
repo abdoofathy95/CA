@@ -27,11 +27,7 @@ public class MemoryStage {
 		registerTwoData = ExecutionStage.registerTwoData;
 		registerAddressToWriteTo = ExecutionStage.registerAddressToWriteTo;
 	}
-/*
-	public static void startNextStage() {
-		WriteBackStage.init();
-	}
-*/
+	
 	public static void executeStage() {
 		
 		if(execute){
