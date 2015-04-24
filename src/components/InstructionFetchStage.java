@@ -17,15 +17,22 @@ public class InstructionFetchStage {
 	 * public static void startNextStage() { //InstructionDecodeStage.init(); }
 	 */
 
-	public static void ExecuteStage() {
+	public static void executeStage() {
 		fetch();
-		InstructionDecodeStage.ExecuteStage();
+		System.out.println("InstructionFetchStage");
+		//InstructionDecodeStage.ExecuteStage();
 	}
 
 	public static void fetch() {
+		if(currentPC < InstructionMemory.instructions.size()){
 		currentInstruction = InstructionMemory.instructions.get(currentPC);
 		currentPC += 1;
 		jumpBranchInstruction(currentInstruction);
+		InstructionDecodeStage.execute = true;
+		}else{
+			InstructionDecodeStage.execute = false;
+		}
+		
 	}
 
 	public static void jumpBranchInstruction(Instruction instruction) {

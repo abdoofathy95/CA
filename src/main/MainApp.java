@@ -2,11 +2,15 @@ package main;
 
 import java.io.IOException;
 
+import components.ExecutionStage;
+import components.InstructionDecodeStage;
 import components.InstructionFetchStage;
 import components.InstructionMemory;
 import components.Memory;
+import components.MemoryStage;
 import components.Parser;
 import components.RegisterFile;
+import components.WriteBackStage;
 
 public class MainApp {
 	@SuppressWarnings("static-access") // to be moved to a seperate class ( main application class)
@@ -22,8 +26,19 @@ public class MainApp {
 		RegisterFile.initRegistersWithAddresses();
 		RegisterFile.initRegistersWithZeros();
 		//
-		while(InstructionFetchStage.currentPC < InstructionMemory.instructions.size()) {
-			InstructionFetchStage.ExecuteStage();
+		WriteBackStage backStage = new WriteBackStage();
+		MemoryStage memoryStage = new MemoryStage();
+		ExecutionStage executionStage = new ExecutionStage();
+		InstructionDecodeStage instructionDecodeStage = new InstructionDecodeStage();
+		InstructionFetchStage fetchStage = new InstructionFetchStage();
+		RegisterFile registerFile = new RegisterFile();
+		for (int i = 0 ; i < 5*InstructionMemory.instructions.size() ; i++) {
+			backStage.executeStage();
+			memoryStage.executeStage();
+			executionStage.executeStage();
+			instructionDecodeStage.executeStage();
+			fetchStage.executeStage();
 		}
+		System.out.println(RegisterFile.readRegisterWithItsName("t1"));
 	}
 }

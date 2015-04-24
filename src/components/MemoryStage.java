@@ -3,6 +3,7 @@ package components;
 import java.util.Hashtable;
 
 public class MemoryStage {
+	public static boolean execute = false;
 	public static Hashtable<String, String> tempRegisterWB;
 	private static Hashtable<String, String> tempRegisterM;
 	public static String currentPC;
@@ -26,12 +27,15 @@ public class MemoryStage {
 		registerTwoData = ExecutionStage.registerTwoData;
 		registerAddressToWriteTo = ExecutionStage.registerAddressToWriteTo;
 	}
-
+/*
 	public static void startNextStage() {
 		WriteBackStage.init();
 	}
-	
+*/
 	public static void executeStage() {
+		
+		if(execute){
+		WriteBackStage.execute = true;
 		init();
 		//memRead , memWrite , Branch , BNE , Jump , JumpR
 		String memRead = tempRegisterM.get("memRead");
@@ -65,6 +69,10 @@ public class MemoryStage {
 			//branch
 			//currentPC = aluResult;
 		}
-		startNextStage();
+		//startNextStage();
+		System.out.println("MemoryStage");
+		}else{
+			WriteBackStage.execute = false;
+		}
 	}
 }

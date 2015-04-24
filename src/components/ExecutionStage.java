@@ -3,6 +3,7 @@ package components;
 import java.util.Hashtable;
 
 public class ExecutionStage {
+	public static boolean execute = false;
 	public static Hashtable<String, String> tempRegisterWB;
 	public static Hashtable<String, String> tempRegisterM;
 	private static Hashtable<String, String> tempRegisterEx;
@@ -27,8 +28,11 @@ public class ExecutionStage {
 	public static String registerTwoDataOutput; 
 
 
-	public static void init() { // called from previous stage (no need to call
+	public static void executeStage() { // called from previous stage (no need to call
 								// it again)
+		
+		if(execute){
+		MemoryStage.execute = true;
 		String immediateValueShift16;
 		String immediateValueShift2;
 		String Registertwodata2ndInput;	
@@ -131,8 +135,13 @@ public class ExecutionStage {
 		if(Integer.compare(Integer.parseInt(registerOneData), Integer.parseInt(ALU2ndInput))==0)
 			aluZeroSignal="1";
 		else aluZeroSignal = "0";
-		startNextStage();
+		//startNextStage();
+		System.out.println("ExecuteStage");
+		}else{
+			MemoryStage.execute = false;
+		}
 	}
+		
 
 	public static void startNextStage() {
 		MemoryStage.executeStage();

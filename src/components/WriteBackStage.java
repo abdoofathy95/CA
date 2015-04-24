@@ -3,6 +3,7 @@ package components;
 import java.util.Hashtable;
 
 public class WriteBackStage {
+	public static boolean execute = false;
 	private static Hashtable<String, String> tempRegisterWB;
 	private static String currentPC;
 	private static String memoryData;
@@ -10,13 +11,16 @@ public class WriteBackStage {
 	public static String registerAddressToWriteTo;
 	public static String dataToBeWrittenToReg; // set in current class
 
-	public static void init() {
+	public static void executeStage() {
+		if(execute){
 		tempRegisterWB = MemoryStage.tempRegisterWB;
 		currentPC = MemoryStage.currentPC;
 		aluResult = MemoryStage.aluResult;
 		registerAddressToWriteTo = MemoryStage.registerAddressToWriteTo;
 		memoryData = MemoryStage.memoryData;
 		findInstruction(tempRegisterWB);
+		System.out.println("WriteBackStage");
+		}
 	}	
 		public static void findInstruction(Hashtable<String,String> tempRegisterWB){
 			
@@ -86,12 +90,12 @@ public class WriteBackStage {
 			}
 			return bin;
 		}
-		
+		/*
 		public static void main(String[]args){
 			System.out.println(signExtendData("0x001289AA"));
 			System.out.println(signExtendData("0x0012897A"));
 		}
-		
+		*/
 	}
 
 

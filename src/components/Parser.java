@@ -20,7 +20,7 @@ public class Parser {
 		validateInstructionRegisters();
 		fillArray();
 	}
-
+	
 	public static void getLabels() throws IOException {
 		String currentLine = "";
 		BufferedReader br = readFromFile();

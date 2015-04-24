@@ -9,7 +9,7 @@ import java.util.Hashtable;
  */
 public class InstructionDecodeStage {
 	// generate control signals here according to method
-
+	public static boolean execute = false;
 	// will be holding signals generated according to current instruction
 	public static Hashtable<String, String> tempRegisterWB = new Hashtable<String, String>();
 	// will be holding signals generated according to current instruction
@@ -45,7 +45,7 @@ public class InstructionDecodeStage {
 	 * public static void startNextStage() { calls next stage (call it when
 	 * done) ExecutionStage.init(); }
 	 */
-
+/*
 	public static void main(String[] args) {
 		RegisterFile.initRegistersWithAddresses();
 		RegisterFile.initRegistersWithZeros();
@@ -56,8 +56,10 @@ public class InstructionDecodeStage {
 		// InstructionFetchStage.ExecuteStage();
 		printStage();
 	}
-
-	public static void ExecuteStage() {
+*/
+	public static void executeStage() {
+		if(execute){
+		ExecutionStage.execute = true;
 		currentPC = Integer.toBinaryString(InstructionFetchStage.currentPC);
 		while (currentPC.length() < 32) {
 			currentPC = "0" + currentPC;
@@ -65,7 +67,11 @@ public class InstructionDecodeStage {
 		currentInstruction = InstructionFetchStage.currentInstruction;
 		decodeInstruction(InstructionFetchStage.currentInstruction);
 		printStage();
-		ExecutionStage.init();
+		System.out.println("InstructionDecodeStage");
+		}else{
+			ExecutionStage.execute = false;
+		}
+		//ExecutionStage.init();
 	}
 
 	private static void printStage() {
