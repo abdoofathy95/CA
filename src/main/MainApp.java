@@ -32,13 +32,26 @@ public class MainApp {
 		InstructionDecodeStage instructionDecodeStage = new InstructionDecodeStage();
 		InstructionFetchStage fetchStage = new InstructionFetchStage();
 		RegisterFile registerFile = new RegisterFile();
-		for (int i = 0 ; i < 5*InstructionMemory.instructions.size() ; i++) {
+		int y = 0;
+		while (InstructionFetchStage.currentPC < InstructionMemory.instructions.size()) {
+			System.out.println("-------------Cycle " + y + "-------------");
 			backStage.executeStage();
 			memoryStage.executeStage();
 			executionStage.executeStage();
 			instructionDecodeStage.executeStage();
 			fetchStage.executeStage();
+			System.out.println("-------------end Cycle " + y + "-------------");
+			y++;
 		}
-		//System.out.println(RegisterFile.readRegisterWithItsName("t1"));
+		for (int i = 0 ; i < 4 ; i++) {
+			System.out.println("-------------Cycle " + y + "-------------");
+			backStage.executeStage();
+			memoryStage.executeStage();
+			executionStage.executeStage();
+			instructionDecodeStage.executeStage();
+			fetchStage.executeStage();
+			System.out.println("-------------end Cycle " + y + "-------------");
+			y++;
+		}
 	}
 }

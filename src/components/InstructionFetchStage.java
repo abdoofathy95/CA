@@ -19,7 +19,7 @@ public class InstructionFetchStage {
 
 	public static void executeStage() {
 		fetch();
-		System.out.println("InstructionFetchStage");
+		
 		//InstructionDecodeStage.ExecuteStage();
 	}
 
@@ -29,6 +29,7 @@ public class InstructionFetchStage {
 		currentPC += 1;
 		jumpBranchInstruction(currentInstruction);
 		InstructionDecodeStage.execute = true;
+		System.out.println("InstructionFetchStage");
 		}else{
 			InstructionDecodeStage.execute = false;
 		}
