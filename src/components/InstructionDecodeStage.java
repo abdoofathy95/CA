@@ -122,7 +122,7 @@ public class InstructionDecodeStage {
 		immediateValue = binInstruction.substring(16, 32);
 		if (immediateValue.length() < 32) {
 			while(immediateValue.length()<32) {
-				immediateValue = binInstruction.charAt(0) + immediateValue;
+				immediateValue = immediateValue.charAt(0) + immediateValue;
 			}
 		}
 		
@@ -142,7 +142,7 @@ public class InstructionDecodeStage {
 		switch (insName) {
 		case "add": {
 			storeControlSignals("1", "0", "0", "0", "0", "Add", "0", "0", "1",
-					"0", "0", "0", "0", "0", "0","0");
+					"0", "0", "0", "0", "0", "0","0","0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -161,7 +161,7 @@ public class InstructionDecodeStage {
 
 		case "sub": {
 			storeControlSignals("1", "0", "0", "0", "0", "Sub", "0", "0", "1",
-					"0", "0", "0", "0", "0", "0","0");
+					"0", "0", "0", "0", "0", "0","0","0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -178,7 +178,7 @@ public class InstructionDecodeStage {
 		}
 		case "and": {
 			storeControlSignals("1", "0", "0", "0", "0", "AND", "0", "0", "1",
-					"0", "0", "0", "0", "0", "0","0");
+					"0", "0", "0", "0", "0", "0","0","0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -195,7 +195,7 @@ public class InstructionDecodeStage {
 		}
 		case "lw": {
 			storeControlSignals("0", "0", "0", "1", "1", "Add", "0", "1", "1",
-					"0", "0", "0", "0", "0", "0","0");
+					"0", "0", "0", "0", "0", "0","0","0");
 			String instructionBinary = "100011";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -216,7 +216,7 @@ public class InstructionDecodeStage {
 		}
 		case "sw": {
 			storeControlSignals("0", "0", "0", "0", "0", "Add", "1", "1", "0",
-					"0", "0", "0", "0", "0", "0","0");
+					"0", "0", "0", "0", "0", "0","0","0");
 			String instructionBinary = "101011";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -237,7 +237,7 @@ public class InstructionDecodeStage {
 		}
 		case "addi": {
 			storeControlSignals("0", "0", "0", "0", "0", "Add", "0", "1", "1",
-					"0", "0", "0", "0", "0", "0","0");
+					"0", "0", "0", "0", "0", "0","0","0");
 			String instructionBinary = "101011";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -249,7 +249,6 @@ public class InstructionDecodeStage {
 				while (signExtened.length()<32) {
 					signExtened = "0" + signExtened;
 				}
-				System.out.println(signExtened);
 			}// sign extend
 			instructionBinary += signExtened.substring(16, 32);
 			stageOutput(instructionBinary,
@@ -259,7 +258,7 @@ public class InstructionDecodeStage {
 		}
 		case "lb": {
 			storeControlSignals("0", "0", "0", "1", "1", "Add", "0", "1", "1",
-					"0", "0", "0", "1", "0", "0","0");
+					"0", "0", "0", "1", "0", "0","0","0");
 			String instructionBinary = "101011";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -280,7 +279,7 @@ public class InstructionDecodeStage {
 		}
 		case "lbu": {
 			storeControlSignals("0", "0", "0", "1", "1", "Add", "0", "1", "1",
-					"0", "0", "0", "0", "1", "0","0");
+					"0", "0", "0", "0", "1", "0","0","0");
 			String instructionBinary = "101011";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -302,7 +301,7 @@ public class InstructionDecodeStage {
 		}
 		case "sb": {
 			storeControlSignals("0", "0", "0", "0", "0", "Add", "1", "1", "0",
-					"0", "0", "0", "0", "0", "1","0");
+					"0", "0", "0", "0", "0", "1","0","0");
 			String instructionBinary = "101000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -324,7 +323,7 @@ public class InstructionDecodeStage {
 		}
 		case "lui": {
 			storeControlSignals("0", "0", "0", "0", "0", "Add", "0", "1", "1",
-					"0", "0", "0", "0", "0", "0","1");
+					"0", "0", "0", "0", "0", "0","1","0");
 			String instructionBinary = "001111";
 			instructionBinary += "00000";// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
@@ -342,8 +341,8 @@ public class InstructionDecodeStage {
 			break;
 		}
 		case "sll": {
-			storeControlSignals("1", "0", "0", "0", "0", "SLL", "0", "0", "1",
-					"0", "0", "0", "0", "0", "0", "0");
+			storeControlSignals("1", "0", "0", "0", "0", "SLL", "0", "1", "1",
+					"0", "0", "0", "0", "0", "0", "0","1");
 			String instructionBinary = "000000";
 			instructionBinary +="00000";// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
@@ -366,8 +365,8 @@ public class InstructionDecodeStage {
 			break;
 		}
 		case "srl": {
-			storeControlSignals("1", "0", "0", "0", "0", "SRL", "0", "0", "1",
-					"0", "0", "0", "0", "0", "0","0");
+			storeControlSignals("1", "0", "0", "0", "0", "SRL", "0", "1", "1",
+					"0", "0", "0", "0", "0", "0","0","1");
 			String instructionBinary = "000000";
 			instructionBinary += "00000";// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
@@ -391,7 +390,7 @@ public class InstructionDecodeStage {
 		}
 		case "nor": {
 			storeControlSignals("1", "0", "0", "0", "0", "NOR", "0", "0", "1",
-					"0", "0", "0", "0", "0", "0","0");
+					"0", "0", "0", "0", "0", "0","0","0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -409,7 +408,7 @@ public class InstructionDecodeStage {
 
 		case "beq": {
 			storeControlSignals("0", "1", "0", "0", "0", "Sub", "0", "0", "0",
-					"0", "0", "0", "0", "0", "0","0");
+					"0", "0", "0", "0", "0", "0","0","0");
 			String instructionBinary = "101011";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -433,7 +432,7 @@ public class InstructionDecodeStage {
 		}
 		case "bne": {
 			storeControlSignals("0", "0", "1", "0", "0", "Sub", "0", "0", "0",
-					"0", "0", "0", "0", "0", "0","0");
+					"0", "0", "0", "0", "0", "0","0","0");
 			String instructionBinary = "000101";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -457,7 +456,7 @@ public class InstructionDecodeStage {
 		}
 		case "j": {
 			storeControlSignals("0", "0", "0", "0", "0", "Add", "0", "0", "0",
-					"1", "0", "0", "0", "0", "0","0");
+					"1", "0", "0", "0", "0", "0","0" , "0");
 			String instructionBinary = "000010";
 			String signExtened = Integer
 					.toBinaryString((int) InstructionFetchStage
@@ -473,7 +472,7 @@ public class InstructionDecodeStage {
 		}
 		case "jal": {
 			storeControlSignals("0", "0", "0", "0", "0", "Add", "0", "0", "1",
-					"1", "0", "1", "0", "0","0", "0");
+					"1", "0", "1", "0", "0","0", "0" , "0");
 			String instructionBinary = "000011";
 			String signExtened = Integer
 					.toBinaryString((int) InstructionFetchStage
@@ -490,7 +489,7 @@ public class InstructionDecodeStage {
 		}
 		case "jr": {
 			storeControlSignals("0", "0", "0", "0", "0", "JR", "0", "0", "0",
-					"0", "1", "0", "0", "0","0", "0");
+					"0", "1", "0", "0", "0","0", "0" , "0");
 			String instructionBinary = "000000";
 			instructionBinary = hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -503,7 +502,7 @@ public class InstructionDecodeStage {
 
 		case "slt": {
 			storeControlSignals("1", "0", "0", "0", "0", "SLT", "0", "0", "1",
-					"0", "0", "0", "0", "0","0", "0");
+					"0", "0", "0", "0", "0","0", "0" , "0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -521,7 +520,7 @@ public class InstructionDecodeStage {
 		}
 		case "sltu": {
 			storeControlSignals("1", "0", "0", "0", "0", "SLTU", "0", "0", "1",
-					"0", "0", "0", "0", "0","0", "0");
+					"0", "0", "0", "0", "0","0", "0", "0");
 			String instructionBinary = "000000";
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
@@ -544,7 +543,7 @@ public class InstructionDecodeStage {
 			String BNE, String memRead, String memToReg, String AluOp,
 			String MemWrite, String AluSrc, String RegWrite, String Jump,
 			String JumpR, String JALEX, String SignExtended,
-			String ZeroExtended,String SB , String ShiftLeft) {
+			String ZeroExtended,String SB , String ShiftLeft , String Shift) {
 
 		tempRegisterWB.put("RegWrite", RegWrite);
 		tempRegisterWB.put("MemToReg", memToReg);
@@ -558,8 +557,10 @@ public class InstructionDecodeStage {
 		tempRegisterM.put("BNE", BNE);
 		tempRegisterM.put("Jump", Jump);
 		tempRegisterM.put("JumpR", JumpR);
+		
 		tempRegisterEx.put("AluSrc", AluSrc);
 		tempRegisterEx.put("AluOp", AluOp);
+		tempRegisterEx.put("Shift", Shift);
 		tempRegisterEx.put("RegDest", RegDest);
 		tempRegisterEx.put("Shift-Left", ShiftLeft);
 		tempRegisterEx.put("SB", SB);

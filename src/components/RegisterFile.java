@@ -40,13 +40,13 @@ public class RegisterFile {
 				break;
 			}
 		}
-		String signExtened = Integer.toBinaryString(Integer.parseInt(value));
-		if (signExtened.length() < 32) {
-			while(signExtened.length()<32) {
-				signExtened = "0" + signExtened;
+		//String signExtened = Integer.toBinaryString(Integer.parseInt(value));
+		if (value.length() < 32) {
+			while(value.length()<32) {
+				value = "0" + value;
 			}
 		}// sign extend
-		registersValue.put(registerValue, signExtened);
+		registersValue.put(registerValue, value);
 	}
 
 	public static void initRegistersWithAddresses() {
