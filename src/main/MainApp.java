@@ -39,6 +39,6 @@ public class MainApp {
 			instructionDecodeStage.executeStage();
 			fetchStage.executeStage();
 		}
-		System.out.println(RegisterFile.readRegisterWithItsName("t1"));
+		//System.out.println(RegisterFile.readRegisterWithItsName("t1"));
 	}
 }

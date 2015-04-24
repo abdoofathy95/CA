@@ -48,7 +48,7 @@ public class WriteBackStage {
 				}else{
 					// add, sub, and, addi, lui, sll, srl, nor, slt, sltu
 					if(tempRegisterWB.get("RegWrite").equals("1")){ 
-						RegisterFile.writeToRegister(RegisterFile.readRegisterWithAddress(registerAddressToWriteTo),aluResult);
+						RegisterFile.writeToRegister(registerAddressToWriteTo,aluResult);
 					}
 				}
 			}
