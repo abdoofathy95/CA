@@ -337,7 +337,7 @@ public class InstructionDecodeStage {
 				}
 			}// sign extend
 			instructionBinary += signExtened.substring(16, 32);
-			stageOutput(instructionBinary, "0x00000000",
+			stageOutput(instructionBinary, "00000000000000000000000000000000",
 					RegisterFile.readRegisterWithItsName(instruction.getRt()));
 			break;
 		}
@@ -361,7 +361,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "000000";
 
 			stageOutput(instructionBinary,
-					"0x00000000",
+					"00000000000000000000000000000000",
 					RegisterFile.readRegisterWithItsName(instruction.getRt()));
 			break;
 		}
@@ -385,7 +385,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "000010";
 
 			stageOutput(instructionBinary,
-					"0x00000000",
+					"00000000000000000000000000000000",
 					RegisterFile.readRegisterWithItsName(instruction.getRt()));
 			break;
 		}
@@ -468,7 +468,7 @@ public class InstructionDecodeStage {
 				}
 			}// sign extend
 			instructionBinary += signExtened.substring(6, 32);
-			stageOutput(instructionBinary, "0x00000000", "0x00000000");
+			stageOutput(instructionBinary, "00000000000000000000000000000000", "00000000000000000000000000000000");
 			break;
 		}
 		case "jal": {
@@ -485,7 +485,7 @@ public class InstructionDecodeStage {
 			}// sign extend
 			instructionBinary += signExtened.substring(6, 32);
 
-			stageOutput(instructionBinary, "0x00000000", "0x00000000");
+			stageOutput(instructionBinary, "00000000000000000000000000000000", "00000000000000000000000000000000");
 			break;
 		}
 		case "jr": {
@@ -497,7 +497,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "0000000000000000010000";
 			stageOutput(instructionBinary,
 					RegisterFile.readRegisterWithItsName(instruction.getRs()),
-					"0x00000000");
+					"00000000000000000000000000000000");
 			break;
 		}
 
