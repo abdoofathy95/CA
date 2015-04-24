@@ -1,22 +1,45 @@
 package components;
 
 import java.util.Hashtable;
+import java.util.Iterator;
 
 public class RegisterFile {
 
 	private static Hashtable<String, String> registersValue = new Hashtable<String, String>();
 	static final Hashtable<String, String> registersAddress = new Hashtable<String, String>();
 
-	public static String readRegister1(String register) {
-		return registersValue.get(register);
+	public static String readRegisterWithAddress(String register) { // register is address in binary
+		int address = Integer.parseInt(register,2);
+		String hexAddress = "0x"+Integer.toHexString(address);
+		String registerValue = "";
+		Iterator <String> keys = registersAddress.keySet().iterator();
+		while(keys.hasNext()) {
+			String key = keys.next();
+			if (registersAddress.get(key).matches(hexAddress)) {
+				registerValue = key;
+				break;
+			}
+		}
+		return registersValue.get(registerValue);
 	}
 
-	public static String readRegister2(String register) {
+	public static String readRegisterWithItsName(String register) { // register is address in binary
 		return registersValue.get(register);
 	}
-
-	public static void writeToRegister(String register, String value) {
-		registersValue.put(register, value);
+	
+	public static void writeToRegister(String register, String value) { // register is address in binary
+		int address = Integer.parseInt(register,2);
+		String hexAddress = "0x"+Integer.toHexString(address);
+		String registerValue = "";
+		Iterator <String> keys = registersAddress.keySet().iterator();
+		while(keys.hasNext()) {
+			String key = keys.next();
+			if (registersAddress.get(key).matches(hexAddress)) {
+				registerValue = key;
+				break;
+			}
+		}
+		registersValue.put(registerValue, value);
 	}
 
 	public static void initRegistersWithAddresses() {

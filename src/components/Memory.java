@@ -3,9 +3,13 @@ package components;
 import java.util.ArrayList;
 
 public class Memory {
-	public static ArrayList<String> mem = new ArrayList<String>();
-
+	public static ArrayList<String> mem; // dynamic memory with bounds [0:1000000000]
+										// stack starts at 999999999
 	public static void writeToMemory(int index,String content) {
+		if (index<0 || index>mem.size()){
+			System.out.println("Memory address out of bounds");
+			System.exit(0);
+		}
 		String byte1 = content.substring(0, 8);
 		String byte2 = content.substring(8, 16);
 		String byte3 = content.substring(16, 24);
@@ -18,5 +22,11 @@ public class Memory {
 	public static String readFromMemory(int index) {
 		String word = mem.get(index)+mem.get(index+1)+mem.get(index+2)+mem.get(index+3);
 		return word;
+	}
+	public static void init() {
+		mem =  new ArrayList<String>();
+		for(int i=0; i<999;i++) {
+			mem.add(i,"00000000");
+		}
 	}
 }

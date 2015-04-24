@@ -872,6 +872,8 @@ public class Parser {
 			System.out.println(x.InstructionSet.instructions.get(i).toString());
 			// Offset range in load and store
 		}
+		// initialize the memory
+		Memory.init();
 		RegisterFile.initRegistersWithAddresses();
 		RegisterFile.initRegistersWithZeros();
 		InstructionFetchStage.ExecuteStage();

@@ -43,7 +43,7 @@ public class MemoryStage {
 		if (memRead.matches("1")){
 			// read from memory
 			int address = Integer.parseInt(aluResult);
-			Memory.readFromMemory(address);
+			memoryData = Memory.readFromMemory(address);
 		}
 		if (memWrite.matches("1")){
 			int address = Integer.parseInt(aluResult);

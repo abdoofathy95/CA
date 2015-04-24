@@ -40,15 +40,15 @@ public class InstructionFetchStage {
 	public static void jumpBranchInstruction(Instruction instruction) {
 		switch (instruction.getInstructionName()) {
 		case "beq": {
-			if (hexToInt(RegisterFile.readRegister1(instruction.getRs()))
-					- hexToInt(RegisterFile.readRegister2(instruction.getRt())) == 0) {
+			if (hexToInt(RegisterFile.readRegisterWithItsName(instruction.getRs()))
+					- hexToInt(RegisterFile.readRegisterWithItsName(instruction.getRt())) == 0) {
 				currentPC = getLabelIndex(instruction.getJumpLabel());
 			}
 			break;
 		}
 		case "bne": {
-			if (hexToInt(RegisterFile.readRegister1(instruction.getRs()))
-					- hexToInt(RegisterFile.readRegister2(instruction.getRt())) != 0) {
+			if (hexToInt(RegisterFile.readRegisterWithItsName(instruction.getRs()))
+					- hexToInt(RegisterFile.readRegisterWithItsName(instruction.getRt())) != 0) {
 				currentPC = getLabelIndex(instruction.getJumpLabel());
 			}
 			break;
@@ -63,7 +63,7 @@ public class InstructionFetchStage {
 		}
 		case "jr": {
 			currentPC = getInstructionIndex(instruction)
-					+ hexToInt(RegisterFile.readRegister1(instruction.getRs()));
+					+ hexToInt(RegisterFile.readRegisterWithItsName(instruction.getRs()));
 			break;
 		}
 		}
