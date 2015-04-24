@@ -216,6 +216,7 @@ public class ExecutionStage {
 		}
 		
 		}
+
 		if(Integer.compare(Integer.parseUnsignedInt(registerOneData,2), Integer.parseUnsignedInt(ALU2ndInput,2))==0)
 			aluZeroSignal="1";
 		else aluZeroSignal = "0";
