@@ -31,6 +31,7 @@ public class RegisterFile {
 		int address = Integer.parseInt(register,2);
 		String hexAddress = "0x"+Integer.toHexString(address);
 		String registerValue = "";
+
 		Iterator <String> keys = registersAddress.keySet().iterator();
 		while(keys.hasNext()) {
 			String key = keys.next();

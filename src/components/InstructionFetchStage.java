@@ -102,7 +102,7 @@ public class InstructionFetchStage {
 	}
 
 	public static int hexToInt(String hex) {
-		return Integer.parseInt(hex.substring(2), 16);
+		return Integer.parseUnsignedInt(hex.substring(2), 16);
 	}
 
 	public static void setPC(int i) {

@@ -330,7 +330,7 @@ public class InstructionDecodeStage {
 				}
 			}// sign extend
 			instructionBinary += signExtened.substring(16, 32);
-			stageOutput(instructionBinary, "0x00000000",
+			stageOutput(instructionBinary, "00000000000000000000000000000000",
 					RegisterFile.readRegisterWithItsName(instruction.getRt()));
 			break;
 		}
@@ -354,7 +354,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "000000";
 
 			stageOutput(instructionBinary,
-					"0x00000000",
+					"00000000000000000000000000000000",
 					RegisterFile.readRegisterWithItsName(instruction.getRt()));
 			break;
 		}
@@ -378,7 +378,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "000010";
 
 			stageOutput(instructionBinary,
-					"0x00000000",
+					"00000000000000000000000000000000",
 					RegisterFile.readRegisterWithItsName(instruction.getRt()));
 			break;
 		}
@@ -461,7 +461,7 @@ public class InstructionDecodeStage {
 				}
 			}// sign extend
 			instructionBinary += signExtened.substring(6, 32);
-			stageOutput(instructionBinary, "0x00000000", "0x00000000");
+			stageOutput(instructionBinary, "00000000000000000000000000000000", "00000000000000000000000000000000");
 			break;
 		}
 		case "jal": {
@@ -478,7 +478,7 @@ public class InstructionDecodeStage {
 			}// sign extend
 			instructionBinary += signExtened.substring(6, 32);
 
-			stageOutput(instructionBinary, "0x00000000", "0x00000000");
+			stageOutput(instructionBinary, "00000000000000000000000000000000", "00000000000000000000000000000000");
 			break;
 		}
 		case "jr": {
@@ -490,7 +490,7 @@ public class InstructionDecodeStage {
 			instructionBinary += "0000000000000000010000";
 			stageOutput(instructionBinary,
 					RegisterFile.readRegisterWithItsName(instruction.getRs()),
-					"0x00000000");
+					"00000000000000000000000000000000");
 			break;
 		}
 
@@ -529,9 +529,8 @@ public class InstructionDecodeStage {
 					RegisterFile.readRegisterWithItsName(instruction.getRt()));
 			break;
 		}
-
 		}
-
+		immediateValue=signExtendData(immediateValue);
 	}
 
 	private static void storeControlSignals(String RegDest, String Branch,
@@ -567,5 +566,15 @@ public class InstructionDecodeStage {
 			bin = "0" + bin;
 		}
 		return bin;
+	}
+	
+	private static String signExtendData(String data) {
+        String binary = data;
+		if(binary.substring(0,1).equals("1")){
+      	  while(binary.length()<32) binary="1"+binary;
+        }else{
+        	while(binary.length()<32) binary="0"+binary;
+        }
+		return binary;
 	}
 }

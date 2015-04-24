@@ -6,6 +6,7 @@ public class Memory {
 	public static ArrayList<String> mem; // dynamic memory with bounds [0:1000000000]
 										// stack starts at 999999999
 	public static void writeToMemory(int index,String content) {
+		System.out.println(index);
 		String byte1 = content.substring(0, 8);
 		String byte2 = content.substring(8, 16);
 		String byte3 = content.substring(16, 24);
@@ -21,8 +22,5 @@ public class Memory {
 	}
 	public static void init() {
 		mem =  new ArrayList<String>();
-		for(int i=0; i<999;i++) {
-			mem.add(i,"00000000");
-		}
 	}
 }
