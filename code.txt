@@ -1,19 +1,28 @@
-<<<<<<< HEAD
-addi $t1,$zero,5
-addi $t0 , $zero , 80
-addi $t2 , $zero , -1
-addi $t3 , $zero , -1
-sub $s0 , $t1 , $t0
-=======
-addi $t1 , $zero , 0
-addi $t2 , $zero , 10
-addi $t3 , $zero , 0
-addi $t3 , $zero , 0
-kareem:addi $t1 , $t1 , 1
-addi $t3 , $zero , 0
-addi $t3 , $zero , 0
-bne $t1 , $t2 , kareem
-addi $t3 , $zero , 3
-addi $t4 , $zero , 4
-add $t5 , $t1 , $t2
->>>>>>> origin/master
+addi $t0, $zero, 5
+addi $t6, $zero, 0
+addi $t6, $zero, 0
+
+addi $t1, $zero, 0
+addi $t6, $zero, 0
+addi $t6, $zero, 0
+
+Fac: slt $t2, $t0, $zero
+	 addi $t6, $zero, 0
+	 addi $t6, $zero, 0
+	 
+	 add $t1, $t1, $t0
+	 addi $t6, $zero, 0
+	 addi $t6, $zero, 0
+	 
+	 bne $t2, $zero, Exit
+	 addi $t6, $zero, 0
+	 addi $t6, $zero, 0
+	 
+	 addi $t0, $t0, -1
+	 addi $t6, $zero, 0
+	 addi $t6, $zero, 0
+	 
+	 j Fac
+	 
+Exit:
+	addi $t5, $zero, 0

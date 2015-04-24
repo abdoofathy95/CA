@@ -122,7 +122,7 @@ public class InstructionDecodeStage {
 		immediateValue = binInstruction.substring(16, 32);
 		if (immediateValue.length() < 32) {
 			while(immediateValue.length()<32) {
-				immediateValue = binInstruction.charAt(0) + immediateValue;
+				immediateValue = immediateValue.charAt(0) + immediateValue;
 			}
 		}
 		

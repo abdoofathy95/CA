@@ -54,5 +54,7 @@ public class MainApp {
 			y++;
 		}
 		System.out.println(RegisterFile.readRegisterWithItsName("t0"));
+		System.out.println(RegisterFile.readRegisterWithItsName("t1"));
+		System.out.println(RegisterFile.readRegisterWithItsName("t2"));
 	}
 }

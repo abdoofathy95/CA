@@ -39,14 +39,8 @@ public class RegisterFile {
 				registerValue = key;
 				break;
 			}
-		}
-		String signExtened = Integer.toBinaryString(Integer.parseInt(value));
-		if (signExtened.length() < 32) {
-			while(signExtened.length()<32) {
-				signExtened = "0" + signExtened;
-			}
-		}// sign extend
-		registersValue.put(registerValue, signExtened);
+		}		
+		registersValue.put(registerValue, value);
 	}
 
 	public static void initRegistersWithAddresses() {

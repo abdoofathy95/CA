@@ -92,14 +92,15 @@ public class ExecutionStage {
 		case"Add":{
 			int result=(Integer.parseUnsignedInt(registerOneData,2)+Integer.parseUnsignedInt(ALU2ndInput,2));
 			aluResult = Integer.toBinaryString(result);
-			if (result >= 0) {
+			if (result >= 0 && aluResult.length()<32) {
 				aluResult = "0"+aluResult;
 				aluResult=signExtendData(aluResult);
 			}
-			else {
+			else if(result < 0 && aluResult.length()<32){
 				aluResult = "1"+aluResult;
 				aluResult=signExtendData(aluResult);
 			}
+			System.out.println("/////////////////////////////////////"+result);
 			break;
 		}
 		case"Sub":{
@@ -143,7 +144,7 @@ public class ExecutionStage {
 			break;
 		}
 		case"SLL":{
-			int result= Integer.parseUnsignedInt(registerOneData,2) << Integer.parseUnsignedInt(ALU2ndInput,2);
+			int result= Integer.parseUnsignedInt(registerTwoData,2) << Integer.parseUnsignedInt(ALU2ndInput,2);
 			aluResult = Integer.toBinaryString(result);
 			if (result >= 0 && aluResult.length()<32) {
 				aluResult = "0"+aluResult;
@@ -228,7 +229,7 @@ public class ExecutionStage {
 	}
 	private static String signExtendData(String data) {
         String binary = data;
-		if(binary.substring(0,1).equals("1")){
+		if(binary.charAt(0) == '1'){
       	  while(binary.length()<32) binary="1"+binary;
         }else{
         	while(binary.length()<32) binary="0"+binary;
