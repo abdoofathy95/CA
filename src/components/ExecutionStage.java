@@ -79,7 +79,7 @@ public class ExecutionStage {
 		}
 		switch(tempRegisterEx.get("AluOp")){
 		case"Add":{
-			aluResult=(Integer.parseInt(registerOneData)+Integer.parseInt(ALU2ndInput))+"";
+			aluResult=(Integer.parseInt(registerOneData,2)+Integer.parseInt(ALU2ndInput,2))+"";
 			break;
 		}
 		case"Sub":{
@@ -132,7 +132,7 @@ public class ExecutionStage {
 		}
 		
 		}
-		if(Integer.compare(Integer.parseInt(registerOneData), Integer.parseInt(ALU2ndInput))==0)
+		if(Integer.compare(Integer.parseInt(registerOneData,2), Integer.parseInt(ALU2ndInput,2))==0)
 			aluZeroSignal="1";
 		else aluZeroSignal = "0";
 		//startNextStage();
