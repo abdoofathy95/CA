@@ -13,7 +13,7 @@ public class MemoryStage {
 	public static String aluResult;
 	private static String registerTwoData;
 	public static String registerAddressToWriteTo;
-
+	
 	public static void init() { // called from previous stage (no need to call
 								// it again)
 		tempRegisterWB = ExecutionStage.tempRegisterWB;

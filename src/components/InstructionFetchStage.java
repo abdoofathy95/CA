@@ -16,7 +16,7 @@ public class InstructionFetchStage {
 	/*
 	 * public static void startNextStage() { //InstructionDecodeStage.init(); }
 	 */
-	
+
 	public static void ExecuteStage() {
 		fetch();
 		InstructionDecodeStage.ExecuteStage();
@@ -31,15 +31,19 @@ public class InstructionFetchStage {
 	public static void jumpBranchInstruction(Instruction instruction) {
 		switch (instruction.getInstructionName()) {
 		case "beq": {
-			if (hexToInt(RegisterFile.readRegisterWithItsName(instruction.getRs()))
-					- hexToInt(RegisterFile.readRegisterWithItsName(instruction.getRt())) == 0) {
+			if (hexToInt(RegisterFile.readRegisterWithItsName(instruction
+					.getRs()))
+					- hexToInt(RegisterFile.readRegisterWithItsName(instruction
+							.getRt())) == 0) {
 				currentPC = getLabelIndex(instruction.getJumpLabel());
 			}
 			break;
 		}
 		case "bne": {
-			if (hexToInt(RegisterFile.readRegisterWithItsName(instruction.getRs()))
-					- hexToInt(RegisterFile.readRegisterWithItsName(instruction.getRt())) != 0) {
+			if (hexToInt(RegisterFile.readRegisterWithItsName(instruction
+					.getRs()))
+					- hexToInt(RegisterFile.readRegisterWithItsName(instruction
+							.getRt())) != 0) {
 				currentPC = getLabelIndex(instruction.getJumpLabel());
 			}
 			break;
@@ -54,7 +58,8 @@ public class InstructionFetchStage {
 		}
 		case "jr": {
 			currentPC = getInstructionIndex(instruction)
-					+ hexToInt(RegisterFile.readRegisterWithItsName(instruction.getRs()));
+					+ hexToInt(RegisterFile.readRegisterWithItsName(instruction
+							.getRs()));
 			break;
 		}
 		}
@@ -91,7 +96,8 @@ public class InstructionFetchStage {
 	public static int hexToInt(String hex) {
 		return Integer.parseInt(hex.substring(2), 16);
 	}
-	public static void setPC(int i){ 
+
+	public static void setPC(int i) {
 		currentPC = i;
 	}
 }

@@ -51,7 +51,7 @@ public class InstructionDecodeStage {
 		RegisterFile.initRegistersWithZeros();
 		InstructionFetchStage.currentPC = 1;
 		InstructionFetchStage.currentInstruction = new Instruction("kareem",
-				"add", "t3", "t1", "t2", "", "", "");
+				"sll", "t2", null, "t1", null, "7", null);
 		InstructionDecodeStage.ExecuteStage();
 		// InstructionFetchStage.ExecuteStage();
 		printStage();
@@ -332,37 +332,47 @@ public class InstructionDecodeStage {
 			storeControlSignals("1", "0", "0", "0", "0", "SLL", "0", "0", "1",
 					"0", "0", "0", "0", "0", "0", "0");
 			String instructionBinary = "000000";
-			/*instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction.getRs()));*/ // source  (THERE IS NO SOURCE HERE)
+			instructionBinary +="00000";// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRt()));// target
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRd()));// destination
-			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction.getConstant())); // shamt
+			String signExtened = Integer.toBinaryString((int) Integer
+					.parseInt(instruction.getConstant()));
+			if (signExtened.length() < 5) {
+				while (5 - signExtened.length() != 0) {
+					signExtened = "0" + signExtened;
+				}
+			}// sign extend
+			instructionBinary += signExtened;
 			instructionBinary += "000000";
 
 			stageOutput(instructionBinary,
-					RegisterFile.readRegisterWithItsName(instruction.getRt()),
-					RegisterFile.readRegisterWithItsName(instruction.getRd()));
+					"0x00000000",
+					RegisterFile.readRegisterWithItsName(instruction.getRt()));
 			break;
 		}
 		case "srl": {
 			storeControlSignals("1", "0", "0", "0", "0", "SRL", "0", "0", "1",
 					"0", "0", "0", "0", "0", "0","0");
 			String instructionBinary = "000000";
-			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction.getRs()));// source
+			instructionBinary += "00000";// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRt()));// target
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRd()));// destination
-			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction.getConstant()));// shamt
+			String signExtened = Integer.toBinaryString((int) Integer
+					.parseInt(instruction.getConstant()));
+			if (signExtened.length() < 5) {
+				while (5 - signExtened.length() != 0) {
+					signExtened = "0" + signExtened;
+				}
+			}// sign extend
+			instructionBinary += signExtened;
 			instructionBinary += "000010";
 
 			stageOutput(instructionBinary,
-					RegisterFile.readRegisterWithItsName(instruction.getRs()),
+					"0x00000000",
 					RegisterFile.readRegisterWithItsName(instruction.getRt()));
 			break;
 		}
@@ -536,7 +546,6 @@ public class InstructionDecodeStage {
 		tempRegisterM.put("BNE", BNE);
 		tempRegisterM.put("Jump", Jump);
 		tempRegisterM.put("JumpR", JumpR);
-
 		tempRegisterEx.put("AluSrc", AluSrc);
 		tempRegisterEx.put("AluOp", AluOp);
 		tempRegisterEx.put("RegDest", RegDest);

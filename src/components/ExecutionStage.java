@@ -93,12 +93,12 @@ public class ExecutionStage {
 		case"SLL":{
 			Double x = Math.pow(2, Integer.parseInt(ALU2ndInput));
 			
-			aluResult=(Integer.parseInt(registerOneData) *x.intValue()) +"";
+			aluResult=(Integer.parseInt(registerOneData,2) *x.intValue()) +"";
 			break;
 		}
 		case"SRL":{
 			Double x = Math.pow(2, Integer.parseInt(ALU2ndInput));
-			aluResult=(Integer.parseInt(registerOneData) / x.intValue())+"";
+			aluResult=(Integer.parseInt(registerOneData,2) / x.intValue())+"";
 			break;
 		}
 		case"NOR":{
