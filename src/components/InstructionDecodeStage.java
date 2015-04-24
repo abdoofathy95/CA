@@ -118,7 +118,14 @@ public class InstructionDecodeStage {
 	private static void stageOutput(String binInstruction,
 			String registerOneData1, String registerTwoData1) {
 		// TODO Auto-generated method stub
+		
 		immediateValue = binInstruction.substring(16, 32);
+		if (immediateValue.length() < 32) {
+			while(immediateValue.length()<32) {
+				immediateValue = binInstruction.charAt(0) + immediateValue;
+			}
+		}
+		
 		registerTAddress = binInstruction.substring(11, 16);
 		registerDAddress = binInstruction.substring(16, 21);
 		jumpAddress = currentPC.substring(0, 4) + binInstruction.substring(6)
