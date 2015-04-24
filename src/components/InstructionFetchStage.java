@@ -106,7 +106,7 @@ public class InstructionFetchStage {
 	}
 
 	public static int binToInt(String bin) {
-		return Integer.parseInt(bin, 2);
+		return Integer.parseUnsignedInt(bin, 2);
 	}
 
 	public static void setPC(int i) {

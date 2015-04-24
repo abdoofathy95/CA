@@ -231,7 +231,7 @@ public class ExecutionStage {
 	}
 	private static String signExtendData(String data) {
         String binary = data;
-		if(binary.substring(0,1).equals("1")){
+		if(binary.charAt(0) == '1'){
       	  while(binary.length()<32) binary="1"+binary;
         }else{
         	while(binary.length()<32) binary="0"+binary;
