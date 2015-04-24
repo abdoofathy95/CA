@@ -8,5 +8,5 @@ import java.util.ArrayList;
 */
 
 public class InstructionMemory {
-	static ArrayList<Instruction> instructions = new ArrayList<Instruction>();
+	public static ArrayList<Instruction> instructions = new ArrayList<Instruction>();
 }

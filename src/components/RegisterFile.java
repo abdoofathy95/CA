@@ -53,12 +53,12 @@ public class RegisterFile {
 		registersAddress.put("a3", "0x7");
 		registersAddress.put("t0", "0x8");
 		registersAddress.put("t1", "0x9");
-		registersAddress.put("t2", "0xA");
-		registersAddress.put("t3", "0xB");
-		registersAddress.put("t4", "0xC");
-		registersAddress.put("t5", "0xD");
-		registersAddress.put("t6", "0xE");
-		registersAddress.put("t7", "0xF");
+		registersAddress.put("t2", "0xa");
+		registersAddress.put("t3", "0xb");
+		registersAddress.put("t4", "0xc");
+		registersAddress.put("t5", "0xd");
+		registersAddress.put("t6", "0xe");
+		registersAddress.put("t7", "0xf");
 		registersAddress.put("s0", "0x10");
 		registersAddress.put("s1", "0x11");
 		registersAddress.put("s2", "0x12");
@@ -69,12 +69,12 @@ public class RegisterFile {
 		registersAddress.put("s7", "0x17");
 		registersAddress.put("t8", "0x18");
 		registersAddress.put("t9", "0x19");
-		registersAddress.put("k0", "0x1A");
-		registersAddress.put("k1", "0x1B");
-		registersAddress.put("gp", "0x1C");
-		registersAddress.put("sp", "0x1D");
-		registersAddress.put("s7", "0x1E");
-		registersAddress.put("ra", "0x1F");
+		registersAddress.put("k0", "0x1a");
+		registersAddress.put("k1", "0x1b");
+		registersAddress.put("gp", "0x1c");
+		registersAddress.put("sp", "0x1d");
+		registersAddress.put("s7", "0x1e");
+		registersAddress.put("ra", "0x1f");
 	}
 
 	public static void initRegistersWithZeros() {

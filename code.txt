@@ -1,1 +1,9 @@
-add $t1 , $t1 , $t2
+addi $t2 , $t1, 50
+addi $t2 , $t1, 50
+addi $t2 , $t1, 50
+addi $t2 , $t1, 50
+addi $t2 , $t1, 50
+addi $t2 , $t1, 50
+addi $t2 , $t1, 50
+addi $t2 , $t1, 50
+addi $t2 , $t1, 50

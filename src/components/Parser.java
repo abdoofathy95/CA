@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Parser {
-	private static InstructionMemory InstructionSet;
+	public static InstructionMemory InstructionSet;
 	private static ArrayList<String> allLables = new ArrayList<String>();
 
 	@SuppressWarnings("static-access")
@@ -863,19 +863,5 @@ public class Parser {
 			System.out.println(registers[i].replaceAll("\\s", ""));
 		}
 		return null;
-	}
-
-	@SuppressWarnings("static-access") // to be moved to a seperate class ( main application class)
-	public static void main(String[] args) throws IOException {
-		Parser x = new Parser();
-		for (int i = 0; i < x.InstructionSet.instructions.size(); i++) {
-			System.out.println(x.InstructionSet.instructions.get(i).toString());
-			// Offset range in load and store
-		}
-		// initialize the memory
-		Memory.init();
-		RegisterFile.initRegistersWithAddresses();
-		RegisterFile.initRegistersWithZeros();
-		InstructionFetchStage.ExecuteStage();
 	}
 }

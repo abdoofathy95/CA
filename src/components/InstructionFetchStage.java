@@ -16,15 +16,6 @@ public class InstructionFetchStage {
 	/*
 	 * public static void startNextStage() { //InstructionDecodeStage.init(); }
 	 */
-
-	public static void main(String[] args) {
-		RegisterFile.initRegistersWithAddresses();
-		RegisterFile.initRegistersWithZeros();
-		InstructionMemory.instructions.add(new Instruction("label1", "beq", "", "t1", "t2", "", "", ""));
-		InstructionMemory.instructions.add(new Instruction("", "beq", "", "t1", "t2", "", "", "label1"));
-		currentPC = 1;
-		ExecuteStage();
-	}
 	
 	public static void ExecuteStage() {
 		fetch();
@@ -99,5 +90,8 @@ public class InstructionFetchStage {
 
 	public static int hexToInt(String hex) {
 		return Integer.parseInt(hex.substring(2), 16);
+	}
+	public static void setPC(int i){ 
+		currentPC = i;
 	}
 }
