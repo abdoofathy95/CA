@@ -269,14 +269,11 @@ public void initMemory()
          console.append("\n");
         i++;
      }
-   if (x.message.size() > 3)
+   if (x.message.size() <= 3)
    {
       assembled = true; 
    }
-   else
-   {
-       assembled = true;
-   }
+   
 
         }
         catch(Exception e)
@@ -290,12 +287,13 @@ public void initMemory()
     private void RunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RunActionPerformed
       
         console.setText("");
-        System.out.print("rinn");
+       
         MainApp a = new MainApp();
       
         a.start();
         
-          
+        if (assembled)  
+        {
         RegisterTable.setValueAt(RegisterFile.registersValue.get("at"), 1, 1);
         RegisterTable.setValueAt(RegisterFile.registersValue.get("v0"), 2, 1);
         RegisterTable.setValueAt(RegisterFile.registersValue.get("v1"), 3, 1);
@@ -352,6 +350,7 @@ public void initMemory()
           
        
       }
+        }
         }
       
     }//GEN-LAST:event_RunActionPerformed
