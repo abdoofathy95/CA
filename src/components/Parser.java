@@ -1066,7 +1066,7 @@ public class Parser {
 	}
 
 	public static BufferedReader readFromFile() throws FileNotFoundException {
-		return new BufferedReader(new FileReader("code.txt"));
+		return new BufferedReader(new FileReader(url));
 	}
 
 	public static String[] getSpecificRegister(String x) {
