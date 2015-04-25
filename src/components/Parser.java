@@ -9,12 +9,15 @@ import java.util.ArrayList;
 public class Parser {
 	public static InstructionMemory InstructionSet;
 	private static ArrayList<String> allLables = new ArrayList<String>();
+	private static ArrayList<String> toMemory = new ArrayList<String>();
 	static boolean textF = false;
+	static boolean dataF = false;
 
 	@SuppressWarnings("static-access")
 	public Parser() throws IOException {
 		this.InstructionSet = new InstructionMemory();
 		getLabels();
+		getInitialData();
 		validatColumnSyntax();
 		validateInstructionNames();
 		validateInstructionFormat();
@@ -82,7 +85,59 @@ public class Parser {
 		}
 		br.close();
 	}
-
+	
+	public static void getInitialData() throws IOException {
+		String currentLine = "";
+		BufferedReader br = readFromFile();
+		while ((currentLine = br.readLine()) != null) {
+			while (currentLine != null && currentLine.matches("\\s*")) {
+				currentLine = br.readLine();
+			}
+			if (currentLine == null) {
+				break;
+			}
+			if (currentLine.matches("\\s*" + ".data" + "\\s*")) {
+				dataF = true;
+				currentLine = br.readLine();
+			}
+			if (currentLine == null) {
+				break;
+			}
+			if (currentLine.matches("\\s*" + ".text" + "\\s*")) {
+				break;
+			}
+			if (dataF && !currentLine.matches("\\s*")) {
+				if(!currentLine.contains(".word")){
+					System.out.println(".word is missing");
+					System.exit(0);
+				}
+				else{
+					int begin = getCharPosition(currentLine, '[');
+					int end = getCharPosition(currentLine, ']');
+					if(begin == -1 || end == -1 || begin > end){
+						System.out.println("Invalid input Syntax");
+						System.exit(0);
+					}
+					else{
+						String[] tempArr = currentLine.substring(begin + 1, end).split(",");
+						for (int i = 0; i < tempArr.length; i++) {
+							try{
+								Integer.parseInt(tempArr[i].replaceAll("\\s*", ""));
+							}
+							catch(Exception e){
+								System.out.println("Invalid input: Expected numbers");
+								System.exit(0);
+							}
+							toMemory.add(""+tempArr[i]);
+						}
+					}
+				}
+			}
+		}
+		textF = false;
+		dataF = false;
+	}
+	
 	public static int countColumns(String x) {
 		int count = 0;
 		for (int i = 0; i < x.length(); i++) {
@@ -140,6 +195,7 @@ public class Parser {
 		}
 		}
 		textF = false;
+		dataF = false;
 		br.close();
 		System.out.println("Validate-column-Done");
 	}
@@ -244,6 +300,7 @@ public class Parser {
 			}
 		}
 		textF = false;
+		dataF = false;
 		br.close();
 		System.out.println("Validate-InstructionNames-Done");
 	}
@@ -478,6 +535,7 @@ public class Parser {
 		}
 		}
 		textF = false;
+		dataF = false;
 		br.close();
 		System.out.println("Validate-Instruction-Format-Done");
 	}
@@ -740,6 +798,7 @@ public class Parser {
 			}
 		}
 		textF = false;
+		dataF = false;
 		br.close();
 		System.out.println("Validate-Instruction-Registers-Done");
 	}
@@ -982,6 +1041,7 @@ public class Parser {
 		}
 		}
 		textF = false;
+		dataF = false;
 		br.close();
 	}
 
@@ -1015,6 +1075,9 @@ public class Parser {
 		Parser x = new Parser();
 		for (int i = 0; i < x.InstructionSet.instructions.size(); i++) {
 			System.out.println(x.InstructionSet.instructions.get(i));
+		}
+		for (int i = 0; i < x.toMemory.size(); i++) {
+			System.out.println(x.toMemory.get(i));
 		}
 	}
 }
