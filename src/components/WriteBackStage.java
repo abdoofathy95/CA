@@ -31,7 +31,7 @@ public class WriteBackStage {
 				}
 				else{
 					if(tempRegisterWB.get("Zero-Extended").equals("1")){ //lbu
-						dataToBeWrittenToReg = "00000000000000000000000000"+memoryData.substring(memoryData.length()-8,memoryData.length());
+						dataToBeWrittenToReg = "000000000000000000000000"+memoryData.substring(memoryData.length()-8,memoryData.length());
 						lbu(registerAddressToWriteTo,dataToBeWrittenToReg);
 					}
 					else{ //lw
@@ -59,26 +59,27 @@ public class WriteBackStage {
           if(binary.substring(0,1).equals("1")){
         	  return "11111111111111111111111111"+data.substring(data.length()-8,data.length());
           }else{
-        	  return "00000000000000000000000000"+data.substring(data.length()-8,data.length());
+        	  return "000000000000000000000000"+data.substring(data.length()-8,data.length());
           }
 		}
 
 		private static void lw(String register,
 				String data) {
+			
 			//assuming registersAddress has address as key and register name as value
-			RegisterFile.writeToRegister(RegisterFile.readRegisterWithAddress(register),data);
+			RegisterFile.writeToRegister(register,data);
 		}
 
 		private static void lbu(String register,
 				String data) {
 			//assuming registersAddress has address as key and register name as value
-			RegisterFile.writeToRegister(RegisterFile.readRegisterWithAddress(register),data);
+			RegisterFile.writeToRegister(register,data);
 		}
 
 		private static void lb(String register,
 				String data) {
 			//assuming registersAddress has address as key and register name as value
-			RegisterFile.writeToRegister(RegisterFile.readRegisterWithAddress(register),data);
+			RegisterFile.writeToRegister(register,data);
 		}
 		
 		

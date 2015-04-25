@@ -53,6 +53,7 @@ public class MainApp {
 			System.out.println("-------------end Cycle " + y + "-------------");
 			y++;
 		}
-			System.out.println("//////////////////////"+Memory.readFromMemory(0));
+		System.out.println(RegisterFile.readRegisterWithItsName("t1"));
+			System.out.println(RegisterFile.readRegisterWithItsName("t5"));
 	}
 }
