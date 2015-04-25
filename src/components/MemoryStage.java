@@ -42,7 +42,7 @@ public class MemoryStage {
 		String jumpR = tempRegisterM.get("JumpR");
 		if (memRead.matches("1")){
 			// read from memory
-			int address = Integer.parseInt(aluResult);
+			int address = Integer.parseInt(aluResult,2);
 			memoryData = Memory.readFromMemory(address);
 		}
 		if (memWrite.matches("1")){

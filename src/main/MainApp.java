@@ -13,9 +13,11 @@ import components.RegisterFile;
 import components.WriteBackStage;
 
 public class MainApp {
+     public boolean executionDone = false;
 	@SuppressWarnings("static-access") // to be moved to a seperate class ( main application class)
 	public void start()
         {
+             
 		InstructionFetchStage.setPC(0);
 		
 		// initialize the memory
@@ -50,8 +52,15 @@ public class MainApp {
 			System.out.println("-------------end Cycle " + y + "-------------");
 			y++;
 		}
+                
 			System.out.println("//////////////////////"+Memory.readFromMemory(0));
                         
+          
+         executionDone = true;    
+          
         }
+        
+        
+     
 }
 	

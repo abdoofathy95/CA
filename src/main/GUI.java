@@ -1,42 +1,80 @@
 package main;
 
+import components.Memory;
 import components.Parser;
+import components.RegisterFile;
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class GUI extends javax.swing.JFrame {
 String url;
+boolean assembled;
     public GUI() {
-        
+assembled = false;
         initComponents();
-      
+             
     }
-public void setLabelText(String text)
+public void initMemory()
 {
- 
-}
+ int x = 268500992;
+        Object rowData[][] = new Object[1250][11];
+        for (int i = 0; i < 1250; i++) {
+            rowData[i][0] = "0x" + Integer.toHexString(x);
+            rowData[i][1] = "0x00000000";
+            rowData[i][2] = "0x00000000";
+            rowData[i][3] = "0x00000000";
+            rowData[i][4] = "0x00000000";
+            rowData[i][5] = "0x00000000";
+            rowData[i][6] = "0x00000000";
+            rowData[i][7] = "0x00000000";
+            rowData[i][8] = "0x00000000";
+            rowData[i][9] = "0x00000000";
+            rowData[i][10] = "0x00000000";
+            x += 40;
+        }
+        Object columnNames[] = {"Address", "Value (+0)", "Value (+4)", "Value (+8)", "Value (+c)", "Value (+10)", "Value (+14)", "Value (+18)", "Value (+1c)",  "Value (+20)",  "Value (+24)"};
+         MemoryTable = new JTable(rowData, columnNames);
+
+        JScrollPane scrollPane = new JScrollPane(MemoryTable);
+        
+       
+    }
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        RegisterFile = new javax.swing.JTable();
+        RegisterTable = new javax.swing.JTable();
         openFileButton = new javax.swing.JButton();
         Assemble = new javax.swing.JButton();
         Run = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        edit = new javax.swing.JEditorPane();
         jScrollPane3 = new javax.swing.JScrollPane();
         console = new javax.swing.JTextArea();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        edit = new javax.swing.JTextArea();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        /*
+        MemoryTable = new javax.swing.JTable();
+        */
+        initMemory();
+        saveButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        RegisterFile.setModel(new javax.swing.table.DefaultTableModel(
+        RegisterTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"$zero", "0x00000000000000000000000000000000"},
                 {"$at", "0x00000000000000000000000000000000"},
@@ -62,10 +100,13 @@ public void setLabelText(String text)
                 {"$s5", "0x00000000000000000000000000000000"},
                 {"$s6", "0x00000000000000000000000000000000"},
                 {"$s7", "0x00000000000000000000000000000000"},
+                {"$t8", "0x00000000000000000000000000000000"},
+                {"$t9", "0x00000000000000000000000000000000"},
                 {"$k0", "0x00000000000000000000000000000000"},
                 {"$k1", "0x00000000000000000000000000000000"},
                 {"$gp", "0x00000000000000000000000000000000"},
-                {"$sp", "0x00000000000000000000000000000000"},
+                {"$sp", "00000000000000001100001101010000"},
+                {"$fp", "0x00000000000000000000000000000000"},
                 {"$ra", "0x00000000000000000000000000000000"}
             },
             new String [] {
@@ -87,10 +128,11 @@ public void setLabelText(String text)
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(RegisterFile);
-        if (RegisterFile.getColumnModel().getColumnCount() > 0) {
-            RegisterFile.getColumnModel().getColumn(0).setResizable(false);
-            RegisterFile.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane2.setViewportView(RegisterTable);
+        if (RegisterTable.getColumnModel().getColumnCount() > 0) {
+            RegisterTable.getColumnModel().getColumn(0).setResizable(false);
+            RegisterTable.getColumnModel().getColumn(0).setPreferredWidth(-20);
+            RegisterTable.getColumnModel().getColumn(1).setResizable(false);
         }
 
         openFileButton.setText("Open File");
@@ -117,49 +159,72 @@ public void setLabelText(String text)
         jLabel1.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         jLabel1.setText("Console:");
 
-        jScrollPane4.setViewportView(edit);
-
         console.setColumns(20);
         console.setRows(5);
         jScrollPane3.setViewportView(console);
+
+        edit.setColumns(20);
+        edit.setRows(5);
+        jScrollPane1.setViewportView(edit);
+
+        jTabbedPane1.addTab("editor", jScrollPane1);
+
+        /*
+        MemoryTable.setModel(
+        ));
+        */
+        jScrollPane5.setViewportView(MemoryTable);
+
+        jTabbedPane1.addTab("Memory", jScrollPane5);
+
+        saveButton.setText("Save File");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(openFileButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Assemble)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Run))
-            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(openFileButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(saveButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Assemble)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Run))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 866, Short.MAX_VALUE)
                     .addComponent(jScrollPane3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(188, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(openFileButton)
-                    .addComponent(Assemble)
-                    .addComponent(Run))
-                .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(openFileButton)
+                            .addComponent(Assemble)
+                            .addComponent(Run)
+                            .addComponent(saveButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 490, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(56, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         pack();
@@ -191,7 +256,7 @@ public void setLabelText(String text)
     private void AssembleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AssembleActionPerformed
     
       
-            
+             console.setText("");
          try
         {
      
@@ -204,7 +269,14 @@ public void setLabelText(String text)
          console.append("\n");
         i++;
      }
-   
+   if (x.message.size() > 3)
+   {
+      assembled = true; 
+   }
+   else
+   {
+       assembled = true;
+   }
 
         }
         catch(Exception e)
@@ -216,29 +288,108 @@ public void setLabelText(String text)
     }//GEN-LAST:event_AssembleActionPerformed
 
     private void RunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RunActionPerformed
+      
+        console.setText("");
+        System.out.print("rinn");
         MainApp a = new MainApp();
+      
         a.start();
+        
+          
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("at"), 1, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("v0"), 2, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("v1"), 3, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("a0"), 4, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("a1"), 5, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("a2"), 6, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("a3"), 7, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("t0"), 8, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("t1"), 9, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("t2"), 10, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("t3"), 11, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("t4"), 12, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("t5"), 13, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("t6"), 14, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("t7"), 15, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("s0"), 16, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("s1"), 17, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("s2"), 18, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("s3"), 19, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("s4"), 20, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("s5"), 21, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("s6"), 22, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("s7"), 23, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("t8"), 24, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("t9"), 25, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("k0"), 26, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("k1"), 27, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("gp"), 28, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("sp"), 29, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("fp"), 30, 1);
+        RegisterTable.setValueAt(RegisterFile.registersValue.get("ra"), 31, 1);
+        
+        
+        int c = 0;
+      for (int i = 1; i < 1250; i++)
+      {
+          for (int j = 1; j < 11; j++)
+          {
+              String b = "";
+              for (int k = 0; k < 4; k++)
+              {
+                  if (Memory.mem[c] == null)
+                  {
+                      b += "00";
+                  }
+                  else
+                  {
+                  b += Memory.mem[c];
+                  c++;
+                  }
+              }
+              MemoryTable.setValueAt(b, i, j);
+             
+          
+       
+      }
+        }
+      
     }//GEN-LAST:event_RunActionPerformed
 
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+       FileWriter fw;
+    try {
+        fw = new FileWriter(url);
+        edit.write(fw);
+    } catch (IOException ex) {
+        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    }//GEN-LAST:event_saveButtonActionPerformed
+  
    
    public static void main (String []args)
    {
-       GUI r = new GUI();
-        r.setVisible(true);
+       GUI r = new GUI();  
+       r.setVisible(true);
                 
    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Assemble;
-    private javax.swing.JTable RegisterFile;
+    private javax.swing.JTable MemoryTable;
+    private javax.swing.JTable RegisterTable;
     private javax.swing.JButton Run;
     private javax.swing.JTextArea console;
-    private javax.swing.JEditorPane edit;
+    private javax.swing.JTextArea edit;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton openFileButton;
+    private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 
 

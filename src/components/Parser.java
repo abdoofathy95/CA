@@ -42,7 +42,7 @@ public class Parser {
 					allLables.add(label.replaceAll("\\s*", ""));
 				} else {
 					message.add("Dublicate label name");
-					System.exit(0);
+					
 				}
 				if (label.matches("\\s*" + "add" + "\\s*")
 						|| label.matches("\\s*" + "addi" + "\\s*")
@@ -66,7 +66,7 @@ public class Parser {
 						|| label.matches("\\s*" + "sltu" + "\\s*")) {
                                     message.add("Reserver instruction name: \""+label + "\" cannot be a label name");
 			
-					System.exit(0);
+					
 				}
 			}
 		}
@@ -110,14 +110,14 @@ public class Parser {
                                     message.add("Invalid input: Unexpected \":\" in line "
 									+ lineCounter);
 					
-					System.exit(0);
+					
 				}
 			}
 			if (currentLine.matches("\\s*" + ":" + "\\s*")) {
                      
 				message.add("Invalid input: Unexpected \":\" in line "
 						+ lineCounter);
-				System.exit(0);
+				
 			}
 			lineCounter++;
 		}
@@ -170,7 +170,7 @@ public class Parser {
 						&& !instruction.matches("\\s*" + "sltu" + "\\s*")) {
 					message.add(instruction + " in line " + lineCounter
 							+ " is not an instruction");
-					System.exit(0);
+					
 				}
 			} else {
 				int splitPosition = getCharPosition(currentLine, ':');
@@ -206,7 +206,7 @@ public class Parser {
 						&& !instruction.matches("\\s*" + "sltu" + "\\s*")) {
 					message.add(instruction + " in line " + lineCounter
 							+ " is not an instruction");
-					System.exit(0);
+					
 				}
 			}
 
@@ -257,12 +257,12 @@ public class Parser {
 					if (tempArr.length < 3) {
 						message.add("Missing parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 					if (tempArr.length > 3) {
 						message.add("Extra parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 
 				}
@@ -278,12 +278,12 @@ public class Parser {
 					if (tempArr.length < 2) {
 						message.add("Missing parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 					if (tempArr.length > 2) {
 						message.add("Extra parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 
 				}
@@ -297,12 +297,12 @@ public class Parser {
 							|| tempArr[0].equals("")) {
 						message.add("Missing parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 					if (tempArr.length > 1) {
 						message.add("Extra parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 
 					if (instruction.matches("\\s*" + "j" + "\\s*")
@@ -311,7 +311,7 @@ public class Parser {
 								instruction.length()).replaceAll("\\s*", ""))) {
 							message.add("Invalid label name in line: "
 									+ lineCounter);
-							System.exit(0);
+							
 						}
 					}
 
@@ -344,12 +344,12 @@ public class Parser {
 					if (tempArr.length < 3) {
 						message.add("Missing parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 					if (tempArr.length > 3) {
 						message.add("Extra parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 
 				}
@@ -365,12 +365,12 @@ public class Parser {
 					if (tempArr.length < 2) {
 						message.add("Missing parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 					if (tempArr.length > 2) {
 						message.add("Extra parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 
 				}
@@ -384,12 +384,12 @@ public class Parser {
 							|| tempArr[0].equals("")) {
 						message.add("Missing parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 					if (tempArr.length > 1) {
 						message.add("Extra parameter in Line "
 								+ lineCounter);
-						System.exit(0);
+						
 					}
 					if (instruction.matches("\\s*" + "j" + "\\s*")
 							|| instruction.matches("\\s*" + "jal" + "\\s*")) {
@@ -397,7 +397,7 @@ public class Parser {
 								instruction.length()).replaceAll("\\s*", ""))) {
 							message.add("Invalid label name in line: "
 									+ lineCounter);
-							System.exit(0);
+							
 						}
 					}
 				}
@@ -449,13 +449,13 @@ public class Parser {
 					if (tempArr[0].matches("\\s*" + "\\$zero" + "\\s*")) {
 						message.add("ERROR Line " + lineCounter
 								+ ", Register Zero cannot be overwritten");
-						System.exit(0);
+						
 					} else {
 						for (int i = 0; i < tempArr.length; i++) {
 							if (!isValidRegister(tempArr[i])) {
 								message.add("Invalid register name in line: "
 												+ lineCounter);
-								System.exit(0);
+								
 							}
 						}
 					}
@@ -467,13 +467,13 @@ public class Parser {
 					if (tempArr[0].matches("\\s*" + "\\$zero" + "\\s*")) {
 						message.add("ERROR Line " + lineCounter
 								+ ", Register Zero cannot be overwritten");
-						System.exit(0);
+						
 					} else {
 						for (int i = 0; i < tempArr.length - 1; i++) {
 							if (!isValidRegister(tempArr[i])) {
 								message.add("Invalid register name in line: "
 												+ lineCounter);
-								System.exit(0);
+								
 							}
 						}
 						String x = "";
@@ -484,14 +484,14 @@ public class Parser {
 						} catch (Exception E) {
 							message.add("Invalid number format in line: "
 											+ lineCounter);
-							System.exit(0);
+							
 						}
 						if (!instruction.matches("\\s*" + "addi" + "\\s*")) {
 							if (Short.parseShort(x) < 0
 									|| Short.parseShort(x) > 31) {
 								message.add("Invalid number format in line: "
 												+ lineCounter);
-								System.exit(0);
+								
 							}
 						}
 
@@ -504,25 +504,25 @@ public class Parser {
 					if (tempArr[0].matches("\\s*" + "\\$zero" + "\\s*")) {
 						message.add("ERROR Line " + lineCounter
 								+ ", Register Zero cannot be overwritten");
-						System.exit(0);
+						
 					} else {
 						if (!isValidRegister(tempArr[0])) {
 							message.add("Invalid register name in line: "
 											+ lineCounter);
-							System.exit(0);
+							
 						}
 						int begin = getCharPosition(tempArr[1], '(');
 						int end = getCharPosition(tempArr[1], ')');
 						if (begin == -1 || end == -1 || end < begin) {
 							message.add("Invalid parameter in line: "
 									+ lineCounter);
-							System.exit(0);
+							
 						}
 						String reg = tempArr[1].substring(begin + 1, end);
 						if (!isValidRegister(reg)) {
 							message.add("Invalid register name " + reg
 									+ " in line: " + lineCounter);
-							System.exit(0);
+							
 						}
 
 						try {
@@ -533,7 +533,7 @@ public class Parser {
 						} catch (Exception E) {
 							message.add("Invalid number format in line: "
 											+ lineCounter);
-							System.exit(0);
+							
 						}
 
 					}
@@ -544,13 +544,13 @@ public class Parser {
 					if (tempArr[1].matches("\\s*" + "\\$zero" + "\\s*")) {
 						message.add("ERROR Line " + lineCounter
 								+ ", Register Zero cannot be overwritten");
-						System.exit(0);
+						
 					} else {
 
 						if (!isValidRegister(tempArr[0])) {
 							message.add("Invalid register name in line: "
 											+ lineCounter);
-							System.exit(0);
+							
 						}
 
 						int begin = getCharPosition(tempArr[1], '(');
@@ -558,13 +558,13 @@ public class Parser {
 						if (begin == -1 || end == -1 || end < begin) {
 							message.add("Invalid parameter in line: "
 									+ lineCounter);
-							System.exit(0);
+							
 						}
 						String reg = tempArr[1].substring(begin + 1, end);
 						if (!isValidRegister(reg)) {
 							message.add("Invalid register name \"" + reg
 									+ "\" in line: " + lineCounter);
-							System.exit(0);
+							
 						}
 
 						try {
@@ -575,7 +575,7 @@ public class Parser {
 						} catch (Exception E) {
 							message.add("Invalid number format in line: "
 											+ lineCounter);
-							System.exit(0);
+							
 						}
 					}
 				} else if (instruction.matches("\\s*" + "beq" + "\\s*")
@@ -585,20 +585,20 @@ public class Parser {
 					if (tempArr[0].matches("\\s*" + "\\$zero" + "\\s*")) {
 						message.add("ERROR Line " + lineCounter
 								+ ", Register Zero cannot be overwritten");
-						System.exit(0);
+						
 					} else {
 						for (int i = 0; i < tempArr.length - 1; i++) {
 							if (!isValidRegister(tempArr[i])) {
 								message.add("Invalid register name in line: "
 												+ lineCounter);
-								System.exit(0);
+								
 							}
 						}
 						if (!allLables.contains(tempArr[2].replaceAll("\\s*",
 								""))) {
 							message.add("Invalid label name in line: "
 									+ lineCounter);
-							System.exit(0);
+							
 						}
 					}
 				} else if (instruction.matches("\\s*" + "lui" + "\\s*")) {
@@ -607,12 +607,12 @@ public class Parser {
 					if (tempArr[0].matches("\\s*" + "\\$zero" + "\\s*")) {
 						message.add("ERROR Line " + lineCounter
 								+ ", Register Zero cannot be overwritten");
-						System.exit(0);
+						
 					} else {
 						if (!isValidRegister(tempArr[0])) {
 							message.add("Invalid register in Line: "
 									+ lineCounter);
-							System.exit(0);
+							
 						}
 						try {
 							String x = tempArr[1].replaceAll("\\s", "");
@@ -621,7 +621,7 @@ public class Parser {
 						} catch (Exception E) {
 							message.add("Invalid number format in line: "
 											+ lineCounter);
-							System.exit(0);
+							
 						}
 					}
 				}
