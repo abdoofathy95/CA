@@ -20,7 +20,7 @@ public class Parser {
 		validateInstructionRegisters();
 		fillArray();
 	}
-	
+
 	public static void getLabels() throws IOException {
 		String currentLine = "";
 		BufferedReader br = readFromFile();
@@ -33,7 +33,8 @@ public class Parser {
 			}
 			if (currentLine.contains(":")) {
 				int pos = getCharPosition(currentLine, ':');
-				String label = currentLine.substring(0, pos).replaceAll("\\s*", "");
+				String label = currentLine.substring(0, pos).replaceAll("\\s*",
+						"");
 				if (!allLables.contains(label)) {
 					allLables.add(label.replaceAll("\\s*", ""));
 				} else {
@@ -60,7 +61,8 @@ public class Parser {
 						|| label.matches("\\s*" + "jr" + "\\s*")
 						|| label.matches("\\s*" + "slt" + "\\s*")
 						|| label.matches("\\s*" + "sltu" + "\\s*")) {
-					System.out.println("Reserver instruction name: \""+label + "\" cannot be a label name");
+					System.out.println("Reserver instruction name: \"" + label
+							+ "\" cannot be a label name");
 					System.exit(0);
 				}
 			}
@@ -160,7 +162,9 @@ public class Parser {
 						&& !instruction.matches("\\s*" + "jal" + "\\s*")
 						&& !instruction.matches("\\s*" + "jr" + "\\s*")
 						&& !instruction.matches("\\s*" + "slt" + "\\s*")
-						&& !instruction.matches("\\s*" + "sltu" + "\\s*")) {
+						&& !instruction.matches("\\s*" + "sltu" + "\\s*")
+						&& !instruction.matches("\\s*" + "move" + "\\s*")
+						&& !instruction.matches("\\s*" + "blt" + "\\s*")) {
 					System.out.println(instruction + " in line " + lineCounter
 							+ " is not an instruction");
 					System.exit(0);
@@ -196,7 +200,9 @@ public class Parser {
 						&& !instruction.matches("\\s*" + "jal" + "\\s*")
 						&& !instruction.matches("\\s*" + "jr" + "\\s*")
 						&& !instruction.matches("\\s*" + "slt" + "\\s*")
-						&& !instruction.matches("\\s*" + "sltu" + "\\s*")) {
+						&& !instruction.matches("\\s*" + "sltu" + "\\s*")
+						&& !instruction.matches("\\s*" + "move" + "\\s*")
+						&& !instruction.matches("\\s*" + "blt" + "\\s*")) {
 					System.out.println(instruction + " in line " + lineCounter
 							+ " is not an instruction");
 					System.exit(0);
@@ -243,7 +249,8 @@ public class Parser {
 						|| instruction.matches("\\s*" + "beq" + "\\s*")
 						|| instruction.matches("\\s*" + "bne" + "\\s*")
 						|| instruction.matches("\\s*" + "slt" + "\\s*")
-						|| instruction.matches("\\s*" + "sltu" + "\\s*")) {
+						|| instruction.matches("\\s*" + "sltu" + "\\s*")
+						|| instruction.matches("\\s*" + "blt" + "\\s*")) {
 					String temp = currentLine.substring(instruction.length());
 					String[] tempArr = temp.split(",");
 					if (tempArr.length < 3) {
@@ -305,6 +312,22 @@ public class Parser {
 									+ lineCounter);
 							System.exit(0);
 						}
+					}
+
+				}
+
+				if (instruction.matches("\\s*" + "move" + "\\s*")) {
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if (tempArr.length < 2) {
+						System.out.println("Missing parameter in Line "
+								+ lineCounter);
+						System.exit(0);
+					}
+					if (tempArr.length > 2) {
+						System.out.println("Extra parameter in Line "
+								+ lineCounter);
+						System.exit(0);
 					}
 
 				}
@@ -392,6 +415,22 @@ public class Parser {
 							System.exit(0);
 						}
 					}
+				}
+
+				if (instruction.matches("\\s*" + "move" + "\\s*")) {
+					String temp = tempS.substring(instruction.length() + 1);
+					String[] tempArr = temp.split(",");
+					if (tempArr.length < 2) {
+						System.out.println("Missing parameter in Line "
+								+ lineCounter);
+						System.exit(0);
+					}
+					if (tempArr.length > 2) {
+						System.out.println("Extra parameter in Line "
+								+ lineCounter);
+						System.exit(0);
+					}
+
 				}
 			}
 			instruction = "";
@@ -579,7 +618,8 @@ public class Parser {
 						}
 					}
 				} else if (instruction.matches("\\s*" + "beq" + "\\s*")
-						|| instruction.matches("\\s*" + "bne" + "\\s*")) {
+						|| instruction.matches("\\s*" + "bne" + "\\s*")
+						|| instruction.matches("\\s*" + "blt" + "\\s*")) {
 					String temp = currentLine.substring(instruction.length());
 					String[] tempArr = temp.split(",");
 					if (tempArr[0].matches("\\s*" + "\\$zero" + "\\s*")) {
@@ -624,6 +664,23 @@ public class Parser {
 									.println("Invalid number format in line: "
 											+ lineCounter);
 							System.exit(0);
+						}
+					}
+				} else if (instruction.matches("\\s*" + "move" + "\\s*")) {
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if (tempArr[0].matches("\\s*" + "\\$zero" + "\\s*")) {
+						System.out.println("ERROR Line " + lineCounter
+								+ ", Register Zero cannot be overwritten");
+						System.exit(0);
+					} else {
+						for (int i = 0; i < tempArr.length; i++) {
+							if (!isValidRegister(tempArr[i])) {
+								System.out
+										.println("Invalid register name in line: "
+												+ lineCounter);
+								System.exit(0);
+							}
 						}
 					}
 				}
@@ -754,6 +811,18 @@ public class Parser {
 				jumpLabel = null;
 
 			}
+
+			if (instName.matches("\\s*" + "move" + "\\s*")) {
+				instName = "add";
+				rd = registers[0].replaceAll("\\s*", "").substring(1);
+				rs = registers[1].replaceAll("\\s*", "").substring(1);
+				rt = "zero";
+				constant = null;
+				offset = null;
+				jumpLabel = null;
+
+			}
+
 			if (instName.matches("\\s*" + "lw" + "\\s*")
 					|| instName.matches("\\s*" + "lb" + "\\s*")
 					|| instName.matches("\\s*" + "lbu" + "\\s*")
@@ -828,9 +897,24 @@ public class Parser {
 				jumpLabel = null;
 				// System.out.println(rs);
 			}
-			Instruction temp = new Instruction(label, instName, rd, rs, rt,
-					offset, constant, jumpLabel);
-			InstructionSet.instructions.add(temp);
+			if (instName.matches("\\s*" + "blt" + "\\s*")) {
+				String o1 = registers[0].replaceAll("\\s*", "").substring(1);
+				String o2 = registers[1].replaceAll("\\s*", "").substring(1);
+				String o3 = registers[2].replaceAll("\\s*", "");
+				InstructionSet.instructions.add(new Instruction("", "slt",
+						"ourTemp1", o1, o2, null, null, null));
+				InstructionSet.instructions.add(new Instruction("", "add",
+						"ourTemp2", o1, o2, null, null, null));
+				InstructionSet.instructions.add(new Instruction("", "add",
+						"ourTemp3", o1, o2, null, null, null));
+				InstructionSet.instructions.add(new Instruction("", "bne",
+						null, "ourTemp1", "zero", null, null, o3));
+			}
+			if (!instName.matches("\\s*" + "blt" + "\\s*")) {
+				Instruction temp = new Instruction(label, instName, rd, rs, rt,
+						offset, constant, jumpLabel);
+				InstructionSet.instructions.add(temp);
+			}
 			finalInst = "";
 			label = "";
 			fullInstruction = "";
@@ -844,7 +928,7 @@ public class Parser {
 	}
 
 	public static String[] getSpecificRegister(String x) {
-		System.out.println(x + "55555555555555555555");
+		System.out.println(x);
 		String instruction = "";
 		String[] result = x.split(" ");
 		String temp5 = "";
@@ -863,5 +947,12 @@ public class Parser {
 			System.out.println(registers[i].replaceAll("\\s", ""));
 		}
 		return null;
+	}
+
+	public static void main(String[] args) throws IOException {
+		Parser x = new Parser();
+		for (int i = 0; i < x.InstructionSet.instructions.size(); i++) {
+			System.out.println(x.InstructionSet.instructions.get(i));
+		}
 	}
 }
