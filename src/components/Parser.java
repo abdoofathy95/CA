@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class Parser {
 	public static InstructionMemory InstructionSet;
 	private static ArrayList<String> allLables = new ArrayList<String>();
+	static boolean textF = false;
 
 	@SuppressWarnings("static-access")
 	public Parser() throws IOException {
@@ -24,13 +25,26 @@ public class Parser {
 	public static void getLabels() throws IOException {
 		String currentLine = "";
 		BufferedReader br = readFromFile();
+		
 		while ((currentLine = br.readLine()) != null) {
+			
 			while (currentLine != null && currentLine.matches("\\s*")) {
 				currentLine = br.readLine();
 			}
 			if (currentLine == null) {
 				break;
 			}
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+				if (currentLine == null) {
+					break;
+				}
+			}
+			if(!textF){
+				break;
+			}
+			
 			if (currentLine.contains(":")) {
 				int pos = getCharPosition(currentLine, ':');
 				String label = currentLine.substring(0, pos).replaceAll("\\s*",
@@ -101,7 +115,16 @@ public class Parser {
 			if (currentLine == null) {
 				break;
 			}
-
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+				if (currentLine == null) {
+					break;
+				}
+			}
+			if(!textF){
+				break;
+			}
 			if (currentLine.contains(":")) {
 				if (countColumns(currentLine) > 1) {
 					System.out
@@ -117,6 +140,7 @@ public class Parser {
 			}
 			lineCounter++;
 		}
+		textF = false;
 		br.close();
 		System.out.println("Validate-column-Done");
 	}
@@ -132,6 +156,16 @@ public class Parser {
 				currentLine = br.readLine();
 			}
 			if (currentLine == null) {
+				break;
+			}
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+				if (currentLine == null) {
+					break;
+				}
+			}
+			if(!textF){
 				break;
 			}
 			if (!currentLine.contains(":")) {
@@ -211,6 +245,7 @@ public class Parser {
 
 			lineCounter++;
 		}
+		textF = false;
 		br.close();
 		System.out.println("Validate-InstructionNames-Done");
 	}
@@ -227,6 +262,16 @@ public class Parser {
 				currentLine = br.readLine();
 			}
 			if (currentLine == null) {
+				break;
+			}
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+				if (currentLine == null) {
+					break;
+				}
+			}
+			if(!textF){
 				break;
 			}
 			if (!currentLine.contains(":")) {
@@ -436,6 +481,7 @@ public class Parser {
 			instruction = "";
 			lineCounter++;
 		}
+		textF = false;
 		br.close();
 		System.out.println("Validate-Instruction-Format-Done");
 	}
@@ -451,6 +497,16 @@ public class Parser {
 				currentLine = br.readLine();
 			}
 			if (currentLine == null) {
+				break;
+			}
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+				if (currentLine == null) {
+					break;
+				}
+			}
+			if(!textF){
 				break;
 			}
 			if (currentLine.contains(":")) {
@@ -688,6 +744,7 @@ public class Parser {
 			instruction = "";
 			lineCounter++;
 		}
+		textF = false;
 		br.close();
 		System.out.println("Validate-Instruction-Registers-Done");
 	}
@@ -740,6 +797,16 @@ public class Parser {
 				currentLine = br.readLine();
 			}
 			if (currentLine == null) {
+				break;
+			}
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+				if (currentLine == null) {
+					break;
+				}
+			}
+			if(!textF){
 				break;
 			}
 			if (currentLine.contains(":")) {
@@ -920,6 +987,7 @@ public class Parser {
 			fullInstruction = "";
 			instName = "";
 		}
+		textF = false;
 		br.close();
 	}
 
