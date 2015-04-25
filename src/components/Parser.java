@@ -136,6 +136,21 @@ public class Parser {
 		}
 		textF = false;
 		dataF = false;
+		Memory.init();
+		for (int i = 0 , j = 0 ; i < toMemory.size(); i++) {
+			String value = Integer.toBinaryString(Integer.parseInt(toMemory.get(i)));
+			if (Integer.parseInt(toMemory.get(i))>=0){
+				value = "0" + value;
+				value = signExtendData(value);
+			}
+			else
+			{
+				value = "1" + value;
+				value = signExtendData(value);
+			}
+			Memory.writeToMemory(j, value);
+			j+= 4;
+		}
 	}
 	
 	public static int countColumns(String x) {
@@ -1079,5 +1094,14 @@ public class Parser {
 		for (int i = 0; i < x.toMemory.size(); i++) {
 			System.out.println(x.toMemory.get(i));
 		}
+	}
+	private static String signExtendData(String data) {
+        String binary = data;
+		if(binary.charAt(0) == '1'){
+      	  while(binary.length()<32) binary="1"+binary;
+        }else{
+        	while(binary.length()<32) binary="0"+binary;
+        }
+		return binary;
 	}
 }
