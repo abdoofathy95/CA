@@ -1,36 +1,7 @@
-<<<<<<< HEAD
-addi $t1,$zero,0
-addi $t2 , $zero , 50
-addi $t3 , $zero , 0
-addi $t4 , $zero , 0
-sll $t5 , $t2 , 20
-=======
-addi $t0, $zero, 5
-addi $t6, $zero, 0
-addi $t6, $zero, 0
-
-addi $t1, $zero, 0
-addi $t6, $zero, 0
-addi $t6, $zero, 0
-
-Fac: slt $t2, $t0, $zero
-	 addi $t6, $zero, 0
-	 addi $t6, $zero, 0
-	 
-	 add $t1, $t1, $t0
-	 addi $t6, $zero, 0
-	 addi $t6, $zero, 0
-	 
-	 bne $t2, $zero, Exit
-	 addi $t6, $zero, 0
-	 addi $t6, $zero, 0
-	 
-	 addi $t0, $t0, -1
-	 addi $t6, $zero, 0
-	 addi $t6, $zero, 0
-	 
-	 j Fac
-	 
-Exit:
-	addi $t5, $zero, 0
->>>>>>> origin/master
+addi $t1 , $zero , 16
+addi $t0 , $zero , 10
+addi $t0 , $zero , 15
+sw $t1 , 0($zero)
+addi $t0 , $zero , 10
+addi $t0 , $zero , 15
+lw $t1 , 0($zero)
