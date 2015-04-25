@@ -201,7 +201,7 @@ public class InstructionDecodeStage {
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
 					.get(instruction.getRs()));// source
 			instructionBinary += hexToBinary(RegisterFile.registersAddress
-					.get(instruction.getRs()));// target
+					.get(instruction.getRt()));// target
 			String signExtened = Integer.toBinaryString((int) Integer
 					.parseInt(instruction.getOffset()));
 			if (signExtened.length() < 32) {

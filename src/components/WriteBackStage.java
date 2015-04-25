@@ -25,6 +25,7 @@ public class WriteBackStage {
 		public static void findInstruction(Hashtable<String,String> tempRegisterWB){
 			
 			if(tempRegisterWB.get("MemToReg").equals("1")){ //LOAD
+				System.out.println(registerAddressToWriteTo+"UUUUUUUUUUUUUUUUUUUUUUUUUU");
 				if(tempRegisterWB.get("Sign-Extended").equals("1")){ //lb
 					dataToBeWrittenToReg = signExtendData(memoryData);
 					lb(registerAddressToWriteTo,dataToBeWrittenToReg);
@@ -65,20 +66,21 @@ public class WriteBackStage {
 
 		private static void lw(String register,
 				String data) {
+			
 			//assuming registersAddress has address as key and register name as value
-			RegisterFile.writeToRegister(RegisterFile.readRegisterWithAddress(register),data);
+			RegisterFile.writeToRegister(register,data);
 		}
 
 		private static void lbu(String register,
 				String data) {
 			//assuming registersAddress has address as key and register name as value
-			RegisterFile.writeToRegister(RegisterFile.readRegisterWithAddress(register),data);
+			RegisterFile.writeToRegister(register,data);
 		}
 
 		private static void lb(String register,
 				String data) {
 			//assuming registersAddress has address as key and register name as value
-			RegisterFile.writeToRegister(RegisterFile.readRegisterWithAddress(register),data);
+			RegisterFile.writeToRegister(register,data);
 		}
 		
 		
