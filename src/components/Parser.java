@@ -677,7 +677,7 @@ public class Parser {
 						|| instruction.matches("\\s*" + "blt" + "\\s*")) {
 					String temp = currentLine.substring(instruction.length());
 					String[] tempArr = temp.split(",");
-					if (tempArr[0].matches("\\s*" + "\\$zero" + "\\s*")) {
+					if (tempArr[0].matches("\\s*" + "\\$ero" + "\\s*")) {
 						System.out.println("ERROR Line " + lineCounter
 								+ ", Register Zero cannot be overwritten");
 						System.exit(0);
