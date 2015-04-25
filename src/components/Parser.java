@@ -331,7 +331,6 @@ public class Parser {
 					}
 
 				}
-
 				if (instruction.matches("\\s*" + "j" + "\\s*")
 						|| instruction.matches("\\s*" + "jal" + "\\s*")
 						|| instruction.matches("\\s*" + "jr" + "\\s*")) {
@@ -351,8 +350,9 @@ public class Parser {
 
 					if (instruction.matches("\\s*" + "j" + "\\s*")
 							|| instruction.matches("\\s*" + "jal" + "\\s*")) {
-						if (!allLables.contains(currentLine.substring(
-								instruction.length()).replaceAll("\\s*", ""))) {
+						
+						if (!allLables.contains(tempArr[0].replaceAll("\\s*", ""))) {
+							
 							System.out.println("Invalid label name in line: "
 									+ lineCounter);
 							System.exit(0);
@@ -453,8 +453,7 @@ public class Parser {
 					}
 					if (instruction.matches("\\s*" + "j" + "\\s*")
 							|| instruction.matches("\\s*" + "jal" + "\\s*")) {
-						if (!allLables.contains(currentLine.substring(
-								instruction.length()).replaceAll("\\s*", ""))) {
+						if (!allLables.contains(tempArr[0].replaceAll("\\s*", ""))) {
 							System.out.println("Invalid label name in line: "
 									+ lineCounter);
 							System.exit(0);
