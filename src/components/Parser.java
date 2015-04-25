@@ -41,10 +41,8 @@ public class Parser {
 					break;
 				}
 			}
-			if(!textF){
-				break;
-			}
 			
+			if(textF && !currentLine.matches("\\s*")){
 			if (currentLine.contains(":")) {
 				int pos = getCharPosition(currentLine, ':');
 				String label = currentLine.substring(0, pos).replaceAll("\\s*",
@@ -79,6 +77,7 @@ public class Parser {
 							+ "\" cannot be a label name");
 					System.exit(0);
 				}
+			}
 			}
 		}
 		br.close();
