@@ -118,13 +118,11 @@ public class Parser {
 			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
 				textF = true;
 				currentLine = br.readLine();
-				if (currentLine == null) {
-					break;
-				}
 			}
-			if(!textF){
+			if (currentLine == null) {
 				break;
 			}
+			if(textF && !currentLine.matches("\\s*")){
 			if (currentLine.contains(":")) {
 				if (countColumns(currentLine) > 1) {
 					System.out
@@ -139,6 +137,8 @@ public class Parser {
 				System.exit(0);
 			}
 			lineCounter++;
+			
+		}
 		}
 		textF = false;
 		br.close();
@@ -161,13 +161,11 @@ public class Parser {
 			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
 				textF = true;
 				currentLine = br.readLine();
-				if (currentLine == null) {
-					break;
-				}
 			}
-			if(!textF){
+			if (currentLine == null) {
 				break;
 			}
+			if(textF && !currentLine.matches("\\s*")){
 			if (!currentLine.contains(":")) {
 				String[] result = currentLine.split("\\s");
 				for (int i = 0; i < result.length; i++) {
@@ -244,6 +242,7 @@ public class Parser {
 			}
 
 			lineCounter++;
+			}
 		}
 		textF = false;
 		br.close();
@@ -267,13 +266,11 @@ public class Parser {
 			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
 				textF = true;
 				currentLine = br.readLine();
-				if (currentLine == null) {
-					break;
-				}
 			}
-			if(!textF){
+			if (currentLine == null) {
 				break;
 			}
+			if(textF && !currentLine.matches("\\s*")){
 			if (!currentLine.contains(":")) {
 				String[] result = currentLine.split("\\s");
 				String temp5 = "";
@@ -480,6 +477,7 @@ public class Parser {
 			instruction = "";
 			lineCounter++;
 		}
+		}
 		textF = false;
 		br.close();
 		System.out.println("Validate-Instruction-Format-Done");
@@ -501,13 +499,11 @@ public class Parser {
 			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
 				textF = true;
 				currentLine = br.readLine();
-				if (currentLine == null) {
-					break;
-				}
 			}
-			if(!textF){
+			if (currentLine == null) {
 				break;
 			}
+			if(textF && !currentLine.matches("\\s*")){
 			if (currentLine.contains(":")) {
 				int begin = getCharPosition(currentLine, ':') + 1;
 				currentLine = currentLine.substring(begin);
@@ -742,6 +738,7 @@ public class Parser {
 			}
 			instruction = "";
 			lineCounter++;
+			}
 		}
 		textF = false;
 		br.close();
@@ -801,13 +798,11 @@ public class Parser {
 			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
 				textF = true;
 				currentLine = br.readLine();
-				if (currentLine == null) {
-					break;
-				}
 			}
-			if(!textF){
+			if (currentLine == null) {
 				break;
 			}
+			if(textF && !currentLine.matches("\\s*")){
 			if (currentLine.contains(":")) {
 				label = currentLine.substring(0,
 						getCharPosition(currentLine, ':'));
@@ -985,6 +980,7 @@ public class Parser {
 			label = "";
 			fullInstruction = "";
 			instName = "";
+		}
 		}
 		textF = false;
 		br.close();

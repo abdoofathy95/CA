@@ -1,24 +1,7 @@
+
+
 .text
+
 addi $t1 , $zero , 8
 addi $t5 , $zero , 0
 addi $t5 , $zero , 0
-
-addi $t2 , $zero , 0
-addi $t5 , $zero , 0
-addi $t5 , $zero , 0
-
-sw $t1 , 0($t2)
-addi $t5 , $zero , 0
-addi $t5 , $zero , 0
-
-jal func
-j exit
-
-
-func:addi $t1 , $zero , 31
-addi $t5 , $zero , 0
-addi $t5 , $zero , 0
-lw $t1 , 0($t2)
-jr $ra
-
-exit:addi $t5 , $zero , 0
