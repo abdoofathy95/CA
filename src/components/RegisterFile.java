@@ -82,6 +82,9 @@ public class RegisterFile {
 		registersAddress.put("sp", "0x1d");
 		registersAddress.put("s7", "0x1e");
 		registersAddress.put("ra", "0x1f");
+		registersAddress.put("ourTemp1", "0x20");
+		registersAddress.put("ourTemp2", "0x21");
+		registersAddress.put("ourTemp3", "0x22");
 	}
 
 	public static void initRegistersWithZeros() {
@@ -117,5 +120,8 @@ public class RegisterFile {
 		registersValue.put("sp", "00000000000000000000000000000000");
 		registersValue.put("s7", "00000000000000000000000000000000");
 		registersValue.put("ra", "00000000000000000000000000000000");
+		registersValue.put("ourTemp1", "00000000000000000000000000000000");
+		registersValue.put("ourTemp2", "00000000000000000000000000000000");
+		registersValue.put("ourTemp3", "00000000000000000000000000000000");
 	}
 }
