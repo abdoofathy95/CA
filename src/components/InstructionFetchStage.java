@@ -63,14 +63,22 @@ public class InstructionFetchStage {
 			currentPC = getLabelIndex(instruction.getJumpLabel());
 			return true;
 		}
+
 		case "jal": {
 			currentPC = getLabelIndex(instruction.getJumpLabel());
+			String nextInstructionIndex = Integer
+					.toBinaryString(getInstructionIndex(instruction) + 1);
+			if (nextInstructionIndex.length() < 32) {
+				while (nextInstructionIndex.length() < 32) {
+					nextInstructionIndex = "0" + nextInstructionIndex;
+				}
+			}
+			RegisterFile.writeToRegister("00000000000000000000000000011111",
+					nextInstructionIndex);
 			return true;
 		}
 		case "jr": {
-			currentPC = getInstructionIndex(instruction)
-					+ binToInt(RegisterFile.readRegisterWithItsName(instruction
-							.getRs()));
+			currentPC = binToInt(RegisterFile.readRegisterWithItsName("ra"));
 			return true;
 		}
 		}
