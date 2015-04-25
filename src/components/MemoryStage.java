@@ -46,7 +46,7 @@ public class MemoryStage {
 			memoryData = Memory.readFromMemory(address);
 		}
 		if (memWrite.matches("1")){
-			int address = Integer.parseInt(aluResult);
+			int address = Integer.parseInt(aluResult,2);
 			Memory.writeToMemory(address, registerTwoData);
 		}
 		if (branch.matches("1")){
