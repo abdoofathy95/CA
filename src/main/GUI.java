@@ -210,8 +210,7 @@ public void initMemory()
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(openFileButton)
@@ -219,12 +218,12 @@ public void initMemory()
                             .addComponent(Run)
                             .addComponent(saveButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(32, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2)))
         );
 
         pack();
@@ -269,10 +268,8 @@ public void initMemory()
          console.append("\n");
         i++;
      }
-   if (x.message.size() <= 3)
-   {
-      assembled = true; 
-   }
+
+   
    
 
         }
@@ -292,8 +289,11 @@ public void initMemory()
       
         a.start();
         
-        if (assembled)  
-        {
+      for (int i = 0; i < a.log.size(); i++)
+      {
+          console.append(a.log.get(i));
+          console.append("\n");
+      }
         RegisterTable.setValueAt(RegisterFile.registersValue.get("at"), 1, 1);
         RegisterTable.setValueAt(RegisterFile.registersValue.get("v0"), 2, 1);
         RegisterTable.setValueAt(RegisterFile.registersValue.get("v1"), 3, 1);
@@ -349,7 +349,7 @@ public void initMemory()
              
           
        
-      }
+      
         }
         }
       

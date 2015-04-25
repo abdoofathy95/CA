@@ -122,3 +122,33 @@ public class Instruction {
 		this.jumpLabel = jumpLabel;
 	}
 }
+// Documentation of registers used in each instruction
+/*
+ * add $rd, $rs, $rt 
+ * sub $rd, $rs, $rt 
+ * and $rd, $rs, $rt 
+ * nor $rd, $rs, $rt 
+ * slt $rd, $rs, $rt 
+ * sltu $rd, $rs, $rt 
+ * ----------------------------------
+ * addi $rt, $rs, constant
+ * ---------------------------------- 
+ * sll $rd, $rt, constant 
+ * srl $rd, $rt,constant
+ * ----------------------------------- 
+ * lw $rt, offset($rs) 
+ * lb $rt, offset($rs)
+ * lbu $rt, offset($rs) 
+ * sw $rt, offset($rs) 
+ * sb $rt, offset($rs)
+ * ----------------------------------- 
+ * lui $rt, constant
+ * ----------------------------------- 
+ * beq $rs, $rt, jumpLabel 
+ * bne $rs, $rt, jumpLabel 
+ * ----------------------------------- 
+ * j jumpLabel 
+ * jal jumpLabel
+ * ----------------------------------- 
+ * jr $rs
+ */

@@ -1,6 +1,7 @@
 package components;
 
 import java.util.Hashtable;
+import main.MainApp;
 
 public class ExecutionStage {
 	public static boolean execute = false;
@@ -223,7 +224,7 @@ public class ExecutionStage {
 			aluZeroSignal="1";
 		else aluZeroSignal = "0";
 		//startNextStage();
-		System.out.println("ExecuteStage");
+		MainApp.addToLog("ExecuteStage");
 		}else{
 			MemoryStage.execute = false;
 		}

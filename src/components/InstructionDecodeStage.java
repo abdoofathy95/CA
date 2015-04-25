@@ -2,6 +2,7 @@ package components;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import main.MainApp;
 
 /* refer to this site to understand format 
  * http://www.cs.umd.edu/class/sum2003/cmsc311/Notes/Mips/format.html
@@ -68,7 +69,7 @@ public class InstructionDecodeStage {
 			currentInstruction = InstructionFetchStage.currentInstruction;
 			decodeInstruction(InstructionFetchStage.currentInstruction);
 			printStage();
-			System.out.println("InstructionDecodeStage");
+			MainApp.addToLog("InstructionDecodeStage");
 		} else {
 			ExecutionStage.execute = false;
 		}
@@ -79,40 +80,40 @@ public class InstructionDecodeStage {
 		// TODO Auto-generated method stub
 		// printing values
 		// --------------------------------------------------------------------
-		System.out.println("-------------------------------------");
-		System.out.println("WB REGISTER :");
+		MainApp.addToLog("-------------------------------------");
+		MainApp.addToLog("WB REGISTER :");
 		Enumeration e = tempRegisterWB.keys();
 		while (e.hasMoreElements()) {
 			String key = (String) e.nextElement();
-			System.out.println(key + " : " + tempRegisterWB.get(key));
+			MainApp.addToLog(key + " : " + tempRegisterWB.get(key));
 		}
-		System.out.println("");
-		System.out.println("M REGISTER :");
+		MainApp.addToLog("");
+		MainApp.addToLog("M REGISTER :");
 		e = tempRegisterM.keys();
 		while (e.hasMoreElements()) {
 			String key = (String) e.nextElement();
-			System.out.println(key + " : " + tempRegisterM.get(key));
+			MainApp.addToLog(key + " : " + tempRegisterM.get(key));
 		}
-		System.out.println("");
-		System.out.println("EX REGISTER :");
+		MainApp.addToLog("");
+		MainApp.addToLog("EX REGISTER :");
 		e = tempRegisterEx.keys();
 		while (e.hasMoreElements()) {
 			String key = (String) e.nextElement();
-			System.out.println(key + " : " + tempRegisterEx.get(key));
+			MainApp.addToLog(key + " : " + tempRegisterEx.get(key));
 		}
-		System.out.println("");
+		MainApp.addToLog("");
 
-		System.out.println("currentPC" + " : " + currentPC);
-		System.out.println("jumpAddress" + " : " + jumpAddress);
-		System.out.println("currentInstruction" + " : "
+		MainApp.addToLog("currentPC" + " : " + currentPC);
+		MainApp.addToLog("jumpAddress" + " : " + jumpAddress);
+		MainApp.addToLog("currentInstruction" + " : "
 				+ currentInstruction.getInstructionName());
-		System.out.println("registerOneData" + " : " + registerOneData);
-		System.out.println("registerTwoData" + " : " + registerTwoData);
-		System.out.println("immediateValue" + " : " + immediateValue);
-		System.out.println("registerTAddress" + " : " + registerTAddress);
-		System.out.println("registerDAddress" + " : " + registerDAddress);
-		System.out.println("instruction" + " : " + instruction);
-		System.out.println("-------------------------------------");
+		MainApp.addToLog("registerOneData" + " : " + registerOneData);
+		MainApp.addToLog("registerTwoData" + " : " + registerTwoData);
+		MainApp.addToLog("immediateValue" + " : " + immediateValue);
+		MainApp.addToLog("registerTAddress" + " : " + registerTAddress);
+		MainApp.addToLog("registerDAddress" + " : " + registerDAddress);
+		MainApp.addToLog("instruction" + " : " + instruction);
+		MainApp.addToLog("-------------------------------------");
 		// --------------------------------------------------------------------
 	}
 

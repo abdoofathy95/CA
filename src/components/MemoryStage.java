@@ -1,6 +1,7 @@
 package components;
 
 import java.util.Hashtable;
+import main.MainApp;
 
 public class MemoryStage {
 	public static boolean execute = false;
@@ -66,7 +67,7 @@ public class MemoryStage {
 			//currentPC = aluResult;
 		}
 		//startNextStage();
-		System.out.println("MemoryStage");
+		MainApp.addToLog("MemoryStage");
 		}else{
 			WriteBackStage.execute = false;
 		}

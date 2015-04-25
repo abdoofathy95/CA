@@ -1,3 +1,4 @@
+
 package components;
 
 import java.io.BufferedReader;
@@ -7,17 +8,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Parser {
-	public static InstructionMemory InstructionSet;
-	private static ArrayList<String> allLables = new ArrayList<String>();
         public static String url;
         public static ArrayList<String> message;
+	public static InstructionMemory InstructionSet;
+	private static ArrayList<String> allLables = new ArrayList<String>();
+	private static ArrayList<String> toMemory = new ArrayList<String>();
+	static boolean textF = false;
+	static boolean dataF = false;
+
 	@SuppressWarnings("static-access")
 	public Parser(String url) throws IOException {
-                
-                this.url = url;
+                 this.url = url;
                  message = new ArrayList<String>();
 		this.InstructionSet = new InstructionMemory();
 		getLabels();
+		getInitialData();
 		validatColumnSyntax();
 		validateInstructionNames();
 		validateInstructionFormat();
@@ -28,16 +33,28 @@ public class Parser {
 	public static void getLabels() throws IOException {
 		String currentLine = "";
 		BufferedReader br = readFromFile();
+		
 		while ((currentLine = br.readLine()) != null) {
+			
 			while (currentLine != null && currentLine.matches("\\s*")) {
 				currentLine = br.readLine();
 			}
 			if (currentLine == null) {
 				break;
 			}
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+				if (currentLine == null) {
+					break;
+				}
+			}
+			
+			if(textF && !currentLine.matches("\\s*")){
 			if (currentLine.contains(":")) {
 				int pos = getCharPosition(currentLine, ':');
-				String label = currentLine.substring(0, pos).replaceAll("\\s*", "");
+				String label = currentLine.substring(0, pos).replaceAll("\\s*",
+						"");
 				if (!allLables.contains(label)) {
 					allLables.add(label.replaceAll("\\s*", ""));
 				} else {
@@ -64,15 +81,83 @@ public class Parser {
 						|| label.matches("\\s*" + "jr" + "\\s*")
 						|| label.matches("\\s*" + "slt" + "\\s*")
 						|| label.matches("\\s*" + "sltu" + "\\s*")) {
-                                    message.add("Reserver instruction name: \""+label + "\" cannot be a label name");
-			
+					message.add("Reserver instruction name: \"" + label
+							+ "\" cannot be a label name");
 					
 				}
+			}
 			}
 		}
 		br.close();
 	}
-
+	
+	public static void getInitialData() throws IOException {
+		String currentLine = "";
+		BufferedReader br = readFromFile();
+		while ((currentLine = br.readLine()) != null) {
+			while (currentLine != null && currentLine.matches("\\s*")) {
+				currentLine = br.readLine();
+			}
+			if (currentLine == null) {
+				break;
+			}
+			if (currentLine.matches("\\s*" + ".data" + "\\s*")) {
+				dataF = true;
+				currentLine = br.readLine();
+			}
+			if (currentLine == null) {
+				break;
+			}
+			if (currentLine.matches("\\s*" + ".text" + "\\s*")) {
+				break;
+			}
+			if (dataF && !currentLine.matches("\\s*")) {
+				if(!currentLine.contains(".word")){
+					message.add(".word is missing");
+					
+				}
+				else{
+					int begin = getCharPosition(currentLine, '[');
+					int end = getCharPosition(currentLine, ']');
+					if(begin == -1 || end == -1 || begin > end){
+						message.add("Invalid input Syntax");
+						
+					}
+					else{
+						String[] tempArr = currentLine.substring(begin + 1, end).split(",");
+						for (int i = 0; i < tempArr.length; i++) {
+							try{
+								Integer.parseInt(tempArr[i].replaceAll("\\s*", ""));
+							}
+							catch(Exception e){
+								message.add("Invalid input: Expected numbers");
+								
+							}
+							toMemory.add(""+tempArr[i]);
+						}
+					}
+				}
+			}
+		}
+		textF = false;
+		dataF = false;
+		Memory.init();
+		for (int i = 0 , j = 0 ; i < toMemory.size(); i++) {
+			String value = Integer.toBinaryString(Integer.parseInt(toMemory.get(i)));
+			if (Integer.parseInt(toMemory.get(i))>=0){
+				value = "0" + value;
+				value = signExtendData(value);
+			}
+			else
+			{
+				value = "1" + value;
+				value = signExtendData(value);
+			}
+			Memory.writeToMemory(j, value);
+			j+= 4;
+		}
+	}
+	
 	public static int countColumns(String x) {
 		int count = 0;
 		for (int i = 0; i < x.length(); i++) {
@@ -104,26 +189,35 @@ public class Parser {
 			if (currentLine == null) {
 				break;
 			}
-
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+			}
+			if (currentLine == null) {
+				break;
+			}
+			if(textF && !currentLine.matches("\\s*")){
 			if (currentLine.contains(":")) {
 				if (countColumns(currentLine) > 1) {
-                                    message.add("Invalid input: Unexpected \":\" in line "
+					System.out
+							.println("Invalid input: Unexpected \":\" in line "
 									+ lineCounter);
-					
 					
 				}
 			}
 			if (currentLine.matches("\\s*" + ":" + "\\s*")) {
-                     
 				message.add("Invalid input: Unexpected \":\" in line "
 						+ lineCounter);
 				
 			}
 			lineCounter++;
+			
 		}
+		}
+		textF = false;
+		dataF = false;
 		br.close();
-              
-
+		message.add("Validate-column-Done");
 	}
 
 	public static void validateInstructionNames() throws IOException {
@@ -139,6 +233,14 @@ public class Parser {
 			if (currentLine == null) {
 				break;
 			}
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+			}
+			if (currentLine == null) {
+				break;
+			}
+			if(textF && !currentLine.matches("\\s*")){
 			if (!currentLine.contains(":")) {
 				String[] result = currentLine.split("\\s");
 				for (int i = 0; i < result.length; i++) {
@@ -167,7 +269,9 @@ public class Parser {
 						&& !instruction.matches("\\s*" + "jal" + "\\s*")
 						&& !instruction.matches("\\s*" + "jr" + "\\s*")
 						&& !instruction.matches("\\s*" + "slt" + "\\s*")
-						&& !instruction.matches("\\s*" + "sltu" + "\\s*")) {
+						&& !instruction.matches("\\s*" + "sltu" + "\\s*")
+						&& !instruction.matches("\\s*" + "move" + "\\s*")
+						&& !instruction.matches("\\s*" + "blt" + "\\s*")) {
 					message.add(instruction + " in line " + lineCounter
 							+ " is not an instruction");
 					
@@ -203,7 +307,9 @@ public class Parser {
 						&& !instruction.matches("\\s*" + "jal" + "\\s*")
 						&& !instruction.matches("\\s*" + "jr" + "\\s*")
 						&& !instruction.matches("\\s*" + "slt" + "\\s*")
-						&& !instruction.matches("\\s*" + "sltu" + "\\s*")) {
+						&& !instruction.matches("\\s*" + "sltu" + "\\s*")
+						&& !instruction.matches("\\s*" + "move" + "\\s*")
+						&& !instruction.matches("\\s*" + "blt" + "\\s*")) {
 					message.add(instruction + " in line " + lineCounter
 							+ " is not an instruction");
 					
@@ -211,10 +317,12 @@ public class Parser {
 			}
 
 			lineCounter++;
+			}
 		}
+		textF = false;
+		dataF = false;
 		br.close();
-                message.add("Validate-InstructionNames-Done");
-	
+		message.add("Validate-InstructionNames-Done");
 	}
 
 	public static void validateInstructionFormat() throws IOException {
@@ -231,6 +339,14 @@ public class Parser {
 			if (currentLine == null) {
 				break;
 			}
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+			}
+			if (currentLine == null) {
+				break;
+			}
+			if(textF && !currentLine.matches("\\s*")){
 			if (!currentLine.contains(":")) {
 				String[] result = currentLine.split("\\s");
 				String temp5 = "";
@@ -251,7 +367,8 @@ public class Parser {
 						|| instruction.matches("\\s*" + "beq" + "\\s*")
 						|| instruction.matches("\\s*" + "bne" + "\\s*")
 						|| instruction.matches("\\s*" + "slt" + "\\s*")
-						|| instruction.matches("\\s*" + "sltu" + "\\s*")) {
+						|| instruction.matches("\\s*" + "sltu" + "\\s*")
+						|| instruction.matches("\\s*" + "blt" + "\\s*")) {
 					String temp = currentLine.substring(instruction.length());
 					String[] tempArr = temp.split(",");
 					if (tempArr.length < 3) {
@@ -287,7 +404,6 @@ public class Parser {
 					}
 
 				}
-
 				if (instruction.matches("\\s*" + "j" + "\\s*")
 						|| instruction.matches("\\s*" + "jal" + "\\s*")
 						|| instruction.matches("\\s*" + "jr" + "\\s*")) {
@@ -307,12 +423,29 @@ public class Parser {
 
 					if (instruction.matches("\\s*" + "j" + "\\s*")
 							|| instruction.matches("\\s*" + "jal" + "\\s*")) {
-						if (!allLables.contains(currentLine.substring(
-								instruction.length()).replaceAll("\\s*", ""))) {
+						
+						if (!allLables.contains(tempArr[0].replaceAll("\\s*", ""))) {
+							
 							message.add("Invalid label name in line: "
 									+ lineCounter);
 							
 						}
+					}
+
+				}
+
+				if (instruction.matches("\\s*" + "move" + "\\s*")) {
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if (tempArr.length < 2) {
+						message.add("Missing parameter in Line "
+								+ lineCounter);
+						
+					}
+					if (tempArr.length > 2) {
+						message.add("Extra parameter in Line "
+								+ lineCounter);
+						
 					}
 
 				}
@@ -393,18 +526,36 @@ public class Parser {
 					}
 					if (instruction.matches("\\s*" + "j" + "\\s*")
 							|| instruction.matches("\\s*" + "jal" + "\\s*")) {
-						if (!allLables.contains(currentLine.substring(
-								instruction.length()).replaceAll("\\s*", ""))) {
+						if (!allLables.contains(tempArr[0].replaceAll("\\s*", ""))) {
 							message.add("Invalid label name in line: "
 									+ lineCounter);
 							
 						}
 					}
 				}
+
+				if (instruction.matches("\\s*" + "move" + "\\s*")) {
+					String temp = tempS.substring(instruction.length() + 1);
+					String[] tempArr = temp.split(",");
+					if (tempArr.length < 2) {
+						message.add("Missing parameter in Line "
+								+ lineCounter);
+						
+					}
+					if (tempArr.length > 2) {
+						message.add("Extra parameter in Line "
+								+ lineCounter);
+						
+					}
+
+				}
 			}
 			instruction = "";
 			lineCounter++;
 		}
+		}
+		textF = false;
+		dataF = false;
 		br.close();
 		message.add("Validate-Instruction-Format-Done");
 	}
@@ -422,6 +573,14 @@ public class Parser {
 			if (currentLine == null) {
 				break;
 			}
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+			}
+			if (currentLine == null) {
+				break;
+			}
+			if(textF && !currentLine.matches("\\s*")){
 			if (currentLine.contains(":")) {
 				int begin = getCharPosition(currentLine, ':') + 1;
 				currentLine = currentLine.substring(begin);
@@ -453,7 +612,8 @@ public class Parser {
 					} else {
 						for (int i = 0; i < tempArr.length; i++) {
 							if (!isValidRegister(tempArr[i])) {
-								message.add("Invalid register name in line: "
+								System.out
+										.println("Invalid register name in line: "
 												+ lineCounter);
 								
 							}
@@ -471,7 +631,8 @@ public class Parser {
 					} else {
 						for (int i = 0; i < tempArr.length - 1; i++) {
 							if (!isValidRegister(tempArr[i])) {
-								message.add("Invalid register name in line: "
+								System.out
+										.println("Invalid register name in line: "
 												+ lineCounter);
 								
 							}
@@ -482,14 +643,16 @@ public class Parser {
 							Short.parseShort(x);
 
 						} catch (Exception E) {
-							message.add("Invalid number format in line: "
+							System.out
+									.println("Invalid number format in line: "
 											+ lineCounter);
 							
 						}
 						if (!instruction.matches("\\s*" + "addi" + "\\s*")) {
 							if (Short.parseShort(x) < 0
 									|| Short.parseShort(x) > 31) {
-								message.add("Invalid number format in line: "
+								System.out
+										.println("Invalid number format in line: "
 												+ lineCounter);
 								
 							}
@@ -507,7 +670,8 @@ public class Parser {
 						
 					} else {
 						if (!isValidRegister(tempArr[0])) {
-							message.add("Invalid register name in line: "
+							System.out
+									.println("Invalid register name in line: "
 											+ lineCounter);
 							
 						}
@@ -531,7 +695,8 @@ public class Parser {
 									.replaceAll("\\s", ""));
 
 						} catch (Exception E) {
-							message.add("Invalid number format in line: "
+							System.out
+									.println("Invalid number format in line: "
 											+ lineCounter);
 							
 						}
@@ -548,7 +713,8 @@ public class Parser {
 					} else {
 
 						if (!isValidRegister(tempArr[0])) {
-							message.add("Invalid register name in line: "
+							System.out
+									.println("Invalid register name in line: "
 											+ lineCounter);
 							
 						}
@@ -573,23 +739,26 @@ public class Parser {
 									.replaceAll("\\s", ""));
 
 						} catch (Exception E) {
-							message.add("Invalid number format in line: "
+							System.out
+									.println("Invalid number format in line: "
 											+ lineCounter);
 							
 						}
 					}
 				} else if (instruction.matches("\\s*" + "beq" + "\\s*")
-						|| instruction.matches("\\s*" + "bne" + "\\s*")) {
+						|| instruction.matches("\\s*" + "bne" + "\\s*")
+						|| instruction.matches("\\s*" + "blt" + "\\s*")) {
 					String temp = currentLine.substring(instruction.length());
 					String[] tempArr = temp.split(",");
-					if (tempArr[0].matches("\\s*" + "\\$zero" + "\\s*")) {
+					if (tempArr[0].matches("\\s*" + "\\$ero" + "\\s*")) {
 						message.add("ERROR Line " + lineCounter
 								+ ", Register Zero cannot be overwritten");
 						
 					} else {
 						for (int i = 0; i < tempArr.length - 1; i++) {
 							if (!isValidRegister(tempArr[i])) {
-								message.add("Invalid register name in line: "
+								System.out
+										.println("Invalid register name in line: "
 												+ lineCounter);
 								
 							}
@@ -619,16 +788,37 @@ public class Parser {
 							Short.parseShort(x);
 
 						} catch (Exception E) {
-							message.add("Invalid number format in line: "
+							System.out
+									.println("Invalid number format in line: "
 											+ lineCounter);
 							
+						}
+					}
+				} else if (instruction.matches("\\s*" + "move" + "\\s*")) {
+					String temp = currentLine.substring(instruction.length());
+					String[] tempArr = temp.split(",");
+					if (tempArr[0].matches("\\s*" + "\\$zero" + "\\s*")) {
+						message.add("ERROR Line " + lineCounter
+								+ ", Register Zero cannot be overwritten");
+						
+					} else {
+						for (int i = 0; i < tempArr.length; i++) {
+							if (!isValidRegister(tempArr[i])) {
+								System.out
+										.println("Invalid register name in line: "
+												+ lineCounter);
+								
+							}
 						}
 					}
 				}
 			}
 			instruction = "";
 			lineCounter++;
+			}
 		}
+		textF = false;
+		dataF = false;
 		br.close();
 		message.add("Validate-Instruction-Registers-Done");
 	}
@@ -683,6 +873,14 @@ public class Parser {
 			if (currentLine == null) {
 				break;
 			}
+			if(currentLine.matches("\\s*" + ".text" + "\\s*")){
+				textF = true;
+				currentLine = br.readLine();
+			}
+			if (currentLine == null) {
+				break;
+			}
+			if(textF && !currentLine.matches("\\s*")){
 			if (currentLine.contains(":")) {
 				label = currentLine.substring(0,
 						getCharPosition(currentLine, ':'));
@@ -752,6 +950,18 @@ public class Parser {
 				jumpLabel = null;
 
 			}
+
+			if (instName.matches("\\s*" + "move" + "\\s*")) {
+				instName = "add";
+				rd = registers[0].replaceAll("\\s*", "").substring(1);
+				rs = registers[1].replaceAll("\\s*", "").substring(1);
+				rt = "zero";
+				constant = null;
+				offset = null;
+				jumpLabel = null;
+
+			}
+
 			if (instName.matches("\\s*" + "lw" + "\\s*")
 					|| instName.matches("\\s*" + "lb" + "\\s*")
 					|| instName.matches("\\s*" + "lbu" + "\\s*")
@@ -826,23 +1036,41 @@ public class Parser {
 				jumpLabel = null;
 				// message.add(rs);
 			}
-			Instruction temp = new Instruction(label, instName, rd, rs, rt,
-					offset, constant, jumpLabel);
-			InstructionSet.instructions.add(temp);
+			if (instName.matches("\\s*" + "blt" + "\\s*")) {
+				String o1 = registers[0].replaceAll("\\s*", "").substring(1);
+				String o2 = registers[1].replaceAll("\\s*", "").substring(1);
+				String o3 = registers[2].replaceAll("\\s*", "");
+				InstructionSet.instructions.add(new Instruction("", "slt",
+						"ourTemp1", o1, o2, null, null, null));
+				InstructionSet.instructions.add(new Instruction("", "add",
+						"ourTemp2", o1, o2, null, null, null));
+				InstructionSet.instructions.add(new Instruction("", "add",
+						"ourTemp3", o1, o2, null, null, null));
+				InstructionSet.instructions.add(new Instruction("", "bne",
+						null, "ourTemp1", "zero", null, null, o3));
+			}
+			if (!instName.matches("\\s*" + "blt" + "\\s*")) {
+				Instruction temp = new Instruction(label, instName, rd, rs, rt,
+						offset, constant, jumpLabel);
+				InstructionSet.instructions.add(temp);
+			}
 			finalInst = "";
 			label = "";
 			fullInstruction = "";
 			instName = "";
 		}
+		}
+		textF = false;
+		dataF = false;
 		br.close();
 	}
 
 	public static BufferedReader readFromFile() throws FileNotFoundException {
-		return new BufferedReader(new FileReader(url));
+		return new BufferedReader(new FileReader("code.txt"));
 	}
 
 	public static String[] getSpecificRegister(String x) {
-		message.add(x + "55555555555555555555");
+		message.add(x);
 		String instruction = "";
 		String[] result = x.split(" ");
 		String temp5 = "";
@@ -862,5 +1090,15 @@ public class Parser {
 		}
 		return null;
 	}
-        
+
+	
+	private static String signExtendData(String data) {
+        String binary = data;
+		if(binary.charAt(0) == '1'){
+      	  while(binary.length()<32) binary="1"+binary;
+        }else{
+        	while(binary.length()<32) binary="0"+binary;
+        }
+		return binary;
+	}
 }

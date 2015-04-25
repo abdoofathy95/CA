@@ -1,6 +1,7 @@
 package components;
 
 import java.util.Hashtable;
+import main.MainApp;
 
 public class WriteBackStage {
 	public static boolean execute = false;
@@ -19,13 +20,12 @@ public class WriteBackStage {
 		registerAddressToWriteTo = MemoryStage.registerAddressToWriteTo;
 		memoryData = MemoryStage.memoryData;
 		findInstruction(tempRegisterWB);
-		System.out.println("WriteBackStage");
+		MainApp.addToLog("WriteBackStage");
 		}
 	}	
 		public static void findInstruction(Hashtable<String,String> tempRegisterWB){
 			
 			if(tempRegisterWB.get("MemToReg").equals("1")){ //LOAD
-				System.out.println(registerAddressToWriteTo+"UUUUUUUUUUUUUUUUUUUUUUUUUU");
 				if(tempRegisterWB.get("Sign-Extended").equals("1")){ //lb
 					dataToBeWrittenToReg = signExtendData(memoryData);
 					lb(registerAddressToWriteTo,dataToBeWrittenToReg);
@@ -58,7 +58,7 @@ public class WriteBackStage {
 		private static String signExtendData(String data) {
           String binary = data.substring(data.length()-8,data.length());
           if(binary.substring(0,1).equals("1")){
-        	  return "11111111111111111111111111"+data.substring(data.length()-8,data.length());
+        	  return "111111111111111111111111"+data.substring(data.length()-8,data.length());
           }else{
         	  return "000000000000000000000000"+data.substring(data.length()-8,data.length());
           }

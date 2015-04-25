@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 public class RegisterFile {
 
-	public static Hashtable<String, String> registersValue = new Hashtable<String, String>();
+	public  static Hashtable<String, String> registersValue = new Hashtable<String, String>();
 	static final Hashtable<String, String> registersAddress = new Hashtable<String, String>();
 
 	public static String readRegisterWithAddress(String register) { // register is address in binary
@@ -80,8 +80,11 @@ public class RegisterFile {
 		registersAddress.put("k1", "0x1b");
 		registersAddress.put("gp", "0x1c");
 		registersAddress.put("sp", "0x1d");
-		registersAddress.put("s7", "0x1e");
+		registersAddress.put("fp", "0x1e");
 		registersAddress.put("ra", "0x1f");
+		registersAddress.put("ourTemp1", "0x20");
+		registersAddress.put("ourTemp2", "0x21");
+		registersAddress.put("ourTemp3", "0x22");
 	}
 
 	public static void initRegistersWithZeros() {
@@ -114,9 +117,11 @@ public class RegisterFile {
 		registersValue.put("k0", "00000000000000000000000000000000");
 		registersValue.put("k1", "00000000000000000000000000000000");
 		registersValue.put("gp", "00000000000000000000000000000000");
-		registersValue.put("sp", "00000000000000001100001101010000"); // starts at 50000
-		registersValue.put("s7", "00000000000000000000000000000000");
+		registersValue.put("sp", "00000000000000001100001101010000");	// sp pointing at 49999
+		registersValue.put("fp", "00000000000000000000000000000000");
 		registersValue.put("ra", "00000000000000000000000000000000");
-		
+		registersValue.put("ourTemp1", "00000000000000000000000000000000");
+		registersValue.put("ourTemp2", "00000000000000000000000000000000");
+		registersValue.put("ourTemp3", "00000000000000000000000000000000");
 	}
 }
