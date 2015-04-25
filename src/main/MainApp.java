@@ -22,7 +22,6 @@ public class MainApp {
 			// Offset range in load and store
 		}
 		// initialize the memory
-		Memory.init();
 		RegisterFile.initRegistersWithAddresses();
 		RegisterFile.initRegistersWithZeros();
 		//
