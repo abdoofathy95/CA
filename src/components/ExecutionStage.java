@@ -87,8 +87,7 @@ public class ExecutionStage {
 			registerTwoDataOutput=registerTwoData;
 		else
 		{
-			int x = Integer.parseUnsignedInt(registerTwoData);
-			registerTwoDataOutput=((x >> 3)&1)+""+((x >> 2)&1)+((x >> 1)&1)+((x >> 0)&1);
+			registerTwoData=signExtendData(registerTwoData.substring(24));
 		}
 		switch(tempRegisterEx.get("AluOp")){
 		case"Add":{

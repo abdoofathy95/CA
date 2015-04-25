@@ -1,7 +1,33 @@
-addi $t1, $zero, 1
-add $t0, $zero, $zero
-add $t0, $zero, $zero
-sw $t1, 4($zero)
-add $t0, $zero, $zero
-add $t0, $zero, $zero
-lw $t0, 4($zero)
+.text
+addi $t3,$zero,-1
+addi $t1,$zero,5
+addi $t2,$zero,7
+add $t8,$zero,$t3
+addi $t4,$zero,64
+addi $t6,$zero,1000
+addi $t7,$zero,2000
+
+
+nor $t5,$t1,$t3
+lbu $t9,0($t6)
+sb $t3,0($t6)
+slt $t2,$t1,$t2
+sw $t1,0($t6)
+
+LOP: addi $t8,$t8,1
+
+    sll $t1,$t1,2
+    addi $t4,$t4, -1
+    and $t2,$t2,$t3
+
+beq $t8,$zero,LOP
+
+j proc1
+
+Ek: j Exit
+
+
+proc1: sltu $t3,$t3,$t4
+	nor $t1,$t3,$zero
+	j Ek
+Exit: add $t7, $zero, $zero
