@@ -1,4 +1,4 @@
-addi $t1 , $zero , 8
+addi $t0 , $zero , 20
 add $t5 , $zero , $zero
 add $t5 , $zero , $zero
 
@@ -6,11 +6,7 @@ add $t2 , $zero , $zero
 add $t5 , $zero , $zero
 add $t5 , $zero , $zero
 
-sw $t1 , 0($t2)
+sw $t0 , 0($t3)
 add $t5 , $zero , $zero
 add $t5 , $zero , $zero
-
-add $t1 , $zero , $zero
-add $t5 , $zero , $zero
-add $t5 , $zero , $zero
-lw $t1 , 0($t2)
+lw $t1 , 0($t3)
