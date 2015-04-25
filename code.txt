@@ -1,7 +1,16 @@
-addi $t1 , $zero , 16
-addi $t0 , $zero , 10
-addi $t0 , $zero , 15
-sw $t1 , 0($zero)
-addi $t0 , $zero , 10
-addi $t0 , $zero , 15
-lw $t1 , 0($zero)
+addi $t1 , $zero , 8
+add $t5 , $zero , $zero
+add $t5 , $zero , $zero
+
+add $t2 , $zero , $zero
+add $t5 , $zero , $zero
+add $t5 , $zero , $zero
+
+sw $t1 , 0($t2)
+add $t5 , $zero , $zero
+add $t5 , $zero , $zero
+
+add $t1 , $zero , $zero
+add $t5 , $zero , $zero
+add $t5 , $zero , $zero
+lw $t1 , 0($t2)

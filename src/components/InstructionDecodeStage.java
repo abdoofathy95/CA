@@ -58,6 +58,10 @@ public class InstructionDecodeStage {
 	}
 */
 	public static void executeStage() {
+		tempRegisterWB = new Hashtable<String, String>();
+		tempRegisterM = new Hashtable<String, String>();
+		tempRegisterEx = new Hashtable<String, String>();
+		
 		if(execute){
 		ExecutionStage.execute = true;
 		currentPC = Integer.toBinaryString(InstructionFetchStage.currentPC);
@@ -536,7 +540,7 @@ public class InstructionDecodeStage {
 			break;
 		}
 		}
-		immediateValue=signExtendData(immediateValue);
+		//immediateValue=signExtendData(immediateValue);
 	}
 
 	private static void storeControlSignals(String RegDest, String Branch,
