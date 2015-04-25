@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+addi $t1,$zero,0
+addi $t2 , $zero , 50
+addi $t3 , $zero , 0
+addi $t4 , $zero , 0
+sll $t5 , $t2 , 20
+=======
 addi $t0, $zero, 5
 addi $t6, $zero, 0
 addi $t6, $zero, 0
@@ -26,3 +33,4 @@ Fac: slt $t2, $t0, $zero
 	 
 Exit:
 	addi $t5, $zero, 0
+>>>>>>> origin/master

@@ -67,7 +67,9 @@ public class ExecutionStage {
 		}
 		else
 			Registertwodata2ndInput=immediateValueShift16;
-		
+		if (Integer.parseInt(tempRegisterEx.get("Shift"))==1) {
+			registerOneData = registerTwoData;
+		}
 		if(Integer.parseInt(tempRegisterEx.get("AluSrc"))==0)
 			ALU2ndInput=registerTwoData;
 		else
@@ -100,7 +102,6 @@ public class ExecutionStage {
 				aluResult = "1"+aluResult;
 				aluResult=signExtendData(aluResult);
 			}
-			System.out.println("/////////////////////////////////////"+result);
 			break;
 		}
 		case"Sub":{
@@ -144,7 +145,8 @@ public class ExecutionStage {
 			break;
 		}
 		case"SLL":{
-			int result= Integer.parseUnsignedInt(registerTwoData,2) << Integer.parseUnsignedInt(ALU2ndInput,2);
+			ALU2ndInput = ALU2ndInput.substring(21, 26);
+			int result= Integer.parseUnsignedInt(registerOneData,2) << Integer.parseUnsignedInt(ALU2ndInput,2);
 			aluResult = Integer.toBinaryString(result);
 			if (result >= 0 && aluResult.length()<32) {
 				aluResult = "0"+aluResult;
@@ -157,6 +159,7 @@ public class ExecutionStage {
 			break;
 		}
 		case"SRL":{
+			ALU2ndInput = ALU2ndInput.substring(21, 26);
 			int result= Integer.parseUnsignedInt(registerOneData,2) >> Integer.parseUnsignedInt(ALU2ndInput,2);
 			aluResult = Integer.toBinaryString(result);
 			if (result >= 0&& aluResult.length()<32) {
@@ -185,7 +188,7 @@ public class ExecutionStage {
 		case"SLT":{
 			if(Integer.parseUnsignedInt(registerOneData,2) < Integer.parseUnsignedInt(ALU2ndInput,2))
 				{
-				aluResult="1";
+				aluResult="01";
 				aluResult = signExtendData(aluResult);
 				}
 			else {
@@ -195,10 +198,10 @@ public class ExecutionStage {
 			break;
 		}
 		case"SLTU":{
-			int x =Integer.compareUnsigned(Integer.parseInt(registerOneData), Integer.parseInt(ALU2ndInput));
+			int x =Integer.compareUnsigned(Integer.parseUnsignedInt(registerOneData,2), Integer.parseUnsignedInt(ALU2ndInput,2));
 			if(x <0 )
 				{
-				aluResult="1";
+				aluResult="01";
 				aluResult = signExtendData(aluResult);
 				}
 			else {
@@ -215,7 +218,6 @@ public class ExecutionStage {
 			aluResult=registerOneData;
 			break;
 		}
-		
 		}
 
 		if(Integer.compare(Integer.parseUnsignedInt(registerOneData,2), Integer.parseUnsignedInt(ALU2ndInput,2))==0)

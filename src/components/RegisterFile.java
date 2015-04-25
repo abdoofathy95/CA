@@ -39,7 +39,13 @@ public class RegisterFile {
 				registerValue = key;
 				break;
 			}
-		}		
+		}
+		//String signExtened = Integer.toBinaryString(Integer.parseInt(value));
+		if (value.length() < 32) {
+			while(value.length()<32) {
+				value = "0" + value;
+			}
+		}// sign extend
 		registersValue.put(registerValue, value);
 	}
 
