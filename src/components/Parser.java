@@ -15,6 +15,7 @@ public class Parser {
 
 	@SuppressWarnings("static-access")
 	public Parser() throws IOException {
+		Memory.init();
 		this.InstructionSet = new InstructionMemory();
 		getLabels();
 		getInitialData();
@@ -136,7 +137,6 @@ public class Parser {
 		}
 		textF = false;
 		dataF = false;
-		Memory.init();
 		for (int i = 0 , j = 0 ; i < toMemory.size(); i++) {
 			String value = Integer.toBinaryString(Integer.parseInt(toMemory.get(i)));
 			if (Integer.parseInt(toMemory.get(i))>=0){
