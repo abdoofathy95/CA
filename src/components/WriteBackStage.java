@@ -1,6 +1,7 @@
 package components;
 
 import java.util.Hashtable;
+import main.MainApp;
 
 public class WriteBackStage {
 	public static boolean execute = false;
@@ -19,7 +20,7 @@ public class WriteBackStage {
 		registerAddressToWriteTo = MemoryStage.registerAddressToWriteTo;
 		memoryData = MemoryStage.memoryData;
 		findInstruction(tempRegisterWB);
-		System.out.println("WriteBackStage");
+		MainApp.addToLog("WriteBackStage");
 		}
 	}	
 		public static void findInstruction(Hashtable<String,String> tempRegisterWB){
@@ -95,6 +96,3 @@ public class WriteBackStage {
 		
 		
 	}
-
-
-

@@ -1,6 +1,7 @@
 package components;
 
 import java.util.Iterator;
+import main.MainApp;
 
 /*
  * HERE fetch the instruction
@@ -32,7 +33,7 @@ public class InstructionFetchStage {
 			} else {
 				InstructionDecodeStage.execute = true;
 			}
-			System.out.println("InstructionFetchStage");
+			MainApp.addToLog("InstructionFetchStage");
 		} else {
 			InstructionDecodeStage.execute = false;
 		}

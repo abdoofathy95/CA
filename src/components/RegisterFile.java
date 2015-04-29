@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 public class RegisterFile {
 
-	private static Hashtable<String, String> registersValue = new Hashtable<String, String>();
+	public  static Hashtable<String, String> registersValue = new Hashtable<String, String>();
 	static final Hashtable<String, String> registersAddress = new Hashtable<String, String>();
 
 	public static String readRegisterWithAddress(String register) { // register is address in binary
@@ -80,7 +80,7 @@ public class RegisterFile {
 		registersAddress.put("k1", "0x1b");
 		registersAddress.put("gp", "0x1c");
 		registersAddress.put("sp", "0x1d");
-		registersAddress.put("s7", "0x1e");
+		registersAddress.put("fp", "0x1e");
 		registersAddress.put("ra", "0x1f");
 		registersAddress.put("ourTemp1", "0x20");
 		registersAddress.put("ourTemp2", "0x21");

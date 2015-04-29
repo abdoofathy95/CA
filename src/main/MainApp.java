@@ -11,17 +11,24 @@ import components.MemoryStage;
 import components.Parser;
 import components.RegisterFile;
 import components.WriteBackStage;
+import java.util.ArrayList;
 
 public class MainApp {
+     public boolean executionDone = false;
+     public static ArrayList <String> log;
 	@SuppressWarnings("static-access") // to be moved to a seperate class ( main application class)
-	public static void main(String[] args) throws IOException {
-		Parser x = new Parser();
+        public static void addToLog(String txt)
+        {
+ 
+        log.add(txt);
+        }
+	public void start()
+        {
+             log = new ArrayList<String>();
 		InstructionFetchStage.setPC(0);
-		for (int i = 0; i < x.InstructionSet.instructions.size(); i++) {
-			System.out.println(x.InstructionSet.instructions.get(i).toString());
-			// Offset range in load and store
-		}
+		
 		// initialize the memory
+		
 		RegisterFile.initRegistersWithAddresses();
 		RegisterFile.initRegistersWithZeros();
 		//
@@ -33,26 +40,35 @@ public class MainApp {
 		RegisterFile registerFile = new RegisterFile();
 		int y = 0;
 		while (InstructionFetchStage.currentPC < InstructionMemory.instructions.size()) {
-			System.out.println("-------------Cycle " + y + "-------------");
+			log.add("-------------Cycle " + y + "-------------");
+                        
 			backStage.executeStage();
 			memoryStage.executeStage();
 			executionStage.executeStage();
 			instructionDecodeStage.executeStage();
 			fetchStage.executeStage();
-			System.out.println("-------------end Cycle " + y + "-------------");
+			log.add("-------------end Cycle " + y + "-------------");
 			y++;
 		}
 		for (int i = 0 ; i < 4 ; i++) {
-			System.out.println("-------------Cycle " + y + "-------------");
+			log.add("-------------Cycle " + y + "-------------");
 			backStage.executeStage();
 			memoryStage.executeStage();
 			executionStage.executeStage();
 			instructionDecodeStage.executeStage();
 			fetchStage.executeStage();
-			System.out.println("-------------end Cycle " + y + "-------------");
+			log.add("-------------end Cycle " + y + "-------------");
 			y++;
 		}
-		System.out.println(RegisterFile.readRegisterWithItsName("t1"));
-			System.out.println(RegisterFile.readRegisterWithItsName("t5"));
-	}
+                
+			log.add("//////////////////////"+Memory.readFromMemory(0));
+                        
+          
+         executionDone = true;    
+          
+        }
+        
+        
+     
 }
+	
